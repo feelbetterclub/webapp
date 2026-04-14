@@ -24,10 +24,13 @@ export default function ClasesPage() {
   const [form, setForm] = useState(emptyForm);
 
   async function loadClasses() {
-    const res = await fetch("/api/admin/classes");
-    const data = await res.json();
-    setClasses(Array.isArray(data) ? data : []);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/admin/classes");
+      const data = res.ok ? await res.json() : [];
+      setClasses(Array.isArray(data) ? data : []);
+    } catch { /* ignore */ } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { loadClasses(); }, []);

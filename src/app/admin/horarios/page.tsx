@@ -21,18 +21,21 @@ export default function HorariosPage() {
   });
 
   async function loadData() {
-    const [sRes, cRes] = await Promise.all([
-      fetch("/api/admin/schedules"),
-      fetch("/api/admin/classes"),
-    ]);
-    const sData = await sRes.json();
-    const cData = await cRes.json();
-    setSchedules(Array.isArray(sData) ? sData : []);
-    setClasses(Array.isArray(cData) ? cData : []);
-    if (Array.isArray(cData) && cData.length > 0 && form.classId === 0) {
-      setForm((f) => ({ ...f, classId: cData[0].id }));
+    try {
+      const [sRes, cRes] = await Promise.all([
+        fetch("/api/admin/schedules"),
+        fetch("/api/admin/classes"),
+      ]);
+      const sData = sRes.ok ? await sRes.json() : [];
+      const cData = cRes.ok ? await cRes.json() : [];
+      setSchedules(Array.isArray(sData) ? sData : []);
+      setClasses(Array.isArray(cData) ? cData : []);
+      if (Array.isArray(cData) && cData.length > 0 && form.classId === 0) {
+        setForm((f) => ({ ...f, classId: cData[0].id }));
+      }
+    } catch { /* ignore */ } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   useEffect(() => { loadData(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);

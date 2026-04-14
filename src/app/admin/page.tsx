@@ -16,21 +16,26 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     async function loadData() {
-      const today = todayISO();
-      const [classesRes, schedulesRes, bookingsRes] = await Promise.all([
-        fetch("/api/admin/classes"),
-        fetch("/api/admin/schedules"),
-        fetch(`/api/bookings?date=${today}`),
-      ]);
+      try {
+        const today = todayISO();
+        const [classesRes, schedulesRes, bookingsRes] = await Promise.all([
+          fetch("/api/admin/classes"),
+          fetch("/api/admin/schedules"),
+          fetch(`/api/bookings?date=${today}`),
+        ]);
 
-      const classesData = await classesRes.json();
-      const schedulesData = await schedulesRes.json();
-      const bookingsData = await bookingsRes.json();
+        const classesData = classesRes.ok ? await classesRes.json() : [];
+        const schedulesData = schedulesRes.ok ? await schedulesRes.json() : [];
+        const bookingsData = bookingsRes.ok ? await bookingsRes.json() : [];
 
-      setClassCount(safeArray(classesData).length);
-      setScheduleCount(safeArray(schedulesData).length);
-      setTodayBookings(safeArray<BookingItem>(bookingsData));
-      setLoading(false);
+        setClassCount(safeArray(classesData).length);
+        setScheduleCount(safeArray(schedulesData).length);
+        setTodayBookings(safeArray<BookingItem>(bookingsData));
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      } finally {
+        setLoading(false);
+      }
     }
 
     loadData();
