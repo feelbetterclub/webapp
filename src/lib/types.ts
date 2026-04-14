@@ -7,6 +7,14 @@ export interface ClassItem {
   durationMinutes: number;
   maxCapacity: number;
   icon: string | null;
+  location: string | null;
+  locationUrl: string | null;
+}
+
+export interface LocationItem {
+  id: number;
+  name: string;
+  url: string | null;
 }
 
 export interface ScheduleItem {
@@ -23,6 +31,8 @@ export interface ScheduleWithAvailability extends ScheduleItem {
   durationMinutes: number;
   maxCapacity: number;
   icon: string | null;
+  location: string | null;
+  locationUrl: string | null;
   currentBookings: number;
   spotsLeft: number;
 }

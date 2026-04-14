@@ -8,6 +8,7 @@ import {
   Calendar,
   Users,
   UserCircle,
+  MapPin,
   ArrowLeft,
 } from "lucide-react";
 
@@ -16,6 +17,7 @@ const links = [
   { href: "/admin/clases", label: "Classes", icon: BookOpen },
   { href: "/admin/horarios", label: "Schedules", icon: Calendar },
   { href: "/admin/instructores", label: "Instructors", icon: UserCircle },
+  { href: "/admin/locations", label: "Locations", icon: MapPin },
   { href: "/admin/alumnos", label: "Students", icon: Users },
 ];
 

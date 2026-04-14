@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BookingDrawer } from "@/components/BookingDrawer";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { ChevronLeft, ChevronRight, Clock, Users, User } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, Users, User, MapPin } from "lucide-react";
 import { DAY_NAMES_SHORT, DAY_NAMES } from "@/lib/days";
 import { useI18n } from "@/lib/i18n/context";
 import { todayISO, formatDateLocalized } from "@/lib/utils";
@@ -155,6 +155,15 @@ export default function ReservarPage() {
                       <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{s.startTime} · {s.durationMinutes} min</span>
                       <span className="flex items-center gap-1"><Users className="w-4 h-4" />{s.currentBookings}/{s.maxCapacity}</span>
                       {s.instructor && <span className="flex items-center gap-1"><User className="w-4 h-4" />{s.instructor}</span>}
+                      {s.location && (
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          {s.locationUrl ? (
+                            <a href={s.locationUrl} target="_blank" rel="noopener noreferrer" className="text-brand-teal hover:underline"
+                              onClick={(e) => e.stopPropagation()}>{s.location}</a>
+                          ) : s.location}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </button>

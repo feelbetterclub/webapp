@@ -8,7 +8,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { DEFAULTS } from "@/lib/constants";
 import { DAY_NAMES } from "@/lib/days";
-import type { ClassItem, ScheduleItem } from "@/lib/types";
+import type { ClassItem, ScheduleItem, LocationItem } from "@/lib/types";
 
 interface Instructor { id: number; name: string; }
 interface ScheduleEntry { dayOfWeek: number; startTime: string; instructorName: string; }
@@ -19,12 +19,14 @@ const emptyForm = {
   durationMinutes: DEFAULTS.durationMinutes,
   maxCapacity: DEFAULTS.maxCapacity,
   icon: DEFAULTS.icon,
+  locationId: 0,
 };
 
 export default function ClasesPage() {
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
   const [instructors, setInstructors] = useState<Instructor[]>([]);
+  const [locationsList, setLocationsList] = useState<LocationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -35,17 +37,20 @@ export default function ClasesPage() {
 
   async function loadData() {
     try {
-      const [cRes, sRes, iRes] = await Promise.all([
+      const [cRes, sRes, iRes, lRes] = await Promise.all([
         fetch("/api/admin/classes"),
         fetch("/api/admin/schedules"),
         fetch("/api/admin/instructors"),
+        fetch("/api/admin/locations"),
       ]);
       const cData = cRes.ok ? await cRes.json() : [];
       const sData = sRes.ok ? await sRes.json() : [];
       const iData = iRes.ok ? await iRes.json() : [];
+      const lData = lRes.ok ? await lRes.json() : [];
       setClasses(Array.isArray(cData) ? cData : []);
       setSchedules(Array.isArray(sData) ? sData : []);
       setInstructors(Array.isArray(iData) ? iData : []);
+      setLocationsList(Array.isArray(lData) ? lData : []);
     } catch { /* ignore */ } finally {
       setLoading(false);
     }
@@ -64,12 +69,14 @@ export default function ClasesPage() {
   }
 
   function openEdit(c: ClassItem) {
+    const loc = locationsList.find((l) => l.name === c.location);
     setForm({
       name: c.name,
       description: c.description || "",
       durationMinutes: c.durationMinutes,
       maxCapacity: c.maxCapacity,
       icon: c.icon || DEFAULTS.icon,
+      locationId: loc?.id || 0,
     });
     setEditingId(c.id);
     setNewSchedules([]);
@@ -95,8 +102,18 @@ export default function ClasesPage() {
     setSaving(true);
 
     try {
+      const selectedLocation = locationsList.find((l) => l.id === form.locationId);
       const method = editingId ? "PUT" : "POST";
-      const body = editingId ? { id: editingId, ...form } : form;
+      const classData = {
+        name: form.name,
+        description: form.description,
+        durationMinutes: form.durationMinutes,
+        maxCapacity: form.maxCapacity,
+        icon: form.icon,
+        location: selectedLocation?.name || null,
+        locationUrl: selectedLocation?.url || null,
+      };
+      const body = editingId ? { id: editingId, ...classData } : classData;
 
       const classRes = await fetch("/api/admin/classes", {
         method,
@@ -200,6 +217,19 @@ export default function ClasesPage() {
                 onChange={(e) => setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))} />
               <Input label="Max Capacity" type="number" min={1} max={100} value={form.maxCapacity}
                 onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
+              {locationsList.length > 0 ? (
+                <Select label="Location" value={form.locationId}
+                  onChange={(e) => setForm((f) => ({ ...f, locationId: Number(e.target.value) }))}>
+                  <option value={0}>No location</option>
+                  {locationsList.map((loc) => (
+                    <option key={loc.id} value={loc.id}>{loc.name}</option>
+                  ))}
+                </Select>
+              ) : (
+                <p className="text-xs text-muted-foreground self-end pb-2">
+                  Add locations in the Locations section first.
+                </p>
+              )}
             </div>
 
             {!editingId && (
@@ -282,9 +312,16 @@ export default function ClasesPage() {
                   <div className="flex-1">
                     <h3 className="text-base font-semibold text-brand-deep">{c.name}</h3>
                     {c.description && <p className="text-sm text-muted-foreground mt-0.5">{c.description}</p>}
-                    <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
+                    <div className="flex flex-wrap gap-4 mt-2 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {c.durationMinutes} min</span>
                       <span>{c.maxCapacity} spots</span>
+                      {c.location && (
+                        <span className="flex items-center gap-1">
+                          📍 {c.locationUrl ? (
+                            <a href={c.locationUrl} target="_blank" rel="noopener noreferrer" className="text-brand-teal hover:underline">{c.location}</a>
+                          ) : c.location}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex gap-2">

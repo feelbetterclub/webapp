@@ -7,6 +7,8 @@ export const classes = sqliteTable("classes", {
   durationMinutes: integer("duration_minutes").notNull().default(60),
   maxCapacity: integer("max_capacity").notNull().default(15),
   icon: text("icon").default("Sun"),
+  location: text("location"),
+  locationUrl: text("location_url"),
 });
 
 export const schedules = sqliteTable("schedules", {
@@ -31,6 +33,14 @@ export const bookings = sqliteTable("bookings", {
   status: text("status").notNull().default("confirmed"),
   createdAt: text("created_at").notNull(),
 });
+
+export const locations = sqliteTable("locations", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  url: text("url"),
+});
+
+export type LocationRow = typeof locations.$inferSelect;
 
 export const instructors = sqliteTable("instructors", {
   id: integer("id").primaryKey({ autoIncrement: true }),

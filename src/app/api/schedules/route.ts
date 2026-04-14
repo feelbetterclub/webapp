@@ -21,6 +21,8 @@ export async function GET(req: NextRequest) {
       durationMinutes: classes.durationMinutes,
       maxCapacity: classes.maxCapacity,
       icon: classes.icon,
+      location: classes.location,
+      locationUrl: classes.locationUrl,
     })
     .from(schedules)
     .innerJoin(classes, eq(schedules.classId, classes.id));
