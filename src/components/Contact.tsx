@@ -7,6 +7,7 @@ import { Input } from "./ui/input";
 import { Select } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { useI18n } from "@/lib/i18n/context";
+import { BrandButton } from "./ui/brand-button";
 
 const contactInfo = [
   { icon: MapPin, label: "Location", value: "Tarifa, ES" },
@@ -80,9 +81,9 @@ export default function Contact() {
                   ))}
                 </Select>
                 <Textarea id="message" name="message" label={t.contact.form.message} rows={4} placeholder={t.contact.form.messagePlaceholder} />
-                <button type="submit" className="w-full bg-brand-teal text-brand-cream py-3.5 rounded-xl font-semibold hover:bg-brand-dark transition-colors">
+                <BrandButton type="submit" size="full">
                   {t.contact.form.submit}
-                </button>
+                </BrandButton>
               </form>
             )}
           </div>

@@ -6,6 +6,7 @@ import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { todayISO, safeArray, escapeCSVField } from "@/lib/utils";
+import { BrandButton } from "@/components/ui/brand-button";
 import type { BookingItem } from "@/lib/types";
 
 export default function AlumnosPage() {
@@ -67,10 +68,9 @@ export default function AlumnosPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-heading text-2xl font-bold text-brand-deep">Students</h1>
-        <button onClick={exportCSV} disabled={filtered.length === 0}
-          className="flex items-center gap-2 bg-brand-teal text-brand-light px-4 py-2 rounded-xl text-sm font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
+        <BrandButton onClick={exportCSV} disabled={filtered.length === 0} size="md">
           <Download className="w-4 h-4" /> Export CSV
-        </button>
+        </BrandButton>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">

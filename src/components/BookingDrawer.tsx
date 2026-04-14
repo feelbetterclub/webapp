@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X, CheckCircle } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { Input } from "./ui/input";
+import { BrandButton } from "./ui/brand-button";
 import { formatDateLocalized } from "@/lib/utils";
 import type { ScheduleWithAvailability } from "@/lib/types";
 
@@ -106,9 +107,9 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
                 {t.booking.confirmedText} {schedule.className} {t.booking.at} {schedule.startTime}
               </p>
               <p className="text-sm text-muted-foreground mb-6">{t.booking.managementNote}</p>
-              <button onClick={onClose} className="bg-brand-teal text-brand-cream px-6 py-3 rounded-xl font-semibold hover:bg-brand-dark transition-colors">
+              <BrandButton onClick={onClose} size="lg">
                 {t.booking.bookAnother}
-              </button>
+              </BrandButton>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,13 +142,9 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
 
               {status === "error" && <p className="text-red-600 text-sm">{errorMsg}</p>}
 
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="w-full bg-brand-teal text-brand-cream py-3.5 rounded-xl font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50"
-              >
+              <BrandButton type="submit" size="full" disabled={status === "loading"}>
                 {status === "loading" ? t.booking.booking : t.booking.confirm}
-              </button>
+              </BrandButton>
             </form>
           )}
         </div>

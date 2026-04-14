@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { BrandButton } from "@/components/ui/brand-button";
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
@@ -52,10 +53,9 @@ export default function AdminLoginPage() {
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
-          <button type="submit" disabled={loading}
-            className="w-full bg-brand-teal text-brand-light py-3 rounded-xl font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
+          <BrandButton type="submit" size="full" disabled={loading}>
             {loading ? "Signing in..." : "Sign In"}
-          </button>
+          </BrandButton>
         </form>
       </div>
     </div>

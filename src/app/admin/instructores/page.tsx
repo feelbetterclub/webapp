@@ -5,6 +5,7 @@ import { Plus, Trash2, X, User } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
+import { BrandButton } from "@/components/ui/brand-button";
 
 interface Instructor {
   id: number;
@@ -72,10 +73,9 @@ export default function InstructorsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-heading text-2xl font-bold text-brand-deep">Instructors</h1>
-        <button onClick={() => { setShowForm(true); setError(""); }}
-          className="flex items-center gap-2 bg-brand-teal text-brand-light px-4 py-2 rounded-xl text-sm font-semibold hover:bg-brand-dark transition-colors">
+        <BrandButton onClick={() => { setShowForm(true); setError(""); }} size="md">
           <Plus className="w-4 h-4" /> New Instructor
-        </button>
+        </BrandButton>
       </div>
 
       {showForm && (
@@ -97,10 +97,9 @@ export default function InstructorsPage() {
             {error && <div className="sm:col-span-3 text-red-600 text-sm">{error}</div>}
 
             <div className="sm:col-span-3">
-              <button type="submit" disabled={saving}
-                className="bg-brand-teal text-brand-light px-6 py-2.5 rounded-xl font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
+              <BrandButton type="submit" size="lg" disabled={saving}>
                 {saving ? "Saving..." : "Add Instructor"}
-              </button>
+              </BrandButton>
             </div>
           </form>
         </div>
