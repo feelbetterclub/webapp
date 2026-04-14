@@ -39,16 +39,16 @@ export default function LocationsPage() {
         body: JSON.stringify(form),
       });
 
+      const data = await res.json();
       if (res.ok) {
         setShowForm(false);
         setForm({ name: "", url: "" });
         loadLocations();
       } else {
-        const data = await res.json();
-        setError(data.error || "Error creating location");
+        setError(data.detail || data.error || "Error creating location");
       }
-    } catch {
-      setError("Connection error");
+    } catch (err) {
+      setError(`Connection error: ${err}`);
     } finally {
       setSaving(false);
     }
