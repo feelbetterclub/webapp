@@ -1,14 +1,11 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
@@ -23,7 +20,8 @@ export default function AdminLoginPage() {
       });
 
       if (res.ok) {
-        router.push("/admin");
+        window.location.href = "/admin";
+        return;
       } else {
         setError("Contraseña incorrecta");
       }
@@ -38,13 +36,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-brand-light flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl p-8 shadow-lg border border-brand-cream w-full max-w-sm">
         <div className="text-center mb-8">
-          <Image
-            src="/logo-wide.png"
-            alt="Feel Better Club"
-            width={60}
-            height={60}
-            className="rounded-xl mx-auto mb-4"
-          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-dark.svg" alt="Feel Better Club" className="h-12 mx-auto mb-4" />
           <h1 className="font-heading text-2xl font-bold text-brand-deep">
             Panel Admin
           </h1>
