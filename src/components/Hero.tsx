@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function Hero() {
@@ -14,9 +13,8 @@ export default function Hero() {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-cream/8 rounded-full blur-3xl" />
 
       <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
-        <div className="mb-8 flex justify-center">
-          <Image src="/logo-wide.png" alt="Feel Better Club" width={600} height={257} className="w-full max-w-md sm:max-w-lg md:max-w-xl drop-shadow-2xl" priority />
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.svg" alt="The Feel Better Club" className="w-full max-w-sm sm:max-w-md mx-auto mb-8" />
 
         <p className="text-brand-cream/80 uppercase tracking-[0.25em] text-xs sm:text-sm mb-6">
           {t.hero.tagline}

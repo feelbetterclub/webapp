@@ -32,6 +32,14 @@ export const bookings = sqliteTable("bookings", {
   createdAt: text("created_at").notNull(),
 });
 
+export const instructors = sqliteTable("instructors", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone"),
+});
+
+export type InstructorRow = typeof instructors.$inferSelect;
 export type ClassRow = typeof classes.$inferSelect;
 export type ScheduleRow = typeof schedules.$inferSelect;
 export type BookingRow = typeof bookings.$inferSelect;

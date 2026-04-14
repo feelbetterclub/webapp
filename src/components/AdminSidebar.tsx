@@ -1,39 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   BookOpen,
   Calendar,
   Users,
+  UserCircle,
   ArrowLeft,
 } from "lucide-react";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/clases", label: "Clases", icon: BookOpen },
-  { href: "/admin/horarios", label: "Horarios", icon: Calendar },
-  { href: "/admin/alumnos", label: "Alumnos", icon: Users },
+  { href: "/admin/clases", label: "Classes", icon: BookOpen },
+  { href: "/admin/horarios", label: "Schedules", icon: Calendar },
+  { href: "/admin/instructores", label: "Instructors", icon: UserCircle },
+  { href: "/admin/alumnos", label: "Students", icon: Users },
 ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white border-r border-brand-cream min-h-screen p-6 hidden md:block">
+    <aside className="w-64 bg-white border-r border-brand-sage/30 min-h-screen p-6 hidden md:block">
       <div className="flex items-center gap-2 mb-8">
-        <Image
-          src="/logo-wide.png"
-          alt="Feel Better Club"
-          width={32}
-          height={32}
-          className="rounded-lg"
-        />
-        <span className="font-heading text-lg font-semibold text-brand-deep">
-          Admin
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-dark.svg" alt="Feel Better Club" className="h-8" />
       </div>
 
       <nav className="space-y-1">
@@ -46,7 +39,7 @@ export default function AdminSidebar() {
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-brand-teal/10 text-brand-teal"
-                  : "text-brand-dark hover:bg-brand-cream/50"
+                  : "text-brand-dark hover:bg-brand-sage/20"
               }`}
             >
               <link.icon className="w-5 h-5" />
@@ -62,7 +55,7 @@ export default function AdminSidebar() {
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-brand-teal transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Volver al sitio
+          Back to site
         </Link>
       </div>
     </aside>

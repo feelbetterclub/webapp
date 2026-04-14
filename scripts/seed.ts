@@ -42,6 +42,13 @@ async function seed() {
       status TEXT NOT NULL DEFAULT 'confirmed',
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS instructors (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT,
+      phone TEXT
+    );
   `);
 
   // Check if data already exists

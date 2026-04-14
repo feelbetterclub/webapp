@@ -44,10 +44,10 @@ export default function AdminDashboard() {
   if (loading) return <Loading />;
 
   const statCards = [
-    { label: "Clases", value: classCount, icon: BookOpen, color: "bg-brand-teal/10 text-brand-teal" },
-    { label: "Horarios", value: scheduleCount, icon: Calendar, color: "bg-blue-50 text-blue-600" },
-    { label: "Reservas hoy", value: todayBookings.length, icon: Users, color: "bg-amber-50 text-amber-600" },
-    { label: "Tendencia", value: `+${todayBookings.length}`, icon: TrendingUp, color: "bg-green-50 text-green-600" },
+    { label: "Classes", value: classCount, icon: BookOpen, color: "bg-brand-teal/10 text-brand-teal" },
+    { label: "Schedules", value: scheduleCount, icon: Calendar, color: "bg-blue-50 text-blue-600" },
+    { label: "Today's Bookings", value: todayBookings.length, icon: Users, color: "bg-amber-50 text-amber-600" },
+    { label: "Trend", value: `+${todayBookings.length}`, icon: TrendingUp, color: "bg-green-50 text-green-600" },
   ];
 
   return (
@@ -70,16 +70,16 @@ export default function AdminDashboard() {
 
       <div className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
         <div className="px-6 py-4 border-b border-brand-sage/20">
-          <h2 className="font-heading text-lg font-semibold text-brand-deep">Reservas de hoy</h2>
+          <h2 className="font-heading text-lg font-semibold text-brand-deep">Today&apos;s Bookings</h2>
         </div>
         {todayBookings.length === 0 ? (
-          <div className="p-6"><EmptyState text="No hay reservas para hoy" /></div>
+          <div className="p-6"><EmptyState text="No bookings for today" /></div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-brand-light/50">
-                  {["Alumno", "Email", "Clase", "Hora", "Estado"].map((h) => (
+                  {["Student", "Email", "Class", "Time", "Status"].map((h) => (
                     <th key={h} className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
                     <td className="px-6 py-4 text-sm text-muted-foreground">{b.startTime}</td>
                     <td className="px-6 py-4">
                       <StatusBadge variant={b.status === "confirmed" ? "confirmed" : "cancelled"}>
-                        {b.status === "confirmed" ? "Confirmada" : "Cancelada"}
+                        {b.status === "confirmed" ? "Confirmed" : "Cancelled"}
                       </StatusBadge>
                     </td>
                   </tr>

@@ -16,10 +16,13 @@ export default function AlumnosPage() {
 
   const loadBookings = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(`/api/bookings?date=${dateFilter}`);
-    const data = await res.json();
-    setBookings(safeArray<BookingItem>(data));
-    setLoading(false);
+    try {
+      const res = await fetch(`/api/bookings?date=${dateFilter}`);
+      const data = res.ok ? await res.json() : [];
+      setBookings(safeArray<BookingItem>(data));
+    } catch { /* ignore */ } finally {
+      setLoading(false);
+    }
   }, [dateFilter]);
 
   useEffect(() => { loadBookings(); }, [loadBookings]);
@@ -45,19 +48,17 @@ export default function AlumnosPage() {
   }, [filtered]);
 
   function exportCSV() {
-    const headers = "Nombre,Email,Teléfono,Clase,Hora,Fecha,Estado\n";
+    const headers = "Name,Email,Phone,Class,Time,Date,Status\n";
     const rows = filtered
       .map((b) =>
         [b.userName, b.userEmail, b.userPhone || "", b.className, b.startTime, b.date, b.status]
-          .map(escapeCSVField)
-          .join(",")
-      )
-      .join("\n");
+          .map(escapeCSVField).join(",")
+      ).join("\n");
     const blob = new Blob([headers + rows], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `alumnos-${dateFilter}.csv`;
+    a.download = `students-${dateFilter}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -65,39 +66,39 @@ export default function AlumnosPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-heading text-2xl font-bold text-brand-deep">Alumnos</h1>
-        <button onClick={exportCSV} disabled={filtered.length === 0} className="flex items-center gap-2 bg-brand-teal text-brand-light px-4 py-2 rounded-xl text-sm font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
-          <Download className="w-4 h-4" /> Exportar CSV
+        <h1 className="font-heading text-2xl font-bold text-brand-deep">Students</h1>
+        <button onClick={exportCSV} disabled={filtered.length === 0}
+          className="flex items-center gap-2 bg-brand-teal text-brand-light px-4 py-2 rounded-xl text-sm font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
+          <Download className="w-4 h-4" /> Export CSV
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Buscar por nombre, email o clase..."
+          <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by name, email or class..."
             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-brand-sage/30 bg-white focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
         </div>
         <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}
           className="px-4 py-2.5 rounded-xl border border-brand-sage/30 bg-white focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
       </div>
 
-      {loading ? (
-        <Loading />
-      ) : filtered.length === 0 ? (
-        <EmptyState text="No hay alumnos registrados para esta fecha" />
+      {loading ? <Loading /> : filtered.length === 0 ? (
+        <EmptyState text="No students registered for this date" />
       ) : (
         <div className="space-y-6">
           {Object.entries(groupedByClass).map(([classKey, classBookings]) => (
             <div key={classKey} className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
               <div className="px-6 py-3 bg-brand-light/50 border-b border-brand-sage/20 flex items-center justify-between">
                 <h3 className="font-heading font-semibold text-brand-deep">{classKey}</h3>
-                <span className="text-sm text-muted-foreground">{classBookings.length} alumno{classBookings.length !== 1 ? "s" : ""}</span>
+                <span className="text-sm text-muted-foreground">{classBookings.length} student{classBookings.length !== 1 ? "s" : ""}</span>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-brand-sage/20">
-                      {["Nombre", "Email", "Teléfono", "Estado"].map((h) => (
+                      {["Name", "Email", "Phone", "Status"].map((h) => (
                         <th key={h} className="text-left px-6 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
                       ))}
                     </tr>
@@ -110,7 +111,7 @@ export default function AlumnosPage() {
                         <td className="px-6 py-3 text-sm text-muted-foreground">{b.userPhone || "—"}</td>
                         <td className="px-6 py-3">
                           <StatusBadge variant={b.status === "confirmed" ? "confirmed" : "cancelled"}>
-                            {b.status === "confirmed" ? "Confirmada" : "Cancelada"}
+                            {b.status === "confirmed" ? "Confirmed" : "Cancelled"}
                           </StatusBadge>
                         </td>
                       </tr>
