@@ -1,65 +1,86 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { classes } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { client } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { DEFAULTS } from "@/lib/constants";
 
 export async function GET() {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const result = await db.select().from(classes);
-  return NextResponse.json(result);
+    const result = await client.execute("SELECT * FROM classes ORDER BY name");
+    return NextResponse.json(result.rows);
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const { name, description, durationMinutes, maxCapacity, icon, location, locationUrl } = await req.json();
-  if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    const { name, description, durationMinutes, maxCapacity, icon, location, locationUrl } = await req.json();
+    if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
-  await db.insert(classes).values({
-    name,
-    description: description || null,
-    durationMinutes: durationMinutes || DEFAULTS.durationMinutes,
-    maxCapacity: maxCapacity || DEFAULTS.maxCapacity,
-    icon: icon || DEFAULTS.icon,
-    location: location || null,
-    locationUrl: locationUrl || null,
-  });
+    await client.execute({
+      sql: "INSERT INTO classes (name, description, duration_minutes, max_capacity, icon, location, location_url) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      args: [
+        name,
+        description || null,
+        durationMinutes || DEFAULTS.durationMinutes,
+        maxCapacity || DEFAULTS.maxCapacity,
+        icon || DEFAULTS.icon,
+        location || null,
+        locationUrl || null,
+      ],
+    });
 
-  return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true }, { status: 201 });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function PUT(req: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const { id, name, description, durationMinutes, maxCapacity, icon, location, locationUrl } = await req.json();
-  if (!id || !name) return NextResponse.json({ error: "ID and name are required" }, { status: 400 });
+    const { id, name, description, durationMinutes, maxCapacity, icon, location, locationUrl } = await req.json();
+    if (!id || !name) return NextResponse.json({ error: "ID and name are required" }, { status: 400 });
 
-  await db.update(classes).set({
-    name,
-    description: description || null,
-    durationMinutes: durationMinutes || DEFAULTS.durationMinutes,
-    maxCapacity: maxCapacity || DEFAULTS.maxCapacity,
-    icon: icon || DEFAULTS.icon,
-    location: location || null,
-    locationUrl: locationUrl || null,
-  }).where(eq(classes.id, id));
+    await client.execute({
+      sql: "UPDATE classes SET name=?, description=?, duration_minutes=?, max_capacity=?, icon=?, location=?, location_url=? WHERE id=?",
+      args: [
+        name,
+        description || null,
+        durationMinutes || DEFAULTS.durationMinutes,
+        maxCapacity || DEFAULTS.maxCapacity,
+        icon || DEFAULTS.icon,
+        location || null,
+        locationUrl || null,
+        id,
+      ],
+    });
 
-  return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function DELETE(req: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const id = new URL(req.url).searchParams.get("id");
-  if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    const id = new URL(req.url).searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
 
-  await db.delete(classes).where(eq(classes.id, Number(id)));
-  return NextResponse.json({ success: true });
+    await client.execute({ sql: "DELETE FROM classes WHERE id = ?", args: [Number(id)] });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }

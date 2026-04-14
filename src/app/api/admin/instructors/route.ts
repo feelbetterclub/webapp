@@ -1,40 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { instructors } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { client } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 
 export async function GET() {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const result = await db.select().from(instructors);
-  return NextResponse.json(result);
+    const result = await client.execute("SELECT * FROM instructors ORDER BY name");
+    return NextResponse.json(result.rows);
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const { name, email, phone } = await req.json();
-  if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    const { name, email, phone } = await req.json();
+    if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
-  await db.insert(instructors).values({
-    name,
-    email: email || null,
-    phone: phone || null,
-  });
+    await client.execute({
+      sql: "INSERT INTO instructors (name, email, phone) VALUES (?, ?, ?)",
+      args: [name, email || null, phone || null],
+    });
 
-  return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true }, { status: 201 });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function DELETE(req: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
 
-  const id = new URL(req.url).searchParams.get("id");
-  if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    const id = new URL(req.url).searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
 
-  await db.delete(instructors).where(eq(instructors.id, Number(id)));
-  return NextResponse.json({ success: true });
+    await client.execute({ sql: "DELETE FROM instructors WHERE id = ?", args: [Number(id)] });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
 }
