@@ -25,11 +25,11 @@ export default function Contact() {
   }
 
   const ritualOptions = [
-    { value: "mobility", label: "Mobility Flow" },
-    { value: "strength", label: "Strength Flow" },
-    { value: "pilates", label: "Pilates Flow" },
-    { value: "breathwork", label: "Breathwork" },
-    { value: "sound-healing", label: "Sound Healing" },
+    { value: "mobility", label: t.rituals.mobility.name },
+    { value: "strength", label: t.rituals.strength.name },
+    { value: "pilates", label: t.rituals.pilates.name },
+    { value: "breathwork", label: t.rituals.breathwork.name },
+    { value: "sound-healing", label: t.rituals.soundHealing.name },
     { value: "nutrition", label: t.rituals.nutrition.name },
     { value: "other", label: "Other" },
   ];

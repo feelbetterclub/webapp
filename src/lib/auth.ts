@@ -1,19 +1,19 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
-const SECRET = new TextEncoder().encode(
+export const SECRET = new TextEncoder().encode(
   process.env.ADMIN_SECRET || "feel-better-club-secret-change-me"
 );
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
-const COOKIE_NAME = "fbc-admin";
+export const COOKIE_NAME = "fbc-admin";
 
 export async function createSession(): Promise<string> {
-  const token = await new SignJWT({ role: "admin" })
+  return new SignJWT({ role: "admin" })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("24h")
     .setIssuedAt()
     .sign(SECRET);
-  return token;
 }
 
 export function checkPassword(password: string): boolean {
@@ -32,4 +32,10 @@ export async function verifySession(): Promise<boolean> {
   }
 }
 
-export { COOKIE_NAME };
+export async function requireAdmin(): Promise<NextResponse | null> {
+  const isAdmin = await verifySession();
+  if (!isAdmin) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+  return null;
+}

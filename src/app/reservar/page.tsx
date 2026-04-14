@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BookingDrawer } from "@/components/BookingDrawer";
@@ -8,6 +8,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { ChevronLeft, ChevronRight, Clock, Users, User } from "lucide-react";
 import { DAY_NAMES_SHORT, DAY_NAMES } from "@/lib/days";
 import { useI18n } from "@/lib/i18n/context";
+import { todayISO, formatDateLocalized } from "@/lib/utils";
 import type { ScheduleWithAvailability } from "@/lib/types";
 
 function getWeekDates(base: Date) {
@@ -32,17 +33,23 @@ export default function ReservarPage() {
   const [loading, setLoading] = useState(false);
   const [drawerSchedule, setDrawerSchedule] = useState<ScheduleWithAvailability | null>(null);
 
-  const baseDate = new Date();
-  baseDate.setDate(baseDate.getDate() + weekOffset * 7);
-  const weekDates = getWeekDates(baseDate);
-  const today = new Date().toISOString().split("T")[0];
+  const today = useMemo(() => todayISO(), []);
+  const weekDates = useMemo(() => {
+    const base = new Date();
+    base.setDate(base.getDate() + weekOffset * 7);
+    return getWeekDates(base);
+  }, [weekOffset]);
+
+  const sortedSchedules = useMemo(
+    () => [...schedules].sort((a, b) => a.startTime.localeCompare(b.startTime)),
+    [schedules]
+  );
 
   useEffect(() => {
-    const todayDate = new Date();
-    const dow = todayDate.getDay();
+    const dow = new Date().getDay();
     setSelectedDay(dow === 0 ? 7 : dow);
-    setSelectedDate(todayDate.toISOString().split("T")[0]);
-  }, []);
+    setSelectedDate(today);
+  }, [today]);
 
   const loadSchedules = useCallback(async (dayOfWeek: number, date: string) => {
     setLoading(true);
@@ -65,10 +72,7 @@ export default function ReservarPage() {
   }
 
   const formattedDate = selectedDate
-    ? new Date(selectedDate + "T00:00:00").toLocaleDateString(
-        lang === "es" ? "es-ES" : "en-US",
-        { day: "numeric", month: "long" }
-      )
+    ? formatDateLocalized(selectedDate, lang, { day: "numeric", month: "long" })
     : "";
 
   return (
@@ -81,7 +85,6 @@ export default function ReservarPage() {
             <p className="text-muted-foreground text-lg">{t.booking.subtitle}</p>
           </div>
 
-          {/* Week selector */}
           <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-brand-sage/30 mb-8">
             <div className="flex items-center justify-between mb-4">
               <button onClick={() => setWeekOffset((w) => w - 1)} className="p-2 hover:bg-brand-sage/30 rounded-lg transition-colors" disabled={weekOffset <= 0}>
@@ -118,59 +121,50 @@ export default function ReservarPage() {
             </h2>
           )}
 
-          {/* Ritual Wall — class banners */}
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">{t.booking.loading}</div>
-          ) : schedules.length === 0 ? (
+          ) : sortedSchedules.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground bg-white rounded-2xl border border-brand-sage/30">
               {t.booking.noClasses}
             </div>
           ) : (
             <div className="space-y-4">
-              {schedules
-                .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                .map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => s.spotsLeft > 0 && setDrawerSchedule(s)}
-                    disabled={s.spotsLeft <= 0}
-                    className={`w-full text-left rounded-2xl overflow-hidden border transition-all ${
-                      s.spotsLeft <= 0
-                        ? "border-gray-200 opacity-50 cursor-not-allowed"
-                        : "border-brand-sage/30 bg-white hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
-                    }`}
-                  >
-                    <div className="relative p-6 sm:p-8">
-                      {/* Accent bar */}
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-teal rounded-l-2xl" />
-
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-deep">{s.className}</h3>
-                          {s.classDescription && (
-                            <p className="text-sm text-muted-foreground mt-1 max-w-lg">{s.classDescription}</p>
-                          )}
-                        </div>
-                        <StatusBadge variant={s.spotsLeft <= 0 ? "cancelled" : s.spotsLeft <= 3 ? "warning" : "confirmed"}>
-                          {s.spotsLeft <= 0 ? t.booking.full : `${s.spotsLeft} ${t.booking.spots}`}
-                        </StatusBadge>
+              {sortedSchedules.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => s.spotsLeft > 0 && setDrawerSchedule(s)}
+                  disabled={s.spotsLeft <= 0}
+                  className={`w-full text-left rounded-2xl overflow-hidden border transition-all ${
+                    s.spotsLeft <= 0
+                      ? "border-gray-200 opacity-50 cursor-not-allowed"
+                      : "border-brand-sage/30 bg-white hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
+                  }`}
+                >
+                  <div className="relative p-6 sm:p-8">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-teal rounded-l-2xl" />
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-deep">{s.className}</h3>
+                        {s.classDescription && <p className="text-sm text-muted-foreground mt-1 max-w-lg">{s.classDescription}</p>}
                       </div>
-
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{s.startTime} · {s.durationMinutes} min</span>
-                        <span className="flex items-center gap-1"><Users className="w-4 h-4" />{s.currentBookings}/{s.maxCapacity}</span>
-                        {s.instructor && <span className="flex items-center gap-1"><User className="w-4 h-4" />{s.instructor}</span>}
-                      </div>
+                      <StatusBadge variant={s.spotsLeft <= 0 ? "cancelled" : s.spotsLeft <= 3 ? "warning" : "confirmed"}>
+                        {s.spotsLeft <= 0 ? t.booking.full : `${s.spotsLeft} ${t.booking.spots}`}
+                      </StatusBadge>
                     </div>
-                  </button>
-                ))}
+                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{s.startTime} · {s.durationMinutes} min</span>
+                      <span className="flex items-center gap-1"><Users className="w-4 h-4" />{s.currentBookings}/{s.maxCapacity}</span>
+                      {s.instructor && <span className="flex items-center gap-1"><User className="w-4 h-4" />{s.instructor}</span>}
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
           )}
         </div>
       </main>
       <Footer />
 
-      {/* Booking Drawer */}
       {drawerSchedule && (
         <BookingDrawer
           schedule={drawerSchedule}

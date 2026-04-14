@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { bookings, schedules, classes } from "@/db/schema";
 import { eq, and, count } from "drizzle-orm";
+import { BOOKING_STATUS } from "@/lib/constants";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
   }
 
   const [schedule] = await db
-    .select()
+    .select({ classId: schedules.classId })
     .from(schedules)
     .where(eq(schedules.id, scheduleId));
 
@@ -60,37 +61,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Schedule not found" }, { status: 404 });
   }
 
-  const [classInfo] = await db
-    .select()
-    .from(classes)
-    .where(eq(classes.id, schedule.classId));
-
-  const [bookingCount] = await db
-    .select({ count: count() })
-    .from(bookings)
-    .where(
-      and(
-        eq(bookings.scheduleId, scheduleId),
-        eq(bookings.date, date),
-        eq(bookings.status, "confirmed")
-      )
-    );
+  // Parallel: capacity check, duplicate check, class info
+  const [[classInfo], [bookingCount], [existing]] = await Promise.all([
+    db.select({ maxCapacity: classes.maxCapacity }).from(classes).where(eq(classes.id, schedule.classId)),
+    db.select({ count: count() }).from(bookings).where(
+      and(eq(bookings.scheduleId, scheduleId), eq(bookings.date, date), eq(bookings.status, BOOKING_STATUS.CONFIRMED))
+    ),
+    db.select({ id: bookings.id }).from(bookings).where(
+      and(eq(bookings.scheduleId, scheduleId), eq(bookings.date, date), eq(bookings.userEmail, userEmail), eq(bookings.status, BOOKING_STATUS.CONFIRMED))
+    ),
+  ]);
 
   if (classInfo && bookingCount && bookingCount.count >= classInfo.maxCapacity) {
     return NextResponse.json({ error: "Class is full" }, { status: 409 });
   }
-
-  const [existing] = await db
-    .select()
-    .from(bookings)
-    .where(
-      and(
-        eq(bookings.scheduleId, scheduleId),
-        eq(bookings.date, date),
-        eq(bookings.userEmail, userEmail),
-        eq(bookings.status, "confirmed")
-      )
-    );
 
   if (existing) {
     return NextResponse.json({ error: "You already have a booking" }, { status: 409 });
@@ -102,7 +86,7 @@ export async function POST(req: NextRequest) {
     userName,
     userEmail,
     userPhone: userPhone || null,
-    status: "confirmed",
+    status: BOOKING_STATUS.CONFIRMED,
     createdAt: new Date().toISOString(),
   });
 

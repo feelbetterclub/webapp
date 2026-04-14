@@ -21,8 +21,7 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <a href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Feel Better Club" width={40} height={40} className="rounded-lg" />
-            <span className="font-heading text-xl font-semibold text-brand-deep">Feel Better Club</span>
+            <Image src="/logo-wide.png" alt="Feel Better Club" width={120} height={40} className="h-8 w-auto" />
           </a>
 
           <nav className="hidden md:flex items-center gap-8">

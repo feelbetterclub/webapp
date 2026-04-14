@@ -7,11 +7,8 @@ export default function Hero() {
   const { t } = useI18n();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-brand-dark overflow-hidden">
-      <div className="absolute inset-0">
-        <Image src="/logo-wide.png" alt="" fill className="object-cover opacity-30" priority />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-deep/70 via-brand-dark/50 to-brand-teal/30" />
+    <section className="relative min-h-screen flex items-center justify-center bg-brand-teal overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-deep/60 via-brand-teal to-brand-dark/80" />
 
       <div className="absolute top-20 left-10 w-72 h-72 bg-brand-sage/15 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-cream/8 rounded-full blur-3xl" />

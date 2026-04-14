@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { X, CheckCircle } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
+import { Input } from "./ui/input";
+import { formatDateLocalized } from "@/lib/utils";
 import type { ScheduleWithAvailability } from "@/lib/types";
-import { DAY_NAMES, DAY_NAMES_SHORT } from "@/lib/days";
 
 const IDENTITY_KEY = "fbc-user";
 
@@ -41,17 +42,13 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
     return () => { document.body.style.overflow = ""; };
   }, []);
 
-  const formattedDate = new Date(date + "T00:00:00").toLocaleDateString(
-    lang === "es" ? "es-ES" : "en-US",
-    { weekday: "long", day: "numeric", month: "long" }
-  );
+  const formattedDate = formatDateLocalized(date, lang);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
     setErrorMsg("");
 
-    // Persist identity
     localStorage.setItem(IDENTITY_KEY, JSON.stringify(form));
 
     try {
@@ -83,10 +80,8 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-brand-deep/50 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Drawer */}
       <div className="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom duration-300">
         <div className="sticky top-0 bg-white rounded-t-3xl sm:rounded-t-2xl px-6 pt-4 pb-3 border-b border-brand-sage/20 flex items-center justify-between">
           <div>
@@ -117,46 +112,28 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-brand-deep mb-1.5">
-                  {t.booking.firstName} *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={form.userName}
-                  onChange={(e) => setForm((f) => ({ ...f, userName: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sage/30 bg-brand-light/50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal transition-colors"
-                  placeholder={t.booking.firstNamePlaceholder}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-brand-deep mb-1.5">
-                  {t.booking.mobile} *
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={form.userPhone}
-                  onChange={(e) => setForm((f) => ({ ...f, userPhone: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sage/30 bg-brand-light/50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal transition-colors"
-                  placeholder={t.booking.mobilePlaceholder}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-brand-deep mb-1.5">
-                  {t.booking.emailOptional}
-                </label>
-                <input
-                  type="email"
-                  value={form.userEmail}
-                  onChange={(e) => setForm((f) => ({ ...f, userEmail: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sage/30 bg-brand-light/50 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal transition-colors"
-                  placeholder={t.booking.emailPlaceholder}
-                />
-              </div>
+              <Input
+                label={`${t.booking.firstName} *`}
+                required
+                value={form.userName}
+                onChange={(e) => setForm((f) => ({ ...f, userName: e.target.value }))}
+                placeholder={t.booking.firstNamePlaceholder}
+              />
+              <Input
+                label={`${t.booking.mobile} *`}
+                type="tel"
+                required
+                value={form.userPhone}
+                onChange={(e) => setForm((f) => ({ ...f, userPhone: e.target.value }))}
+                placeholder={t.booking.mobilePlaceholder}
+              />
+              <Input
+                label={t.booking.emailOptional}
+                type="email"
+                value={form.userEmail}
+                onChange={(e) => setForm((f) => ({ ...f, userEmail: e.target.value }))}
+                placeholder={t.booking.emailPlaceholder}
+              />
 
               <p className="text-xs text-muted-foreground bg-brand-sage/20 px-4 py-3 rounded-xl">
                 {t.booking.paymentNote}

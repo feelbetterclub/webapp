@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { schedules, classes } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { verifySession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 
 export async function GET() {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
   const result = await db
     .select({
@@ -26,40 +24,27 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
-  const body = await req.json();
-  const { classId, dayOfWeek, startTime, instructor } = body;
-
+  const { classId, dayOfWeek, startTime, instructor } = await req.json();
   if (!classId || !dayOfWeek || !startTime) {
     return NextResponse.json({ error: "Clase, día y hora son obligatorios" }, { status: 400 });
   }
 
   await db.insert(schedules).values({
-    classId,
-    dayOfWeek,
-    startTime,
-    instructor: instructor || null,
+    classId, dayOfWeek, startTime, instructor: instructor || null,
   });
 
   return NextResponse.json({ success: true }, { status: 201 });
 }
 
 export async function DELETE(req: NextRequest) {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
-
-  if (!id) {
-    return NextResponse.json({ error: "ID es obligatorio" }, { status: 400 });
-  }
+  const id = new URL(req.url).searchParams.get("id");
+  if (!id) return NextResponse.json({ error: "ID es obligatorio" }, { status: 400 });
 
   await db.delete(schedules).where(eq(schedules.id, Number(id)));
   return NextResponse.json({ success: true });

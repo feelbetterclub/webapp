@@ -1,20 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-
-const SECRET = new TextEncoder().encode(
-  process.env.ADMIN_SECRET || "feel-better-club-secret-change-me"
-);
-const COOKIE_NAME = "fbc-admin";
+import { SECRET, COOKIE_NAME } from "@/lib/auth";
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Always allow login page and API login route
   if (pathname === "/admin/login" || pathname === "/api/admin/login") {
     return NextResponse.next();
   }
 
-  // Protect admin pages and admin API routes
   const token = req.cookies.get(COOKIE_NAME)?.value;
 
   if (!token) {

@@ -4,8 +4,7 @@ export const DEFAULTS: { durationMinutes: number; maxCapacity: number; icon: str
   icon: "Sun",
 };
 
-export const NAV_LINKS = [
-  { href: "/#servicios", label: "Servicios" },
-  { href: "/#nosotros", label: "Nosotros" },
-  { href: "/#contacto", label: "Contacto" },
-] as const;
+export const BOOKING_STATUS = {
+  CONFIRMED: "confirmed" as const,
+  CANCELLED: "cancelled" as const,
+};

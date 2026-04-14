@@ -25,7 +25,7 @@ export default function AdminSidebar() {
     <aside className="w-64 bg-white border-r border-brand-cream min-h-screen p-6 hidden md:block">
       <div className="flex items-center gap-2 mb-8">
         <Image
-          src="/logo.png"
+          src="/logo-wide.png"
           alt="Feel Better Club"
           width={32}
           height={32}

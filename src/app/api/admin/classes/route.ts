@@ -2,81 +2,59 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { classes } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { verifySession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
+import { DEFAULTS } from "@/lib/constants";
 
 export async function GET() {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
   const result = await db.select().from(classes);
   return NextResponse.json(result);
 }
 
 export async function POST(req: NextRequest) {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
-  const body = await req.json();
-  const { name, description, durationMinutes, maxCapacity, icon } = body;
-
-  if (!name) {
-    return NextResponse.json({ error: "Nombre es obligatorio" }, { status: 400 });
-  }
+  const { name, description, durationMinutes, maxCapacity, icon } = await req.json();
+  if (!name) return NextResponse.json({ error: "Nombre es obligatorio" }, { status: 400 });
 
   await db.insert(classes).values({
     name,
     description: description || null,
-    durationMinutes: durationMinutes || 60,
-    maxCapacity: maxCapacity || 15,
-    icon: icon || "Sun",
+    durationMinutes: durationMinutes || DEFAULTS.durationMinutes,
+    maxCapacity: maxCapacity || DEFAULTS.maxCapacity,
+    icon: icon || DEFAULTS.icon,
   });
 
   return NextResponse.json({ success: true }, { status: 201 });
 }
 
 export async function PUT(req: NextRequest) {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
-  const body = await req.json();
-  const { id, name, description, durationMinutes, maxCapacity, icon } = body;
+  const { id, name, description, durationMinutes, maxCapacity, icon } = await req.json();
+  if (!id || !name) return NextResponse.json({ error: "ID y nombre son obligatorios" }, { status: 400 });
 
-  if (!id || !name) {
-    return NextResponse.json({ error: "ID y nombre son obligatorios" }, { status: 400 });
-  }
-
-  await db
-    .update(classes)
-    .set({
-      name,
-      description: description || null,
-      durationMinutes: durationMinutes || 60,
-      maxCapacity: maxCapacity || 15,
-      icon: icon || "Sun",
-    })
-    .where(eq(classes.id, id));
+  await db.update(classes).set({
+    name,
+    description: description || null,
+    durationMinutes: durationMinutes || DEFAULTS.durationMinutes,
+    maxCapacity: maxCapacity || DEFAULTS.maxCapacity,
+    icon: icon || DEFAULTS.icon,
+  }).where(eq(classes.id, id));
 
   return NextResponse.json({ success: true });
 }
 
 export async function DELETE(req: NextRequest) {
-  const isAdmin = await verifySession();
-  if (!isAdmin) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
-
-  if (!id) {
-    return NextResponse.json({ error: "ID es obligatorio" }, { status: 400 });
-  }
+  const id = new URL(req.url).searchParams.get("id");
+  if (!id) return NextResponse.json({ error: "ID es obligatorio" }, { status: 400 });
 
   await db.delete(classes).where(eq(classes.id, Number(id)));
   return NextResponse.json({ success: true });

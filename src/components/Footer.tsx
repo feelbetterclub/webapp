@@ -19,7 +19,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <Image src="/logo.png" alt="Feel Better Club" width={36} height={36} className="rounded-lg" />
+              <Image src="/logo-wide.png" alt="Feel Better Club" width={100} height={36} className="h-7 w-auto" />
               <span className="font-heading text-lg font-semibold text-brand-cream">Feel Better Club</span>
             </div>
             <p className="text-sm leading-relaxed text-brand-cream/60">

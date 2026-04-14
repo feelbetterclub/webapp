@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
       <div className="bg-white rounded-2xl p-8 shadow-lg border border-brand-cream w-full max-w-sm">
         <div className="text-center mb-8">
           <Image
-            src="/logo.png"
+            src="/logo-wide.png"
             alt="Feel Better Club"
             width={60}
             height={60}

@@ -1,3 +1,5 @@
+export type BookingStatus = "confirmed" | "cancelled";
+
 export interface ClassItem {
   id: number;
   name: string;
@@ -32,7 +34,7 @@ export interface BookingItem {
   userName: string;
   userEmail: string;
   userPhone: string | null;
-  status: string;
+  status: BookingStatus;
   createdAt: string;
   className: string;
   startTime: string;
