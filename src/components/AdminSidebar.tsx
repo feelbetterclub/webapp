@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   BookOpen,
-  Calendar,
   Users,
   UserCircle,
   MapPin,
@@ -15,7 +14,6 @@ import {
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/clases", label: "Classes", icon: BookOpen },
-  { href: "/admin/horarios", label: "Schedules", icon: Calendar },
   { href: "/admin/instructores", label: "Instructors", icon: UserCircle },
   { href: "/admin/locations", label: "Locations", icon: MapPin },
   { href: "/admin/alumnos", label: "Students", icon: Users },

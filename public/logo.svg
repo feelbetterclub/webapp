@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <!-- "the" in italic script -->
+  <text x="60" y="35" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-style="italic" fill="#f4ebd0" letter-spacing="2">the</text>
+
+  <!-- "feelbetter" main wordmark -->
+  <text x="12" y="80" font-family="'Nunito', 'Quicksand', 'Arial Rounded MT Bold', sans-serif" font-size="56" font-weight="800" fill="#f4ebd0" letter-spacing="-1">feelbetter</text>
+
+  <!-- "club" in handwritten script style -->
+  <text x="320" y="105" font-family="'Brush Script MT', 'Segoe Script', 'Comic Sans MS', cursive" font-size="32" font-style="italic" fill="#f4ebd0" letter-spacing="1">club</text>
+
+  <!-- Tagline -->
+  <text x="200" y="118" font-family="'Manrope', 'Helvetica Neue', sans-serif" font-size="9" fill="#f4ebd0" opacity="0.7" text-anchor="middle" letter-spacing="4">HOLISTIC HEALTH ROUTINES</text>
+</svg>
