@@ -21,12 +21,18 @@ export interface ScheduleItem {
   id: number;
   classId: number;
   className: string;
-  dayOfWeek: number;
+  date: string;
   startTime: string;
   instructor: string | null;
 }
 
-export interface ScheduleWithAvailability extends ScheduleItem {
+export interface ScheduleWithAvailability {
+  id: number;
+  classId: number;
+  date: string;
+  startTime: string;
+  instructor: string | null;
+  className: string;
   classDescription: string | null;
   durationMinutes: number;
   maxCapacity: number;

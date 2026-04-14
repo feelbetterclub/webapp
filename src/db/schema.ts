@@ -16,7 +16,7 @@ export const schedules = sqliteTable("schedules", {
   classId: integer("class_id")
     .references(() => classes.id)
     .notNull(),
-  dayOfWeek: integer("day_of_week").notNull(), // 1=Lunes ... 7=Domingo
+  date: text("date").notNull(), // "2026-04-15" — specific date
   startTime: text("start_time").notNull(), // "09:00"
   instructor: text("instructor"),
 });

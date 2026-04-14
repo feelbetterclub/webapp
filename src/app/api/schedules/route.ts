@@ -1,67 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { schedules, classes, bookings } from "@/db/schema";
-import { eq, and, count, inArray } from "drizzle-orm";
-import { BOOKING_STATUS } from "@/lib/constants";
+import { client } from "@/db";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const dayOfWeek = searchParams.get("dayOfWeek");
-  const date = searchParams.get("date");
+  try {
+    const { searchParams } = new URL(req.url);
+    const date = searchParams.get("date");
 
-  const query = db
-    .select({
-      id: schedules.id,
-      classId: schedules.classId,
-      dayOfWeek: schedules.dayOfWeek,
-      startTime: schedules.startTime,
-      instructor: schedules.instructor,
-      className: classes.name,
-      classDescription: classes.description,
-      durationMinutes: classes.durationMinutes,
-      maxCapacity: classes.maxCapacity,
-      icon: classes.icon,
-      location: classes.location,
-      locationUrl: classes.locationUrl,
-    })
-    .from(schedules)
-    .innerJoin(classes, eq(schedules.classId, classes.id));
+    if (!date) {
+      return NextResponse.json({ error: "date parameter is required" }, { status: 400 });
+    }
 
-  const results = dayOfWeek
-    ? await query.where(eq(schedules.dayOfWeek, Number(dayOfWeek)))
-    : await query;
-
-  if (date && results.length > 0) {
-    // Single grouped query instead of N+1
-    const scheduleIds = results.map((s) => s.id);
-    const counts = await db
-      .select({
-        scheduleId: bookings.scheduleId,
-        count: count(),
-      })
-      .from(bookings)
-      .where(
-        and(
-          inArray(bookings.scheduleId, scheduleIds),
-          eq(bookings.date, date),
-          eq(bookings.status, BOOKING_STATUS.CONFIRMED)
-        )
-      )
-      .groupBy(bookings.scheduleId);
-
-    const countMap = new Map(counts.map((c) => [c.scheduleId, c.count]));
-
-    const withCounts = results.map((schedule) => {
-      const currentBookings = countMap.get(schedule.id) ?? 0;
-      return {
-        ...schedule,
-        currentBookings,
-        spotsLeft: schedule.maxCapacity - currentBookings,
-      };
+    // Get schedules for this specific date with booking counts
+    const result = await client.execute({
+      sql: `
+        SELECT
+          s.id, s.class_id as classId, s.date, s.start_time as startTime, s.instructor,
+          c.name as className, c.description as classDescription,
+          c.duration_minutes as durationMinutes, c.max_capacity as maxCapacity,
+          c.icon, c.location, c.location_url as locationUrl,
+          COALESCE(b.cnt, 0) as currentBookings,
+          c.max_capacity - COALESCE(b.cnt, 0) as spotsLeft
+        FROM schedules_v2 s
+        INNER JOIN classes c ON s.class_id = c.id
+        LEFT JOIN (
+          SELECT schedule_id, COUNT(*) as cnt
+          FROM bookings
+          WHERE date = ? AND status = 'confirmed'
+          GROUP BY schedule_id
+        ) b ON b.schedule_id = s.id
+        WHERE s.date = ?
+        ORDER BY s.start_time
+      `,
+      args: [date, date],
     });
 
-    return NextResponse.json(withCounts);
+    return NextResponse.json(result.rows);
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
   }
-
-  return NextResponse.json(results);
 }

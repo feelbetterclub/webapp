@@ -1,6 +1,4 @@
 import { createClient } from "@libsql/client";
-import { drizzle } from "drizzle-orm/libsql";
-import * as schema from "../src/db/schema";
 import dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
@@ -9,8 +7,6 @@ const client = createClient({
   url: process.env.TURSO_DATABASE_URL || "file:feel-better.db",
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
-
-const db = drizzle(client, { schema });
 
 async function seed() {
   // Create tables
@@ -21,20 +17,22 @@ async function seed() {
       description TEXT,
       duration_minutes INTEGER NOT NULL DEFAULT 60,
       max_capacity INTEGER NOT NULL DEFAULT 15,
-      icon TEXT DEFAULT 'Sun'
+      icon TEXT DEFAULT 'Sun',
+      location TEXT,
+      location_url TEXT
     );
 
-    CREATE TABLE IF NOT EXISTS schedules (
+    CREATE TABLE IF NOT EXISTS schedules_v2 (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       class_id INTEGER NOT NULL REFERENCES classes(id),
-      day_of_week INTEGER NOT NULL,
+      date TEXT NOT NULL,
       start_time TEXT NOT NULL,
       instructor TEXT
     );
 
     CREATE TABLE IF NOT EXISTS bookings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      schedule_id INTEGER NOT NULL REFERENCES schedules(id),
+      schedule_id INTEGER NOT NULL,
       date TEXT NOT NULL,
       user_name TEXT NOT NULL,
       user_email TEXT NOT NULL,
@@ -49,9 +47,14 @@ async function seed() {
       email TEXT,
       phone TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS locations (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      url TEXT
+    );
   `);
 
-  // Check if data already exists
   const result = await client.execute("SELECT COUNT(*) as count FROM classes");
   const count = result.rows[0]?.count as number;
   if (count > 0) {
@@ -59,44 +62,26 @@ async function seed() {
     process.exit(0);
   }
 
-  // Seed classes
+  console.log("Seeding database...");
+  // Seed via raw SQL since Drizzle has issues with Turso autoincrement
   const classesData = [
-    { name: "Mobility Flow", description: "Unlock your hips, shoulders and spine with deep mobility work. Designed for kiters and surfers to improve rotation and prevent injuries.", durationMinutes: 60, maxCapacity: 15, icon: "Sun" },
-    { name: "Strength Flow", description: "Build functional core strength and upper body power. Perfect for watersports athletes seeking more stability on the board.", durationMinutes: 50, maxCapacity: 12, icon: "Heart" },
-    { name: "Breathwork", description: "Master breathing techniques that boost energy, reduce stress and sharpen focus for better performance on and off the water.", durationMinutes: 45, maxCapacity: 20, icon: "Wind" },
-    { name: "Pilates Flow", description: "Low-impact, high-precision exercises that strengthen your core, improve posture and accelerate recovery after intense water sessions.", durationMinutes: 50, maxCapacity: 15, icon: "Sparkles" },
-    { name: "Sound Healing", description: "Deep relaxation through tibetan bowls and sound frequencies. Release tension and restore balance after intense training days.", durationMinutes: 60, maxCapacity: 15, icon: "Waves" },
-    { name: "Holistic Nutrition", description: "Learn how to fuel your body with whole foods that enhance recovery, energy and overall wellbeing for active lifestyles.", durationMinutes: 90, maxCapacity: 10, icon: "Leaf" },
+    ["Mobility Flow", "Deep mobility work for kiters and surfers. Improve rotation and prevent injuries.", 60, 15],
+    ["Strength Flow", "Functional core and upper body strength for watersports athletes.", 50, 12],
+    ["Breathwork", "Breathing techniques for energy, stress reduction and focus.", 45, 20],
+    ["Pilates Flow", "Low-impact exercises for core strength and posture recovery.", 50, 15],
+    ["Sound Healing", "Deep relaxation with tibetan bowls and sound frequencies.", 60, 15],
+    ["Holistic Nutrition", "Workshops on whole foods for recovery and wellbeing.", 90, 10],
   ];
 
   for (const c of classesData) {
-    await db.insert(schema.classes).values(c);
+    await client.execute({
+      sql: "INSERT INTO classes (name, description, duration_minutes, max_capacity) VALUES (?, ?, ?, ?)",
+      args: c,
+    });
   }
 
-  // Seed schedules (Lunes=1 ... Domingo=7)
-  const schedulesData = [
-    { classId: 1, dayOfWeek: 1, startTime: "07:30", instructor: "Monika" },
-    { classId: 1, dayOfWeek: 3, startTime: "07:30", instructor: "Monika" },
-    { classId: 1, dayOfWeek: 5, startTime: "08:00", instructor: "Monika" },
-    { classId: 2, dayOfWeek: 2, startTime: "07:30", instructor: "Monika" },
-    { classId: 2, dayOfWeek: 4, startTime: "07:30", instructor: "Monika" },
-    { classId: 3, dayOfWeek: 1, startTime: "09:00", instructor: "Monika" },
-    { classId: 3, dayOfWeek: 3, startTime: "09:00", instructor: "Monika" },
-    { classId: 4, dayOfWeek: 2, startTime: "09:00", instructor: "Monika" },
-    { classId: 4, dayOfWeek: 4, startTime: "09:00", instructor: "Monika" },
-    { classId: 4, dayOfWeek: 6, startTime: "10:00", instructor: "Monika" },
-    { classId: 5, dayOfWeek: 5, startTime: "19:00", instructor: "Monika" },
-    { classId: 5, dayOfWeek: 6, startTime: "18:00", instructor: "Monika" },
-    { classId: 6, dayOfWeek: 6, startTime: "12:00", instructor: "Monika" },
-  ];
-
-  for (const s of schedulesData) {
-    await db.insert(schema.schedules).values(s);
-  }
-
+  console.log(`  - ${classesData.length} classes seeded`);
   console.log("Database seeded successfully!");
-  console.log(`  - ${classesData.length} classes`);
-  console.log(`  - ${schedulesData.length} schedules`);
 }
 
 seed().catch(console.error);

@@ -22,17 +22,17 @@ export async function ensureTables() {
       location_url TEXT
     );
 
-    CREATE TABLE IF NOT EXISTS schedules (
+    CREATE TABLE IF NOT EXISTS schedules_v2 (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       class_id INTEGER NOT NULL REFERENCES classes(id),
-      day_of_week INTEGER NOT NULL,
+      date TEXT NOT NULL,
       start_time TEXT NOT NULL,
       instructor TEXT
     );
 
     CREATE TABLE IF NOT EXISTS bookings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      schedule_id INTEGER NOT NULL REFERENCES schedules(id),
+      schedule_id INTEGER NOT NULL,
       date TEXT NOT NULL,
       user_name TEXT NOT NULL,
       user_email TEXT NOT NULL,

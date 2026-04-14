@@ -1,17 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Pencil, Trash2, X, Clock, Calendar } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Clock, Calendar, MapPin, RefreshCw } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { DEFAULTS } from "@/lib/constants";
-import { DAY_NAMES } from "@/lib/days";
+import { todayISO } from "@/lib/utils";
 import type { ClassItem, ScheduleItem, LocationItem } from "@/lib/types";
 
 interface Instructor { id: number; name: string; }
-interface ScheduleEntry { dayOfWeek: number; startTime: string; instructorName: string; }
+interface ScheduleEntry {
+  date: string;
+  startTime: string;
+  instructorName: string;
+  recurring: boolean;
+  untilDate: string;
+  indefinite: boolean;
+}
 
 const emptyForm = {
   name: "",
@@ -21,6 +28,17 @@ const emptyForm = {
   icon: DEFAULTS.icon,
   locationId: 0,
 };
+
+function makeScheduleEntry(defaultInstructor: string): ScheduleEntry {
+  return {
+    date: todayISO(),
+    startTime: "09:00",
+    instructorName: defaultInstructor,
+    recurring: false,
+    untilDate: "",
+    indefinite: false,
+  };
+}
 
 export default function ClasesPage() {
   const [classes, setClasses] = useState<ClassItem[]>([]);
@@ -43,14 +61,10 @@ export default function ClasesPage() {
         fetch("/api/admin/instructors"),
         fetch("/api/admin/locations"),
       ]);
-      const cData = cRes.ok ? await cRes.json() : [];
-      const sData = sRes.ok ? await sRes.json() : [];
-      const iData = iRes.ok ? await iRes.json() : [];
-      const lData = lRes.ok ? await lRes.json() : [];
-      setClasses(Array.isArray(cData) ? cData : []);
-      setSchedules(Array.isArray(sData) ? sData : []);
-      setInstructors(Array.isArray(iData) ? iData : []);
-      setLocationsList(Array.isArray(lData) ? lData : []);
+      setClasses(cRes.ok ? await cRes.json() : []);
+      setSchedules(sRes.ok ? await sRes.json() : []);
+      setInstructors(iRes.ok ? await iRes.json() : []);
+      setLocationsList(lRes.ok ? await lRes.json() : []);
     } catch { /* ignore */ } finally {
       setLoading(false);
     }
@@ -63,7 +77,7 @@ export default function ClasesPage() {
   function openNew() {
     setForm(emptyForm);
     setEditingId(null);
-    setNewSchedules([{ dayOfWeek: 1, startTime: "09:00", instructorName: defaultInstructor }]);
+    setNewSchedules([makeScheduleEntry(defaultInstructor)]);
     setError("");
     setShowForm(true);
   }
@@ -85,15 +99,15 @@ export default function ClasesPage() {
   }
 
   function addScheduleEntry() {
-    setNewSchedules((s) => [...s, { dayOfWeek: 1, startTime: "09:00", instructorName: defaultInstructor }]);
+    setNewSchedules((s) => [...s, makeScheduleEntry(defaultInstructor)]);
   }
 
   function removeScheduleEntry(index: number) {
     setNewSchedules((s) => s.filter((_, i) => i !== index));
   }
 
-  function updateScheduleEntry(index: number, field: keyof ScheduleEntry, value: string | number) {
-    setNewSchedules((s) => s.map((entry, i) => (i === index ? { ...entry, [field]: value } : entry)));
+  function updateScheduleEntry(index: number, updates: Partial<ScheduleEntry>) {
+    setNewSchedules((s) => s.map((entry, i) => (i === index ? { ...entry, ...updates } : entry)));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -123,35 +137,34 @@ export default function ClasesPage() {
 
       if (!classRes.ok) {
         const data = await classRes.json();
-        setError(data.error || "Error saving class");
+        setError(data.detail || data.error || "Error saving class");
         setSaving(false);
         return;
       }
 
       if (!editingId && newSchedules.length > 0) {
         const updatedRes = await fetch("/api/admin/classes");
-        const updatedClasses = updatedRes.ok ? await updatedRes.json() : [];
-        const newClass = Array.isArray(updatedClasses)
-          ? updatedClasses.find((c: ClassItem) => c.name === form.name)
-          : null;
+        const updatedClasses: ClassItem[] = updatedRes.ok ? await updatedRes.json() : [];
+        const newClass = updatedClasses.find((c) => c.name === form.name);
 
         if (newClass) {
-          await Promise.all(
-            newSchedules
-              .filter((s) => s.dayOfWeek && s.startTime)
-              .map((s) =>
-                fetch("/api/admin/schedules", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    classId: newClass.id,
-                    dayOfWeek: s.dayOfWeek,
-                    startTime: s.startTime,
-                    instructor: s.instructorName || null,
-                  }),
-                })
-              )
-          );
+          const schedulePromises = newSchedules
+            .filter((s) => s.date && s.startTime)
+            .map((s) =>
+              fetch("/api/admin/schedules", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  classId: newClass.id,
+                  date: s.date,
+                  startTime: s.startTime,
+                  instructor: s.instructorName || null,
+                  recurring: s.recurring,
+                  untilDate: s.recurring && !s.indefinite ? s.untilDate : null,
+                }),
+              })
+            );
+          await Promise.all(schedulePromises);
         }
       }
 
@@ -176,12 +189,18 @@ export default function ClasesPage() {
     loadData();
   }
 
+  async function handleDeleteSchedule(scheduleId: number) {
+    if (!confirm("Delete this session?")) return;
+    await fetch(`/api/admin/schedules?id=${scheduleId}`, { method: "DELETE" });
+    loadData();
+  }
+
   if (loading) return <Loading />;
 
   function getClassSchedules(classId: number) {
     return schedules
       .filter((s) => s.classId === classId)
-      .sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime));
+      .sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime));
   }
 
   return (
@@ -199,36 +218,23 @@ export default function ClasesPage() {
             <h2 className="font-heading text-lg font-semibold text-brand-deep">
               {editingId ? "Edit Class" : "New Class"}
             </h2>
-            <button onClick={() => setShowForm(false)}>
-              <X className="w-5 h-5 text-muted-foreground" />
-            </button>
+            <button onClick={() => setShowForm(false)}><X className="w-5 h-5 text-muted-foreground" /></button>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <Input label="Name *" required value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+                <Input label="Name *" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
               </div>
               <div className="sm:col-span-2">
-                <Textarea label="Description" rows={2} value={form.description}
-                  onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
+                <Textarea label="Description" rows={2} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
               </div>
-              <Input label="Duration (min)" type="number" min={15} max={180} value={form.durationMinutes}
-                onChange={(e) => setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))} />
-              <Input label="Max Capacity" type="number" min={1} max={100} value={form.maxCapacity}
-                onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
-              {locationsList.length > 0 ? (
-                <Select label="Location" value={form.locationId}
-                  onChange={(e) => setForm((f) => ({ ...f, locationId: Number(e.target.value) }))}>
+              <Input label="Duration (min)" type="number" min={15} max={180} value={form.durationMinutes} onChange={(e) => setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))} />
+              <Input label="Max Capacity" type="number" min={1} max={100} value={form.maxCapacity} onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
+              {locationsList.length > 0 && (
+                <Select label="Location" value={form.locationId} onChange={(e) => setForm((f) => ({ ...f, locationId: Number(e.target.value) }))}>
                   <option value={0}>No location</option>
-                  {locationsList.map((loc) => (
-                    <option key={loc.id} value={loc.id}>{loc.name}</option>
-                  ))}
+                  {locationsList.map((loc) => (<option key={loc.id} value={loc.id}>{loc.name}</option>))}
                 </Select>
-              ) : (
-                <p className="text-xs text-muted-foreground self-end pb-2">
-                  Add locations in the Locations section first.
-                </p>
               )}
             </div>
 
@@ -236,51 +242,81 @@ export default function ClasesPage() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold text-brand-deep flex items-center gap-2">
-                    <Calendar className="w-4 h-4" /> Schedules
+                    <Calendar className="w-4 h-4" /> Sessions
                   </h3>
-                  <button type="button" onClick={addScheduleEntry}
-                    className="text-xs text-brand-teal hover:text-brand-dark font-medium flex items-center gap-1">
-                    <Plus className="w-3 h-3" /> Add schedule
+                  <button type="button" onClick={addScheduleEntry} className="text-xs text-brand-teal hover:text-brand-dark font-medium flex items-center gap-1">
+                    <Plus className="w-3 h-3" /> Add session
                   </button>
                 </div>
 
                 {newSchedules.length === 0 ? (
                   <p className="text-sm text-muted-foreground bg-brand-sage/10 px-4 py-3 rounded-xl">
-                    You can add schedules now or later from the Schedules section.
+                    Add at least one session with date and time.
                   </p>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {newSchedules.map((entry, i) => (
-                      <div key={i} className="flex items-end gap-3 bg-brand-light/50 p-3 rounded-xl">
-                        <div className="flex-1">
-                          <Select label="Day" value={entry.dayOfWeek}
-                            onChange={(e) => updateScheduleEntry(i, "dayOfWeek", Number(e.target.value))}>
-                            {DAY_NAMES.slice(1).map((d, idx) => (
-                              <option key={idx + 1} value={idx + 1}>{d}</option>
-                            ))}
-                          </Select>
+                      <div key={i} className="bg-brand-light/50 p-4 rounded-xl space-y-3">
+                        <div className="flex items-end gap-3">
+                          <div className="flex-1">
+                            <Input label="Date *" type="date" value={entry.date} onChange={(e) => updateScheduleEntry(i, { date: e.target.value })} />
+                          </div>
+                          <div className="flex-1">
+                            <Input label="Time *" type="time" value={entry.startTime} onChange={(e) => updateScheduleEntry(i, { startTime: e.target.value })} />
+                          </div>
+                          <div className="flex-1">
+                            {instructors.length > 0 ? (
+                              <Select label="Instructor" value={entry.instructorName} onChange={(e) => updateScheduleEntry(i, { instructorName: e.target.value })}>
+                                {instructors.map((inst) => (<option key={inst.id} value={inst.name}>{inst.name}</option>))}
+                              </Select>
+                            ) : (
+                              <Input label="Instructor" value={entry.instructorName} placeholder="Name" onChange={(e) => updateScheduleEntry(i, { instructorName: e.target.value })} />
+                            )}
+                          </div>
+                          <button type="button" onClick={() => removeScheduleEntry(i)} className="p-2 text-red-400 hover:text-red-600 mb-1">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <div className="flex-1">
-                          <Input label="Time" type="time" value={entry.startTime}
-                            onChange={(e) => updateScheduleEntry(i, "startTime", e.target.value)} />
-                        </div>
-                        <div className="flex-1">
-                          {instructors.length > 0 ? (
-                            <Select label="Instructor" value={entry.instructorName}
-                              onChange={(e) => updateScheduleEntry(i, "instructorName", e.target.value)}>
-                              {instructors.map((inst) => (
-                                <option key={inst.id} value={inst.name}>{inst.name}</option>
-                              ))}
-                            </Select>
-                          ) : (
-                            <Input label="Instructor" value={entry.instructorName} placeholder="Name"
-                              onChange={(e) => updateScheduleEntry(i, "instructorName", e.target.value)} />
+
+                        {/* Recurring toggle */}
+                        <div className="flex items-center gap-4">
+                          <label className="flex items-center gap-2 text-sm cursor-pointer">
+                            <input type="checkbox" checked={entry.recurring} onChange={(e) => updateScheduleEntry(i, { recurring: e.target.checked })}
+                              className="w-4 h-4 rounded border-brand-sage/30 text-brand-teal focus:ring-brand-teal/30" />
+                            <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
+                            <span className="text-brand-deep font-medium">Repeat weekly</span>
+                          </label>
+
+                          {entry.recurring && (
+                            <div className="flex items-center gap-3 ml-4">
+                              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                                <input type="radio" name={`until-${i}`} checked={entry.indefinite} onChange={() => updateScheduleEntry(i, { indefinite: true, untilDate: "" })}
+                                  className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
+                                <span>Indefinitely</span>
+                              </label>
+                              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                                <input type="radio" name={`until-${i}`} checked={!entry.indefinite} onChange={() => updateScheduleEntry(i, { indefinite: false })}
+                                  className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
+                                <span>Until</span>
+                              </label>
+                              {!entry.indefinite && (
+                                <input type="date" value={entry.untilDate} onChange={(e) => updateScheduleEntry(i, { untilDate: e.target.value })}
+                                  min={entry.date}
+                                  className="px-3 py-1.5 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+                              )}
+                            </div>
                           )}
                         </div>
-                        <button type="button" onClick={() => removeScheduleEntry(i)}
-                          className="p-2 text-red-400 hover:text-red-600 mb-1">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+
+                        {entry.recurring && (
+                          <p className="text-xs text-muted-foreground">
+                            {entry.indefinite
+                              ? `Will repeat every ${new Date(entry.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} for ~6 months`
+                              : entry.untilDate
+                                ? `Will repeat every ${new Date(entry.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} until ${new Date(entry.untilDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                : "Select an end date"}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -290,8 +326,7 @@ export default function ClasesPage() {
 
             {error && <p className="text-red-600 text-sm">{error}</p>}
 
-            <button type="submit" disabled={saving}
-              className="bg-brand-teal text-brand-light px-6 py-2.5 rounded-xl font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
+            <button type="submit" disabled={saving} className="bg-brand-teal text-brand-light px-6 py-2.5 rounded-xl font-semibold hover:bg-brand-dark transition-colors disabled:opacity-50">
               {saving ? "Saving..." : editingId ? "Save Changes" : "Create Class"}
             </button>
           </form>
@@ -305,7 +340,8 @@ export default function ClasesPage() {
       ) : (
         <div className="space-y-4">
           {classes.map((c) => {
-            const classSchedules = getClassSchedules(c.id);
+            const cs = getClassSchedules(c.id);
+            const upcoming = cs.filter((s) => s.date >= todayISO());
             return (
               <div key={c.id} className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
                 <div className="px-6 py-4 flex items-start justify-between">
@@ -317,9 +353,8 @@ export default function ClasesPage() {
                       <span>{c.maxCapacity} spots</span>
                       {c.location && (
                         <span className="flex items-center gap-1">
-                          📍 {c.locationUrl ? (
-                            <a href={c.locationUrl} target="_blank" rel="noopener noreferrer" className="text-brand-teal hover:underline">{c.location}</a>
-                          ) : c.location}
+                          <MapPin className="w-3 h-3" />
+                          {c.locationUrl ? <a href={c.locationUrl} target="_blank" rel="noopener noreferrer" className="text-brand-teal hover:underline">{c.location}</a> : c.location}
                         </span>
                       )}
                     </div>
@@ -329,16 +364,21 @@ export default function ClasesPage() {
                     <button onClick={() => handleDelete(c.id)} className="text-red-400 hover:text-red-600 p-1"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
-                {classSchedules.length > 0 && (
+                {upcoming.length > 0 && (
                   <div className="border-t border-brand-sage/20 px-6 py-3 bg-brand-light/30">
+                    <p className="text-xs text-muted-foreground mb-2">{upcoming.length} upcoming session{upcoming.length !== 1 ? "s" : ""}</p>
                     <div className="flex flex-wrap gap-2">
-                      {classSchedules.map((s) => (
-                        <span key={s.id} className="inline-flex items-center gap-1 text-xs bg-brand-sage/20 text-brand-dark px-2.5 py-1 rounded-full">
+                      {upcoming.slice(0, 10).map((s) => (
+                        <span key={s.id} className="inline-flex items-center gap-1 text-xs bg-brand-sage/20 text-brand-dark px-2.5 py-1 rounded-full group">
                           <Calendar className="w-3 h-3" />
-                          {DAY_NAMES[s.dayOfWeek]} {s.startTime}
+                          {new Date(s.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} {s.startTime}
                           {s.instructor && <span className="text-muted-foreground">· {s.instructor}</span>}
+                          <button onClick={() => handleDeleteSchedule(s.id)} className="ml-1 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100">
+                            <X className="w-3 h-3" />
+                          </button>
                         </span>
                       ))}
+                      {upcoming.length > 10 && <span className="text-xs text-muted-foreground">+{upcoming.length - 10} more</span>}
                     </div>
                   </div>
                 )}

@@ -51,11 +51,12 @@ export default function ReservarPage() {
     setSelectedDate(today);
   }, [today]);
 
-  const loadSchedules = useCallback(async (dayOfWeek: number, date: string) => {
+  const loadSchedules = useCallback(async (_dayOfWeek: number, date: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/schedules?dayOfWeek=${dayOfWeek}&date=${date}`);
-      setSchedules(await res.json());
+      const res = await fetch(`/api/schedules?date=${date}`);
+      const data = await res.json();
+      setSchedules(Array.isArray(data) ? data : []);
     } catch {
       setSchedules([]);
     }
