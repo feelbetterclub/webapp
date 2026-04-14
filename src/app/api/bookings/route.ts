@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const date = searchParams.get("date");
   const scheduleId = searchParams.get("scheduleId");
 
-  let query = db
+  const query = db
     .select({
       id: bookings.id,
       scheduleId: bookings.scheduleId,
@@ -33,8 +33,8 @@ export async function GET(req: NextRequest) {
 
   const results =
     conditions.length > 0
-      ? query.where(and(...conditions)).all()
-      : query.all();
+      ? await query.where(and(...conditions))
+      : await query;
 
   return NextResponse.json(results);
 }
@@ -44,39 +44,28 @@ export async function POST(req: NextRequest) {
   const { scheduleId, date, userName, userEmail, userPhone } = body;
 
   if (!scheduleId || !date || !userName || !userEmail) {
-    return NextResponse.json(
-      { error: "Faltan campos obligatorios" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  // Validate email
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail)) {
-    return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
-  // Check schedule exists
-  const schedule = db
+  const [schedule] = await db
     .select()
     .from(schedules)
-    .where(eq(schedules.id, scheduleId))
-    .get();
+    .where(eq(schedules.id, scheduleId));
 
   if (!schedule) {
-    return NextResponse.json(
-      { error: "Horario no encontrado" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Schedule not found" }, { status: 404 });
   }
 
-  // Check capacity
-  const classInfo = db
+  const [classInfo] = await db
     .select()
     .from(classes)
-    .where(eq(classes.id, schedule.classId))
-    .get();
+    .where(eq(classes.id, schedule.classId));
 
-  const bookingCount = db
+  const [bookingCount] = await db
     .select({ count: count() })
     .from(bookings)
     .where(
@@ -85,18 +74,13 @@ export async function POST(req: NextRequest) {
         eq(bookings.date, date),
         eq(bookings.status, "confirmed")
       )
-    )
-    .get();
+    );
 
   if (classInfo && bookingCount && bookingCount.count >= classInfo.maxCapacity) {
-    return NextResponse.json(
-      { error: "Clase completa para esta fecha" },
-      { status: 409 }
-    );
+    return NextResponse.json({ error: "Class is full" }, { status: 409 });
   }
 
-  // Check duplicate
-  const existing = db
+  const [existing] = await db
     .select()
     .from(bookings)
     .where(
@@ -106,31 +90,21 @@ export async function POST(req: NextRequest) {
         eq(bookings.userEmail, userEmail),
         eq(bookings.status, "confirmed")
       )
-    )
-    .get();
+    );
 
   if (existing) {
-    return NextResponse.json(
-      { error: "Ya tienes una reserva para esta clase" },
-      { status: 409 }
-    );
+    return NextResponse.json({ error: "You already have a booking" }, { status: 409 });
   }
 
-  const result = db
-    .insert(bookings)
-    .values({
-      scheduleId,
-      date,
-      userName,
-      userEmail,
-      userPhone: userPhone || null,
-      status: "confirmed",
-      createdAt: new Date().toISOString(),
-    })
-    .run();
+  await db.insert(bookings).values({
+    scheduleId,
+    date,
+    userName,
+    userEmail,
+    userPhone: userPhone || null,
+    status: "confirmed",
+    createdAt: new Date().toISOString(),
+  });
 
-  return NextResponse.json(
-    { success: true, id: result.lastInsertRowid },
-    { status: 201 }
-  );
+  return NextResponse.json({ success: true }, { status: 201 });
 }

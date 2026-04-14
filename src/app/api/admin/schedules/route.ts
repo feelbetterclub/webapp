@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const result = db
+  const result = await db
     .select({
       id: schedules.id,
       classId: schedules.classId,
@@ -20,8 +20,7 @@ export async function GET() {
       className: classes.name,
     })
     .from(schedules)
-    .innerJoin(classes, eq(schedules.classId, classes.id))
-    .all();
+    .innerJoin(classes, eq(schedules.classId, classes.id));
 
   return NextResponse.json(result);
 }
@@ -36,26 +35,17 @@ export async function POST(req: NextRequest) {
   const { classId, dayOfWeek, startTime, instructor } = body;
 
   if (!classId || !dayOfWeek || !startTime) {
-    return NextResponse.json(
-      { error: "Clase, día y hora son obligatorios" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Clase, día y hora son obligatorios" }, { status: 400 });
   }
 
-  const result = db
-    .insert(schedules)
-    .values({
-      classId,
-      dayOfWeek,
-      startTime,
-      instructor: instructor || null,
-    })
-    .run();
+  await db.insert(schedules).values({
+    classId,
+    dayOfWeek,
+    startTime,
+    instructor: instructor || null,
+  });
 
-  return NextResponse.json(
-    { success: true, id: result.lastInsertRowid },
-    { status: 201 }
-  );
+  return NextResponse.json({ success: true }, { status: 201 });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -71,6 +61,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "ID es obligatorio" }, { status: 400 });
   }
 
-  db.delete(schedules).where(eq(schedules.id, Number(id))).run();
+  await db.delete(schedules).where(eq(schedules.id, Number(id)));
   return NextResponse.json({ success: true });
 }

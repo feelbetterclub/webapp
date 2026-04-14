@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const result = db.select().from(classes).all();
+  const result = await db.select().from(classes);
   return NextResponse.json(result);
 }
 
@@ -27,21 +27,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nombre es obligatorio" }, { status: 400 });
   }
 
-  const result = db
-    .insert(classes)
-    .values({
-      name,
-      description: description || null,
-      durationMinutes: durationMinutes || 60,
-      maxCapacity: maxCapacity || 15,
-      icon: icon || "Sun",
-    })
-    .run();
+  await db.insert(classes).values({
+    name,
+    description: description || null,
+    durationMinutes: durationMinutes || 60,
+    maxCapacity: maxCapacity || 15,
+    icon: icon || "Sun",
+  });
 
-  return NextResponse.json(
-    { success: true, id: result.lastInsertRowid },
-    { status: 201 }
-  );
+  return NextResponse.json({ success: true }, { status: 201 });
 }
 
 export async function PUT(req: NextRequest) {
@@ -57,7 +51,8 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "ID y nombre son obligatorios" }, { status: 400 });
   }
 
-  db.update(classes)
+  await db
+    .update(classes)
     .set({
       name,
       description: description || null,
@@ -65,8 +60,7 @@ export async function PUT(req: NextRequest) {
       maxCapacity: maxCapacity || 15,
       icon: icon || "Sun",
     })
-    .where(eq(classes.id, id))
-    .run();
+    .where(eq(classes.id, id));
 
   return NextResponse.json({ success: true });
 }
@@ -84,6 +78,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "ID es obligatorio" }, { status: 400 });
   }
 
-  db.delete(classes).where(eq(classes.id, Number(id))).run();
+  await db.delete(classes).where(eq(classes.id, Number(id)));
   return NextResponse.json({ success: true });
 }

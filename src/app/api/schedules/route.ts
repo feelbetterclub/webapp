@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const dayOfWeek = searchParams.get("dayOfWeek");
   const date = searchParams.get("date");
 
-  let query = db
+  const query = db
     .select({
       id: schedules.id,
       classId: schedules.classId,
@@ -25,30 +25,30 @@ export async function GET(req: NextRequest) {
     .innerJoin(classes, eq(schedules.classId, classes.id));
 
   const results = dayOfWeek
-    ? query.where(eq(schedules.dayOfWeek, Number(dayOfWeek))).all()
-    : query.all();
+    ? await query.where(eq(schedules.dayOfWeek, Number(dayOfWeek)))
+    : await query;
 
-  // If a date is provided, add booking counts
   if (date) {
-    const withCounts = results.map((schedule) => {
-      const bookingCount = db
-        .select({ count: count() })
-        .from(bookings)
-        .where(
-          and(
-            eq(bookings.scheduleId, schedule.id),
-            eq(bookings.date, date),
-            eq(bookings.status, "confirmed")
-          )
-        )
-        .get();
+    const withCounts = await Promise.all(
+      results.map(async (schedule) => {
+        const [bookingCount] = await db
+          .select({ count: count() })
+          .from(bookings)
+          .where(
+            and(
+              eq(bookings.scheduleId, schedule.id),
+              eq(bookings.date, date),
+              eq(bookings.status, "confirmed")
+            )
+          );
 
-      return {
-        ...schedule,
-        currentBookings: bookingCount?.count ?? 0,
-        spotsLeft: schedule.maxCapacity - (bookingCount?.count ?? 0),
-      };
-    });
+        return {
+          ...schedule,
+          currentBookings: bookingCount?.count ?? 0,
+          spotsLeft: schedule.maxCapacity - (bookingCount?.count ?? 0),
+        };
+      })
+    );
 
     return NextResponse.json(withCounts);
   }
