@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@libsql/client";
 import { db } from "@/db";
 import { locations } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth";
+
+function getClient() {
+  return createClient({
+    url: process.env.TURSO_DATABASE_URL || "file:feel-better.db",
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  });
+}
 
 export async function GET() {
   try {
@@ -24,8 +32,12 @@ export async function POST(req: NextRequest) {
     const { name, url } = await req.json();
     if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
-    // Use raw SQL to avoid Drizzle sending explicit null for autoincrement id
-    await db.run(sql`INSERT INTO locations (name, url) VALUES (${name}, ${url || null})`);
+    const client = getClient();
+    await client.execute({
+      sql: "INSERT INTO locations (name, url) VALUES (?, ?)",
+      args: [name, url || null],
+    });
+
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
