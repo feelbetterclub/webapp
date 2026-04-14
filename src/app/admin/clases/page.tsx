@@ -11,34 +11,21 @@ import { todayISO } from "@/lib/utils";
 import type { ClassItem, ScheduleItem, LocationItem } from "@/lib/types";
 
 interface Instructor { id: number; name: string; }
-interface ScheduleEntry {
-  date: string;
-  startTime: string;
-  instructorName: string;
-  recurring: boolean;
-  untilDate: string;
-  indefinite: boolean;
-}
 
 const emptyForm = {
   name: "",
   description: "",
   durationMinutes: DEFAULTS.durationMinutes,
   maxCapacity: DEFAULTS.maxCapacity,
-  icon: DEFAULTS.icon,
   locationId: 0,
+  // Session fields
+  date: todayISO(),
+  startTime: "09:00",
+  instructorName: "",
+  recurring: false,
+  untilDate: "",
+  indefinite: false,
 };
-
-function makeScheduleEntry(defaultInstructor: string): ScheduleEntry {
-  return {
-    date: todayISO(),
-    startTime: "09:00",
-    instructorName: defaultInstructor,
-    recurring: false,
-    untilDate: "",
-    indefinite: false,
-  };
-}
 
 export default function ClasesPage() {
   const [classes, setClasses] = useState<ClassItem[]>([]);
@@ -49,7 +36,6 @@ export default function ClasesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
-  const [newSchedules, setNewSchedules] = useState<ScheduleEntry[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -75,9 +61,8 @@ export default function ClasesPage() {
   const defaultInstructor = instructors.length > 0 ? instructors[0].name : "";
 
   function openNew() {
-    setForm(emptyForm);
+    setForm({ ...emptyForm, instructorName: defaultInstructor, date: todayISO() });
     setEditingId(null);
-    setNewSchedules([makeScheduleEntry(defaultInstructor)]);
     setError("");
     setShowForm(true);
   }
@@ -85,29 +70,17 @@ export default function ClasesPage() {
   function openEdit(c: ClassItem) {
     const loc = locationsList.find((l) => l.name === c.location);
     setForm({
+      ...emptyForm,
       name: c.name,
       description: c.description || "",
       durationMinutes: c.durationMinutes,
       maxCapacity: c.maxCapacity,
-      icon: c.icon || DEFAULTS.icon,
       locationId: loc?.id || 0,
+      instructorName: defaultInstructor,
     });
     setEditingId(c.id);
-    setNewSchedules([]);
     setError("");
     setShowForm(true);
-  }
-
-  function addScheduleEntry() {
-    setNewSchedules((s) => [...s, makeScheduleEntry(defaultInstructor)]);
-  }
-
-  function removeScheduleEntry(index: number) {
-    setNewSchedules((s) => s.filter((_, i) => i !== index));
-  }
-
-  function updateScheduleEntry(index: number, updates: Partial<ScheduleEntry>) {
-    setNewSchedules((s) => s.map((entry, i) => (i === index ? { ...entry, ...updates } : entry)));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -123,7 +96,7 @@ export default function ClasesPage() {
         description: form.description,
         durationMinutes: form.durationMinutes,
         maxCapacity: form.maxCapacity,
-        icon: form.icon,
+        icon: DEFAULTS.icon,
         location: selectedLocation?.name || null,
         locationUrl: selectedLocation?.url || null,
       };
@@ -142,35 +115,30 @@ export default function ClasesPage() {
         return;
       }
 
-      if (!editingId && newSchedules.length > 0) {
+      // Create session for new classes
+      if (!editingId && form.date && form.startTime) {
         const updatedRes = await fetch("/api/admin/classes");
         const updatedClasses: ClassItem[] = updatedRes.ok ? await updatedRes.json() : [];
         const newClass = updatedClasses.find((c) => c.name === form.name);
 
         if (newClass) {
-          const schedulePromises = newSchedules
-            .filter((s) => s.date && s.startTime)
-            .map((s) =>
-              fetch("/api/admin/schedules", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  classId: newClass.id,
-                  date: s.date,
-                  startTime: s.startTime,
-                  instructor: s.instructorName || null,
-                  recurring: s.recurring,
-                  untilDate: s.recurring && !s.indefinite ? s.untilDate : null,
-                }),
-              })
-            );
-          await Promise.all(schedulePromises);
+          await fetch("/api/admin/schedules", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              classId: newClass.id,
+              date: form.date,
+              startTime: form.startTime,
+              instructor: form.instructorName || null,
+              recurring: form.recurring,
+              untilDate: form.recurring && !form.indefinite ? form.untilDate : null,
+            }),
+          });
         }
       }
 
       setShowForm(false);
       setEditingId(null);
-      setNewSchedules([]);
       loadData();
     } catch {
       setError("Connection error");
@@ -180,11 +148,9 @@ export default function ClasesPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("Delete this class and all its schedules?")) return;
-    const classSchedules = schedules.filter((s) => s.classId === id);
-    await Promise.all(
-      classSchedules.map((s) => fetch(`/api/admin/schedules?id=${s.id}`, { method: "DELETE" }))
-    );
+    if (!confirm("Delete this class and all its sessions?")) return;
+    const cs = schedules.filter((s) => s.classId === id);
+    await Promise.all(cs.map((s) => fetch(`/api/admin/schedules?id=${s.id}`, { method: "DELETE" })));
     await fetch(`/api/admin/classes?id=${id}`, { method: "DELETE" });
     loadData();
   }
@@ -198,8 +164,9 @@ export default function ClasesPage() {
   if (loading) return <Loading />;
 
   function getClassSchedules(classId: number) {
+    const today = todayISO();
     return schedules
-      .filter((s) => s.classId === classId)
+      .filter((s) => s.classId === classId && s.date >= today)
       .sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime));
   }
 
@@ -221,6 +188,7 @@ export default function ClasesPage() {
             <button onClick={() => setShowForm(false)}><X className="w-5 h-5 text-muted-foreground" /></button>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Class info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <Input label="Name *" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
@@ -238,88 +206,63 @@ export default function ClasesPage() {
               )}
             </div>
 
+            {/* Session — only for new classes */}
             {!editingId && (
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-brand-deep flex items-center gap-2">
-                    <Calendar className="w-4 h-4" /> Sessions
-                  </h3>
-                  <button type="button" onClick={addScheduleEntry} className="text-xs text-brand-teal hover:text-brand-dark font-medium flex items-center gap-1">
-                    <Plus className="w-3 h-3" /> Add session
-                  </button>
+              <div className="bg-brand-light/50 p-4 rounded-xl space-y-4">
+                <h3 className="text-sm font-semibold text-brand-deep flex items-center gap-2">
+                  <Calendar className="w-4 h-4" /> Session
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <Input label="Date *" type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} />
+                  <Input label="Time *" type="time" value={form.startTime} onChange={(e) => setForm((f) => ({ ...f, startTime: e.target.value }))} />
+                  {instructors.length > 0 ? (
+                    <Select label="Instructor" value={form.instructorName} onChange={(e) => setForm((f) => ({ ...f, instructorName: e.target.value }))}>
+                      {instructors.map((inst) => (<option key={inst.id} value={inst.name}>{inst.name}</option>))}
+                    </Select>
+                  ) : (
+                    <Input label="Instructor" value={form.instructorName} placeholder="Name" onChange={(e) => setForm((f) => ({ ...f, instructorName: e.target.value }))} />
+                  )}
                 </div>
 
-                {newSchedules.length === 0 ? (
-                  <p className="text-sm text-muted-foreground bg-brand-sage/10 px-4 py-3 rounded-xl">
-                    Add at least one session with date and time.
+                {/* Recurring */}
+                <div className="flex flex-wrap items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="checkbox" checked={form.recurring} onChange={(e) => setForm((f) => ({ ...f, recurring: e.target.checked }))}
+                      className="w-4 h-4 rounded border-brand-sage/30 text-brand-teal focus:ring-brand-teal/30" />
+                    <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span className="text-brand-deep font-medium">Repeat weekly</span>
+                  </label>
+
+                  {form.recurring && (
+                    <>
+                      <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <input type="radio" name="until" checked={form.indefinite} onChange={() => setForm((f) => ({ ...f, indefinite: true, untilDate: "" }))}
+                          className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
+                        <span>Indefinitely</span>
+                      </label>
+                      <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <input type="radio" name="until" checked={!form.indefinite} onChange={() => setForm((f) => ({ ...f, indefinite: false }))}
+                          className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
+                        <span>Until</span>
+                      </label>
+                      {!form.indefinite && (
+                        <input type="date" value={form.untilDate} min={form.date}
+                          onChange={(e) => setForm((f) => ({ ...f, untilDate: e.target.value }))}
+                          className="px-3 py-1.5 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {form.recurring && (
+                  <p className="text-xs text-muted-foreground">
+                    {form.indefinite
+                      ? `Will repeat every ${new Date(form.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} for ~6 months`
+                      : form.untilDate
+                        ? `Will repeat every ${new Date(form.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} until ${new Date(form.untilDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                        : "Select an end date"}
                   </p>
-                ) : (
-                  <div className="space-y-4">
-                    {newSchedules.map((entry, i) => (
-                      <div key={i} className="bg-brand-light/50 p-4 rounded-xl space-y-3">
-                        <div className="flex items-end gap-3">
-                          <div className="flex-1">
-                            <Input label="Date *" type="date" value={entry.date} onChange={(e) => updateScheduleEntry(i, { date: e.target.value })} />
-                          </div>
-                          <div className="flex-1">
-                            <Input label="Time *" type="time" value={entry.startTime} onChange={(e) => updateScheduleEntry(i, { startTime: e.target.value })} />
-                          </div>
-                          <div className="flex-1">
-                            {instructors.length > 0 ? (
-                              <Select label="Instructor" value={entry.instructorName} onChange={(e) => updateScheduleEntry(i, { instructorName: e.target.value })}>
-                                {instructors.map((inst) => (<option key={inst.id} value={inst.name}>{inst.name}</option>))}
-                              </Select>
-                            ) : (
-                              <Input label="Instructor" value={entry.instructorName} placeholder="Name" onChange={(e) => updateScheduleEntry(i, { instructorName: e.target.value })} />
-                            )}
-                          </div>
-                          <button type="button" onClick={() => removeScheduleEntry(i)} className="p-2 text-red-400 hover:text-red-600 mb-1">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-
-                        {/* Recurring toggle */}
-                        <div className="flex items-center gap-4">
-                          <label className="flex items-center gap-2 text-sm cursor-pointer">
-                            <input type="checkbox" checked={entry.recurring} onChange={(e) => updateScheduleEntry(i, { recurring: e.target.checked })}
-                              className="w-4 h-4 rounded border-brand-sage/30 text-brand-teal focus:ring-brand-teal/30" />
-                            <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
-                            <span className="text-brand-deep font-medium">Repeat weekly</span>
-                          </label>
-
-                          {entry.recurring && (
-                            <div className="flex items-center gap-3 ml-4">
-                              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                                <input type="radio" name={`until-${i}`} checked={entry.indefinite} onChange={() => updateScheduleEntry(i, { indefinite: true, untilDate: "" })}
-                                  className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
-                                <span>Indefinitely</span>
-                              </label>
-                              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                                <input type="radio" name={`until-${i}`} checked={!entry.indefinite} onChange={() => updateScheduleEntry(i, { indefinite: false })}
-                                  className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
-                                <span>Until</span>
-                              </label>
-                              {!entry.indefinite && (
-                                <input type="date" value={entry.untilDate} onChange={(e) => updateScheduleEntry(i, { untilDate: e.target.value })}
-                                  min={entry.date}
-                                  className="px-3 py-1.5 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {entry.recurring && (
-                          <p className="text-xs text-muted-foreground">
-                            {entry.indefinite
-                              ? `Will repeat every ${new Date(entry.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} for ~6 months`
-                              : entry.untilDate
-                                ? `Will repeat every ${new Date(entry.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} until ${new Date(entry.untilDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
-                                : "Select an end date"}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
                 )}
               </div>
             )}
@@ -340,8 +283,7 @@ export default function ClasesPage() {
       ) : (
         <div className="space-y-4">
           {classes.map((c) => {
-            const cs = getClassSchedules(c.id);
-            const upcoming = cs.filter((s) => s.date >= todayISO());
+            const upcoming = getClassSchedules(c.id);
             return (
               <div key={c.id} className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
                 <div className="px-6 py-4 flex items-start justify-between">
