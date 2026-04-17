@@ -38,6 +38,7 @@ export async function ensureTables() {
       user_email TEXT NOT NULL,
       user_phone TEXT,
       status TEXT NOT NULL DEFAULT 'confirmed',
+      cancel_token TEXT,
       created_at TEXT NOT NULL
     );
 
@@ -53,7 +54,49 @@ export async function ensureTables() {
       name TEXT NOT NULL,
       url TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS community_members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      phone_prefix TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      source TEXT DEFAULT 'popup',
+      created_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS testimonials (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      author TEXT NOT NULL,
+      text TEXT NOT NULL,
+      class_type TEXT,
+      rating INTEGER DEFAULT 5,
+      visible INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      text TEXT NOT NULL,
+      reply_email TEXT,
+      created_at TEXT NOT NULL
+    );
   `);
+
+  // Idempotent ALTERs for pre-existing DBs. libSQL lacks IF NOT EXISTS
+  // on ADD COLUMN, so swallow "duplicate column" errors.
+  const safeAlter = async (sql: string) => {
+    try {
+      await client.execute(sql);
+    } catch (err) {
+      const msg = String(err);
+      if (!/duplicate column|already exists/i.test(msg)) {
+        throw err;
+      }
+    }
+  };
+
+  await safeAlter("ALTER TABLE bookings ADD COLUMN cancel_token TEXT");
 
   initialized = true;
 }

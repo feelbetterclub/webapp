@@ -1,67 +1,81 @@
 const en = {
   nav: {
-    rituals: "Rituals",
     about: "About",
+    classInfo: "Class Info",
+    classProgram: "Class Program",
+    book: "Book",
+    rituals: "Rituals",
     contact: "Contact",
     bookClass: "Book a Class",
   },
   hero: {
-    tagline: "Morning Endorphins & Sea Vitamins Workouts",
-    headline1: "Strong Body",
-    headline2: "Clear Mind",
+    tagline: "Outdoor Training Community",
+    headline1: "Personalised Workouts",
+    headline2: "Each of You Matters",
     subtitle:
-      "Reconnect with Nature and your True Power. Holistic health rituals designed for lifestyle-driven athletes.",
-    cta1: "Discover our rituals",
+      "Fueled by Endorphins and Sea Vitamins. Nature. Connection. Fun.",
+    comingSoon: "Holistic Health Rituals — coming soon. Stay tuned.",
+    cta1: "Explore Classes",
     cta2: "Book a class",
   },
-  rituals: {
-    label: "Our Rituals",
-    title: "Designed for Athletes, Powered by Nature",
+  classInfo: {
+    label: "Class Info",
+    title: "Train Outside. Feel Better. Together.",
     subtitle:
-      "Each ritual targets a specific need. Combine them for a complete transformation.",
+      "Four disciplines designed to move, strengthen, and connect you with nature.",
+    bookButton: "Book",
     mobility: {
       name: "Mobility Flow",
       description:
-        "Unlock your hips, shoulders and spine with deep mobility work. Designed for kiters and surfers to improve rotation, prevent injuries and move with more freedom on the water.",
+        "A smooth session focused on dynamic stretching and breathwork. It activates the joints, muscles and lymphatic system. Perfect for waking up the body and releasing tension. It supports professional athletes in preventing injuries and faster recovery.",
     },
     strength: {
       name: "Strength Flow",
       description:
-        "Build functional core strength and upper body power. Perfect for watersports athletes seeking more stability on the board and explosive performance in every session.",
+        "A class designed to shape the body, build muscle mass and flexibility. Full energy sequence using body weight and accessories such as dumbbells, resistance bands, ankle weights.",
     },
     pilates: {
       name: "Pilates Flow",
       description:
-        "Low-impact, high-precision exercises that strengthen your core, improve posture and accelerate recovery. Ideal after intense water sessions.",
+        "A controlled yet powerful class using the Pilates Ball to activate deep muscles and improve balance. Through precise movement, it strengthens the core and enhances overall alignment. It boosts long-term wellbeing and spine health.",
     },
-    breathwork: {
-      name: "Breathwork",
+    funBurn: {
+      name: "Fun Burn",
       description:
-        "Master breathing techniques that boost energy, reduce stress and sharpen focus. Learn to control your breath for better performance on and off the water.",
-    },
-    soundHealing: {
-      name: "Sound Healing",
-      description:
-        "Deep relaxation through tibetan bowls and sound frequencies. Release tension, calm your nervous system and restore balance after intense training days.",
-    },
-    nutrition: {
-      name: "Holistic Nutrition",
-      description:
-        "Learn how to fuel your body with whole foods that enhance recovery, energy and overall wellbeing. Workshops tailored for active lifestyles.",
+        "A dynamic cardio workout with dance-inspired elements. Great for burning calories, boosting endurance and enjoying a music-driven session.",
     },
   },
   about: {
     label: "About Us",
-    title: "A Sanctuary for Athletes",
-    p1: "Feel Better Club was born from the belief that small, consistent rituals create massive transformation. Our holistic approach combines movement, breath and awareness to help you perform better and feel better every day.",
-    p2: "Whether you're a seasoned kiter, a weekend surfer or just starting your journey — there's a place for you here. Small groups, certified coaches, flexible schedules.",
+    title: "Our Story",
+    story: {
+      p1: "The Feel Better Club was created with a simple intention: to bring people together through movement, nature, and the kind of energy that only shared effort can create. What started as a few beach and garden sessions for friends has grown into a space where people challenge themselves, and discover how good it is to move with purpose — surrounded by fresh air, sunlight, and wildlife.",
+      p2: "Training outside grounds us, training together lifts us up. And we keep showing up because it just Feel(s) Better — the endorphins and sound of waves bring out the smiles. Each one counts.",
+    },
+    founder: {
+      label: "Meet the Founder & Coach",
+      heading: "Monika",
+      p1: "Sport has been at the center of my life for as long as I can remember. I started at the age of seven, and I became a professional basketball player — an experience that shaped my everyday discipline, teamwork, and the belief that high goals are worth pursuing.",
+      p2: "After ten years in competitive sport, I shifted my focus to studying at university and opened myself to new forms of movement: dance, tennis, skiing, resistance training, and pilates. Each discipline taught me something different about the body and its potential, rhythm, and flow.",
+      p3: "In 2016, I discovered kitesurfing — a passion that changed my life and eventually led me to move to Tarifa in 2021. The ocean, the wind, the freedom — it all felt like home. Since then, I've continued exploring, traveling, and learning — always curious, always growing, always moving.",
+      p4: "Today, I bring more than 25 years of experience in sports into every session. As a European-certified fitness and personal trainer, I'm fulfilled by guiding people, helping them connect with their bodies, and discovering their inner power. My approach is built on positive energy, precise technique, and body-mind-soul connection. A rhythm-driven atmosphere creates flow and brings out smiles — because training should feel good.",
+      p5: "This community is an extension of everything I love and value: nature, movement, connection, and the joy of growing together.",
+      signoff: "I'm grateful you're here. Moni",
+    },
     highlights: [
       "Small groups for personalized attention",
-      "Certified coaches with years of experience",
-      "Spaces designed for comfort and relaxation",
+      "European-certified coach",
+      "Outdoor spaces — beach, garden, forest",
       "Flexible schedules adapted to your routine",
     ],
     stat: "happy athletes",
+  },
+  rituals: {
+    label: "Rituals",
+    title: "Holistic Rituals — Coming Soon",
+    subtitle:
+      "Whole-food high-protein nutrition tips, sauna, breathwork and ice bath events to support your training and recovery.",
+    comingSoon: "Stay tuned",
   },
   contact: {
     label: "Contact",
@@ -109,11 +123,17 @@ const en = {
       "You can return to this site anytime to manage a new class or cancel your spot.",
   },
   footer: {
-    links: "Links",
-    followUs: "Follow Us",
+    askUs: "Ask us anything",
+    askUsPlaceholder: "Type your message...",
+    askUsEmail: "Email (optional, for reply)",
+    askUsSend: "Send",
+    askUsSent: "Sent! We'll get back to you.",
+    joinCommunity: "Join our Community",
+    joinCommunityText: "Become part of the #FEELBETTERCLUB — free outdoor class, weekly updates and events.",
+    joinCommunityBtn: "Join",
+    connectTitle: "Connect and Get Inspired",
+    testimonials: "Testimonials",
     rights: "All rights reserved.",
-    holisticHealth: "Holistic Health Routines",
-    tagline: "Small Step · Big Impact",
   },
   admin: {
     dashboard: "Dashboard",
@@ -125,6 +145,56 @@ const en = {
   common: {
     loading: "Loading...",
     noData: "No data available",
+  },
+  cancel: {
+    title: "Cancel Your Booking",
+    class: "Class",
+    date: "Date",
+    time: "Time",
+    name: "Name",
+    confirmCancel: "Cancel My Spot",
+    cancelledTitle: "Booking Cancelled",
+    cancelledText: "Your spot has been released. We hope to see you next time.",
+    bookAnother: "Book Another Class",
+    errorTitle: "Oops",
+    lockoutMessage:
+      "Cancellations must be made at least 12 hours before the class starts. Please contact us directly.",
+    backHome: "Back to home",
+  },
+  onDemand: {
+    title: "Request a Private or Group Session",
+    subtitle:
+      "Can't find a time that works? Request a custom session — private or group of 5+.",
+    name: "Your Name",
+    email: "Email",
+    phone: "Mobile",
+    groupSize: "Group size",
+    groupSizePlaceholder: "1 (private) or 5+",
+    preferredDate: "Preferred dates / times",
+    preferredDatePlaceholder: "e.g. Weekday mornings, Saturday 10am...",
+    notes: "Notes",
+    notesPlaceholder: "Any preferences or questions...",
+    submit: "Send Request",
+    submitting: "Sending...",
+    successTitle: "Request Sent!",
+    successText: "Moni will get back to you shortly to arrange your session.",
+  },
+  popup: {
+    title: "UNLOCK A FREE OUTDOOR CLASS!",
+    subtitle:
+      "Join the #FEELBETTERCLUB community and get a free beachfront training session.",
+    name: "Name",
+    email: "Email",
+    prefix: "Prefix",
+    phone: "Mobile",
+    cta: "I am in. Sign Up",
+    submitting: "Signing up...",
+    successTitle: "You're in!",
+    successText:
+      "Check your inbox — a welcome message with the details of your free outdoor class is on its way.",
+    close: "Close",
+    disclaimer:
+      "By signing up you agree to receive updates, nutrition tips and event news. Unsubscribe anytime.",
   },
 };
 

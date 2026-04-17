@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BookingDrawer } from "@/components/BookingDrawer";
+import { OnDemandForm } from "@/components/OnDemandForm";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { ChevronLeft, ChevronRight, Clock, Users, User, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, Users, User, MapPin, CreditCard } from "lucide-react";
 import { DAY_NAMES_SHORT, DAY_NAMES } from "@/lib/days";
 import { useI18n } from "@/lib/i18n/context";
 import { todayISO, formatDateLocalized } from "@/lib/utils";
@@ -165,12 +166,17 @@ export default function ReservarPage() {
                           ) : s.location}
                         </span>
                       )}
+                      <span className="flex items-center gap-1"><CreditCard className="w-4 h-4" />{t.booking.paymentNote}</span>
                     </div>
                   </div>
                 </button>
               ))}
             </div>
           )}
+          {/* On-demand request form */}
+          <div className="mt-12">
+            <OnDemandForm />
+          </div>
         </div>
       </main>
       <Footer />

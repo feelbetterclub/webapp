@@ -7,10 +7,28 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-brand-teal overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-deep/60 via-brand-teal to-brand-dark/80" />
+      {/* Gradient wash */}
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-deep/70 via-brand-teal to-brand-dark/80" />
 
-      <div className="absolute top-20 left-10 w-72 h-72 bg-brand-sage/15 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-cream/8 rounded-full blur-3xl" />
+      {/* Decorative palm frond SVG — shaded for text legibility */}
+      <svg
+        className="absolute -right-20 -top-10 w-[500px] h-[500px] text-brand-cream/10 pointer-events-none"
+        viewBox="0 0 200 200"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M100 20 C 105 60 110 90 120 110 C 140 90 160 85 180 90 C 160 100 140 115 130 130 C 150 130 170 140 185 155 C 160 150 140 155 130 165 C 145 175 155 190 160 205 C 140 185 120 180 105 185 C 105 170 105 150 100 20 Z" />
+        <path d="M100 20 C 95 60 90 90 80 110 C 60 90 40 85 20 90 C 40 100 60 115 70 130 C 50 130 30 140 15 155 C 40 150 60 155 70 165 C 55 175 45 190 40 205 C 60 185 80 180 95 185 C 95 170 95 150 100 20 Z" />
+      </svg>
+      <svg
+        className="absolute -left-32 bottom-0 w-[400px] h-[400px] text-brand-cream/8 pointer-events-none rotate-12"
+        viewBox="0 0 200 200"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M100 20 C 105 60 110 90 120 110 C 140 90 160 85 180 90 C 160 100 140 115 130 130 C 150 130 170 140 185 155 C 160 150 140 155 130 165 C 145 175 155 190 160 205 C 140 185 120 180 105 185 C 105 170 105 150 100 20 Z" />
+        <path d="M100 20 C 95 60 90 90 80 110 C 60 90 40 85 20 90 C 40 100 60 115 70 130 C 50 130 30 140 15 155 C 40 150 60 155 70 165 C 55 175 45 190 40 205 C 60 185 80 180 95 185 C 95 170 95 150 100 20 Z" />
+      </svg>
 
       <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,20 +38,30 @@ export default function Hero() {
           {t.hero.tagline}
         </p>
 
-        <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-brand-cream mb-6 leading-tight">
+        <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold text-brand-cream mb-6 leading-tight">
           {t.hero.headline1}
           <span className="block text-brand-sage">{t.hero.headline2}</span>
         </h1>
 
-        <p className="text-brand-cream/70 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p className="text-brand-cream/80 text-lg sm:text-xl max-w-2xl mx-auto mb-4 leading-relaxed">
           {t.hero.subtitle}
         </p>
 
+        <p className="text-brand-cream/60 text-sm sm:text-base italic mb-10">
+          {t.hero.comingSoon}
+        </p>
+
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/#servicios" className="bg-brand-cream text-brand-deep px-8 py-3.5 rounded-full text-base font-semibold hover:bg-white transition-colors shadow-lg">
+          <a
+            href="/#class-info"
+            className="bg-brand-cream text-brand-deep px-8 py-3.5 rounded-full text-base font-semibold hover:bg-white transition-colors shadow-lg"
+          >
             {t.hero.cta1}
           </a>
-          <a href="/reservar" className="border-2 border-brand-cream/40 text-brand-cream px-8 py-3.5 rounded-full text-base font-semibold hover:bg-brand-cream/10 transition-colors">
+          <a
+            href="/reservar"
+            className="border-2 border-brand-cream/40 text-brand-cream px-8 py-3.5 rounded-full text-base font-semibold hover:bg-brand-cream/10 transition-colors"
+          >
             {t.hero.cta2}
           </a>
         </div>

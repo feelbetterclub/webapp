@@ -11,7 +11,7 @@ export const classes = sqliteTable("classes", {
   locationUrl: text("location_url"),
 });
 
-export const schedules = sqliteTable("schedules", {
+export const schedules = sqliteTable("schedules_v2", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   classId: integer("class_id")
     .references(() => classes.id)
@@ -31,6 +31,7 @@ export const bookings = sqliteTable("bookings", {
   userEmail: text("user_email").notNull(),
   userPhone: text("user_phone"),
   status: text("status").notNull().default("confirmed"),
+  cancelToken: text("cancel_token"),
   createdAt: text("created_at").notNull(),
 });
 
@@ -53,3 +54,15 @@ export type InstructorRow = typeof instructors.$inferSelect;
 export type ClassRow = typeof classes.$inferSelect;
 export type ScheduleRow = typeof schedules.$inferSelect;
 export type BookingRow = typeof bookings.$inferSelect;
+
+export const communityMembers = sqliteTable("community_members", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  phonePrefix: text("phone_prefix").notNull(),
+  phone: text("phone").notNull(),
+  source: text("source").default("popup"),
+  createdAt: text("created_at").notNull(),
+});
+
+export type CommunityMemberRow = typeof communityMembers.$inferSelect;

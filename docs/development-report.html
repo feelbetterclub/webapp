@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feel Better Club — Development Report</title>
+  <style>
+    :root { --teal: #0d5e42; --dark: #094a34; --cream: #f4ebd0; --light: #faf8f2; --sage: #e2ece9; --deep: #062e21; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--deep); background: var(--light); line-height: 1.7; }
+    .hero { background: var(--teal); color: var(--cream); padding: 60px 20px; text-align: center; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 8px; }
+    .hero p { font-size: 1.1rem; opacity: 0.8; }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    h2 { font-size: 1.6rem; color: var(--teal); margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--sage); }
+    h3 { font-size: 1.15rem; color: var(--dark); margin: 24px 0 8px; }
+    p, li { font-size: 0.95rem; margin-bottom: 6px; }
+    ul { padding-left: 24px; }
+    .badge { display: inline-block; background: var(--teal); color: var(--cream); font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-right: 6px; }
+    .badge.new { background: #2563eb; }
+    .badge.fix { background: #dc2626; }
+    .badge.edit { background: #d97706; }
+    .file { font-family: monospace; font-size: 0.85rem; background: var(--sage); padding: 2px 6px; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
+    th { background: var(--teal); color: var(--cream); text-align: left; padding: 10px 14px; }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--sage); }
+    tr:nth-child(even) td { background: #f0f5f3; }
+    .summary-box { background: white; border: 1px solid var(--sage); border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+    .stat { text-align: center; padding: 16px; }
+    .stat .num { font-size: 2rem; font-weight: 700; color: var(--teal); }
+    .stat .label { font-size: 0.8rem; opacity: 0.7; }
+    footer { background: var(--deep); color: var(--cream); text-align: center; padding: 24px; font-size: 0.85rem; opacity: 0.7; }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <h1>Feel Better Club</h1>
+  <p>Development Report — Fase 0 + 4 Sprints &middot; April 2026</p>
+</div>
+<div class="container">
+  <div class="summary-box">
+    <h3>Project Summary</h3>
+    <p><strong>Stack:</strong> Next.js 16.2.3 &middot; React 19 &middot; Tailwind CSS v4 &middot; Turso (libSQL) &middot; Drizzle ORM &middot; Resend</p>
+    <p><strong>Deploy:</strong> <a href="https://feel-better-club.vercel.app">feel-better-club.vercel.app</a></p>
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="stat"><div class="num">23</div><div class="label">Total Routes</div></div>
+      <div class="stat"><div class="num">8</div><div class="label">New API Endpoints</div></div>
+      <div class="stat"><div class="num">7</div><div class="label">New Components</div></div>
+      <div class="stat"><div class="num">3</div><div class="label">New DB Tables</div></div>
+    </div>
+  </div>
+
+  <h2>Fase 0 — Resolver Incompatibilidades</h2>
+  <h3>1. Schema unification</h3>
+  <p><span class="badge fix">FIX</span> <span class="file">src/db/schema.ts</span> — Drizzle declared <code>schedules</code> but DB uses <code>schedules_v2</code>. Aligned to match reality.</p>
+  <h3>2. TOCTOU race condition</h3>
+  <p><span class="badge fix">FIX</span> <span class="file">src/app/api/bookings/route.ts</span> — Wrapped capacity check + insert in <code>client.transaction("write")</code> with rollback.</p>
+
+  <h2>Sprint 1 — Visual Redesign + Content</h2>
+  <h3>Navigation</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">Header.tsx</span> — 6 items: About | Class Info | Class Program | Book | Rituals | Contact</p>
+  <h3>Hero</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">Hero.tsx</span> — "Personalised Workouts — Each of You Matters" + palm frond SVGs</p>
+  <h3>Class Info (4 types)</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">Services.tsx</span> — Mobility Flow, Strength Flow, Pilates Flow, Fun Burn + Book buttons</p>
+  <h3>About expanded</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">About.tsx</span> — Our Story + Meet the Founder (Monika bio, 5 paragraphs)</p>
+  <h3>Rituals placeholder</h3>
+  <p><span class="badge new">NEW</span> <span class="file">Rituals.tsx</span> — Coming soon: Nutrition, Sauna, Breathwork, Ice Bath</p>
+  <h3>i18n overhaul</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">en.ts</span> + <span class="file">es.ts</span> — All nav, hero, classInfo, about, rituals keys restructured</p>
+
+  <h2>Sprint 2 — Community + Email</h2>
+  <h3>Resend email service</h3>
+  <p><span class="badge new">NEW</span> <span class="file">src/lib/email.ts</span> — Welcome email (Monika copy) + booking confirmation + cancel link. No-ops if API key missing.</p>
+  <h3>Community members</h3>
+  <p><span class="badge new">NEW</span> Table <code>community_members</code> + <span class="file">POST /api/community/signup</span></p>
+  <h3>Pop-up banner</h3>
+  <p><span class="badge new">NEW</span> <span class="file">CommunityPopup.tsx</span> — "UNLOCK A FREE OUTDOOR CLASS!" on first visit, localStorage dismiss</p>
+  <h3>Booking email + cancel token</h3>
+  <p><span class="badge edit">EDIT</span> Bookings POST generates <code>cancel_token</code>, sends confirmation email with cancel URL</p>
+
+  <h2>Sprint 3 — Booking Enhancements</h2>
+  <h3>Cancel self-service</h3>
+  <p><span class="badge new">NEW</span> <span class="file">/api/bookings/cancel</span> + <span class="file">/cancel/[token]</span> — GET info, POST cancel, 12h lockout</p>
+  <h3>On-demand requests</h3>
+  <p><span class="badge new">NEW</span> <span class="file">/api/requests</span> + <span class="file">OnDemandForm.tsx</span> — Private or group 5+ session requests</p>
+  <h3>Payment method</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">reservar/page.tsx</span> — CreditCard badge with "Cash / Card / Revolut" on each card</p>
+
+  <h2>Sprint 4 — Footer + Social Proof</h2>
+  <h3>Footer 4 columns</h3>
+  <p><span class="badge edit">EDIT</span> <span class="file">Footer.tsx</span> — Ask us anything (form), Join Community, Connect (IG), Brand</p>
+  <h3>Testimonials</h3>
+  <p><span class="badge new">NEW</span> Table <code>testimonials</code> + public GET + admin CRUD. Star ratings above footer.</p>
+  <h3>Messages</h3>
+  <p><span class="badge new">NEW</span> Table <code>messages</code> + <span class="file">POST /api/messages</span> — Anonymous, no phone.</p>
+
+  <h2>Route Map (23 routes)</h2>
+  <table>
+    <tr><th>Route</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>/</code></td><td>Static</td><td>Landing + Pop-up</td></tr>
+    <tr><td><code>/reservar</code></td><td>Static</td><td>Calendar + Booking + On-demand</td></tr>
+    <tr><td><code>/cancel/[token]</code></td><td>Dynamic</td><td>Self-service cancel</td></tr>
+    <tr><td><code>/admin/*</code></td><td>Static</td><td>Admin dashboard, classes, students, instructors, locations, login</td></tr>
+    <tr><td><code>/api/schedules</code></td><td>GET</td><td>Public schedules</td></tr>
+    <tr><td><code>/api/bookings</code></td><td>GET/POST</td><td>Bookings (atomic tx)</td></tr>
+    <tr><td><code>/api/bookings/cancel</code></td><td>GET/POST</td><td>Cancel flow</td></tr>
+    <tr><td><code>/api/community/signup</code></td><td>POST</td><td>Community signup + email</td></tr>
+    <tr><td><code>/api/requests</code></td><td>POST</td><td>On-demand requests</td></tr>
+    <tr><td><code>/api/messages</code></td><td>POST</td><td>Anonymous messages</td></tr>
+    <tr><td><code>/api/testimonials</code></td><td>GET</td><td>Public testimonials</td></tr>
+    <tr><td><code>/api/admin/*</code></td><td>CRUD</td><td>Classes, schedules, instructors, locations, testimonials, upcoming, login</td></tr>
+  </table>
+
+  <h2>Database (8 tables)</h2>
+  <table>
+    <tr><th>Table</th><th>Status</th></tr>
+    <tr><td>classes</td><td>Existing</td></tr>
+    <tr><td>schedules_v2</td><td>Existing (unified)</td></tr>
+    <tr><td>bookings</td><td>Extended (+cancel_token)</td></tr>
+    <tr><td>instructors</td><td>Existing</td></tr>
+    <tr><td>locations</td><td>Existing</td></tr>
+    <tr><td>community_members</td><td>New</td></tr>
+    <tr><td>testimonials</td><td>New</td></tr>
+    <tr><td>messages</td><td>New</td></tr>
+  </table>
+
+  <h2>Env Variables</h2>
+  <table>
+    <tr><th>Variable</th><th>Required</th></tr>
+    <tr><td>TURSO_DATABASE_URL</td><td>Production</td></tr>
+    <tr><td>TURSO_AUTH_TOKEN</td><td>Production</td></tr>
+    <tr><td>ADMIN_PASSWORD</td><td>Yes</td></tr>
+    <tr><td>RESEND_API_KEY</td><td>For emails</td></tr>
+    <tr><td>EMAIL_FROM</td><td>Optional</td></tr>
+    <tr><td>NEXT_PUBLIC_SITE_URL</td><td>Optional</td></tr>
+  </table>
+</div>
+<footer>&copy; 2026 Feel Better Club &middot; Development Report</footer>
+</body>
+</html>

@@ -25,18 +25,16 @@ export default function Contact() {
     setSubmitted(true);
   }
 
-  const ritualOptions = [
-    { value: "mobility", label: t.rituals.mobility.name },
-    { value: "strength", label: t.rituals.strength.name },
-    { value: "pilates", label: t.rituals.pilates.name },
-    { value: "breathwork", label: t.rituals.breathwork.name },
-    { value: "sound-healing", label: t.rituals.soundHealing.name },
-    { value: "nutrition", label: t.rituals.nutrition.name },
+  const classOptions = [
+    { value: "mobility", label: t.classInfo.mobility.name },
+    { value: "strength", label: t.classInfo.strength.name },
+    { value: "pilates", label: t.classInfo.pilates.name },
+    { value: "fun-burn", label: t.classInfo.funBurn.name },
     { value: "other", label: "Other" },
   ];
 
   return (
-    <section id="contacto" className="py-24 bg-brand-light">
+    <section id="contact" className="py-24 bg-brand-light">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader label={t.contact.label} title={t.contact.title} description={t.contact.subtitle} />
 
@@ -76,7 +74,7 @@ export default function Contact() {
                 <Input id="email" name="email" type="email" label={t.contact.form.email} required placeholder="you@email.com" />
                 <Select id="interest" name="interest" label={t.contact.form.interest}>
                   <option value="">{t.contact.form.selectOption}</option>
-                  {ritualOptions.map((o) => (
+                  {classOptions.map((o) => (
                     <option key={o.value} value={o.value}>{o.label}</option>
                   ))}
                 </Select>
