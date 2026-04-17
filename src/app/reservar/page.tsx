@@ -28,8 +28,9 @@ function getWeekDates(base: Date) {
 export default function ReservarPage() {
   const { t, lang } = useI18n();
   const [weekOffset, setWeekOffset] = useState(0);
-  const [selectedDay, setSelectedDay] = useState<number | null>(null);
-  const [selectedDate, setSelectedDate] = useState("");
+  const initialDay = (() => { const d = new Date().getDay(); return d === 0 ? 7 : d; })();
+  const [selectedDay, setSelectedDay] = useState<number | null>(initialDay);
+  const [selectedDate, setSelectedDate] = useState(todayISO);
   const [schedules, setSchedules] = useState<ScheduleWithAvailability[]>([]);
   const [loading, setLoading] = useState(false);
   const [drawerSchedule, setDrawerSchedule] = useState<ScheduleWithAvailability | null>(null);
@@ -46,12 +47,6 @@ export default function ReservarPage() {
     [schedules]
   );
 
-  useEffect(() => {
-    const dow = new Date().getDay();
-    setSelectedDay(dow === 0 ? 7 : dow);
-    setSelectedDate(today);
-  }, [today]);
-
   const loadSchedules = useCallback(async (_dayOfWeek: number, date: string) => {
     setLoading(true);
     try {
@@ -65,7 +60,11 @@ export default function ReservarPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedDay && selectedDate) loadSchedules(selectedDay, selectedDate);
+    if (selectedDay && selectedDate) {
+      // Data fetching on selection change — setState inside fetch callback is standard pattern
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      loadSchedules(selectedDay, selectedDate);
+    }
   }, [selectedDay, selectedDate, loadSchedules]);
 
   function selectDay(dayOfWeek: number, iso: string) {

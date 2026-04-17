@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, type FormEvent } from "react";
 import { Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
@@ -142,12 +143,12 @@ export default function Footer() {
             <p className="text-sm text-brand-cream/60 mb-4 leading-relaxed">
               {t.footer.joinCommunityText}
             </p>
-            <a
+            <Link
               href="/#class-info"
               className="inline-block bg-brand-cream/20 hover:bg-brand-cream/30 text-brand-cream text-sm px-5 py-2 rounded-full transition-colors"
             >
               {t.footer.joinCommunityBtn}
-            </a>
+            </Link>
           </div>
 
           {/* 3. Connect and Get Inspired */}

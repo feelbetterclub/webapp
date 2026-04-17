@@ -2,11 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkPassword, createSession, COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  let body: { password?: string };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
   const { password } = body;
 
-  if (!password || !checkPassword(password)) {
-    return NextResponse.json({ error: "Contraseña incorrecta" }, { status: 401 });
+  if (!password || typeof password !== "string") {
+    return NextResponse.json({ error: "Password required" }, { status: 400 });
+  }
+
+  if (!checkPassword(password)) {
+    return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
   const token = await createSession();

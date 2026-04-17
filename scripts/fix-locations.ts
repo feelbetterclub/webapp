@@ -13,7 +13,7 @@ async function run() {
   try {
     const info = await client.execute("PRAGMA table_info(locations)");
     console.log("Current table_info:", info.rows);
-  } catch (e) {
+  } catch {
     console.log("Table does not exist, creating...");
   }
 

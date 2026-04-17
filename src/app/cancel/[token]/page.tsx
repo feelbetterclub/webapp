@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useI18n } from "@/lib/i18n/context";
@@ -82,7 +83,7 @@ export default function CancelPage({ params }: { params: Promise<{ token: string
                 </div>
                 <h2 className="font-heading text-xl font-bold text-brand-deep mb-2">{t.cancel.errorTitle}</h2>
                 <p className="text-muted-foreground">{errorMsg}</p>
-                <a href="/" className="inline-block mt-6 text-brand-teal font-medium hover:underline">{t.cancel.backHome}</a>
+                <Link href="/" className="inline-block mt-6 text-brand-teal font-medium hover:underline">{t.cancel.backHome}</Link>
               </>
             )}
 
@@ -96,9 +97,9 @@ export default function CancelPage({ params }: { params: Promise<{ token: string
                   {info.className} · {info.date} · {info.startTime}
                 </p>
                 <p className="text-sm text-muted-foreground">{t.cancel.cancelledText}</p>
-                <a href="/reservar" className="inline-block mt-6 bg-brand-teal text-brand-cream px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark transition-colors">
+                <Link href="/reservar" className="inline-block mt-6 bg-brand-teal text-brand-cream px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark transition-colors">
                   {t.cancel.bookAnother}
-                </a>
+                </Link>
               </>
             )}
 
@@ -125,7 +126,7 @@ export default function CancelPage({ params }: { params: Promise<{ token: string
                   </div>
                 )}
 
-                <a href="/" className="inline-block mt-4 text-sm text-brand-teal font-medium hover:underline">{t.cancel.backHome}</a>
+                <Link href="/" className="inline-block mt-4 text-sm text-brand-teal font-medium hover:underline">{t.cancel.backHome}</Link>
               </>
             )}
           </div>

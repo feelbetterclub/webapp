@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function Hero() {
@@ -52,18 +53,18 @@ export default function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
+          <Link
             href="/#class-info"
             className="bg-brand-cream text-brand-deep px-8 py-3.5 rounded-full text-base font-semibold hover:bg-white transition-colors shadow-lg"
           >
             {t.hero.cta1}
-          </a>
-          <a
+          </Link>
+          <Link
             href="/reservar"
             className="border-2 border-brand-cream/40 text-brand-cream px-8 py-3.5 rounded-full text-base font-semibold hover:bg-brand-cream/10 transition-colors"
           >
             {t.hero.cta2}
-          </a>
+          </Link>
         </div>
       </div>
 

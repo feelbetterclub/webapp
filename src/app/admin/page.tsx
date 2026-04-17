@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookOpen, Calendar, Users, TrendingUp, Clock, MapPin } from "lucide-react";
+import { BookOpen, Calendar, Users, TrendingUp, MapPin } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";

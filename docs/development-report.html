@@ -8,137 +8,282 @@
     :root { --teal: #0d5e42; --dark: #094a34; --cream: #f4ebd0; --light: #faf8f2; --sage: #e2ece9; --deep: #062e21; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--deep); background: var(--light); line-height: 1.7; }
-    .hero { background: var(--teal); color: var(--cream); padding: 60px 20px; text-align: center; }
-    .hero h1 { font-size: 2.5rem; margin-bottom: 8px; }
-    .hero p { font-size: 1.1rem; opacity: 0.8; }
-    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-    h2 { font-size: 1.6rem; color: var(--teal); margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--sage); }
-    h3 { font-size: 1.15rem; color: var(--dark); margin: 24px 0 8px; }
-    p, li { font-size: 0.95rem; margin-bottom: 6px; }
-    ul { padding-left: 24px; }
-    .badge { display: inline-block; background: var(--teal); color: var(--cream); font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-right: 6px; }
+    .hero-banner { background: linear-gradient(135deg, var(--teal), var(--dark)); color: var(--cream); padding: 60px 20px; text-align: center; }
+    .hero-banner h1 { font-size: 2.5rem; margin-bottom: 8px; }
+    .hero-banner p { font-size: 1.1rem; opacity: 0.8; }
+    .container { max-width: 920px; margin: 0 auto; padding: 40px 20px; }
+    h2 { font-size: 1.5rem; color: var(--teal); margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--sage); }
+    h3 { font-size: 1.1rem; color: var(--dark); margin: 20px 0 6px; }
+    p, li { font-size: 0.92rem; margin-bottom: 5px; }
+    ul { padding-left: 22px; }
+    code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; background: var(--sage); padding: 1px 5px; border-radius: 3px; }
+    .badge { display: inline-block; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-right: 4px; vertical-align: middle; }
     .badge.new { background: #2563eb; }
     .badge.fix { background: #dc2626; }
     .badge.edit { background: #d97706; }
-    .file { font-family: monospace; font-size: 0.85rem; background: var(--sage); padding: 2px 6px; border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem; }
-    th { background: var(--teal); color: var(--cream); text-align: left; padding: 10px 14px; }
-    td { padding: 10px 14px; border-bottom: 1px solid var(--sage); }
+    .badge.sec { background: #7c3aed; }
+    .badge.ref { background: #059669; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.88rem; }
+    th { background: var(--teal); color: var(--cream); text-align: left; padding: 8px 12px; font-size: 0.85rem; }
+    td { padding: 8px 12px; border-bottom: 1px solid var(--sage); }
     tr:nth-child(even) td { background: #f0f5f3; }
-    .summary-box { background: white; border: 1px solid var(--sage); border-radius: 12px; padding: 24px; margin: 24px 0; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
-    .stat { text-align: center; padding: 16px; }
-    .stat .num { font-size: 2rem; font-weight: 700; color: var(--teal); }
-    .stat .label { font-size: 0.8rem; opacity: 0.7; }
-    footer { background: var(--deep); color: var(--cream); text-align: center; padding: 24px; font-size: 0.85rem; opacity: 0.7; }
+    .box { background: #fff; border: 1px solid var(--sage); border-radius: 12px; padding: 24px; margin: 20px 0; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .stat { text-align: center; padding: 12px; }
+    .stat .num { font-size: 1.8rem; font-weight: 700; color: var(--teal); }
+    .stat .lbl { font-size: 0.75rem; opacity: 0.7; }
+    .sev-crit { color: #dc2626; font-weight: 700; }
+    .sev-high { color: #ea580c; font-weight: 600; }
+    .sev-med { color: #d97706; }
+    .sev-low { color: #4b5563; }
+    footer { background: var(--deep); color: var(--cream); text-align: center; padding: 20px; font-size: 0.8rem; opacity: 0.6; }
   </style>
 </head>
 <body>
-<div class="hero">
-  <h1>Feel Better Club</h1>
-  <p>Development Report — Fase 0 + 4 Sprints &middot; April 2026</p>
+
+<div class="hero-banner">
+  <h1>THE FEEL BETTER CLUB</h1>
+  <p>Development Report — Fase 0 + 4 Sprints + Refactor + Security Audit</p>
+  <p style="margin-top:8px;font-size:0.9rem;opacity:0.6;">April 2026</p>
 </div>
+
 <div class="container">
-  <div class="summary-box">
-    <h3>Project Summary</h3>
+
+  <!-- Summary -->
+  <div class="box">
+    <h3 style="margin-top:0;">Project Summary</h3>
     <p><strong>Stack:</strong> Next.js 16.2.3 &middot; React 19 &middot; Tailwind CSS v4 &middot; Turso (libSQL) &middot; Drizzle ORM &middot; Resend</p>
-    <p><strong>Deploy:</strong> <a href="https://feel-better-club.vercel.app">feel-better-club.vercel.app</a></p>
-    <div class="grid-2" style="margin-top:20px;">
-      <div class="stat"><div class="num">23</div><div class="label">Total Routes</div></div>
-      <div class="stat"><div class="num">8</div><div class="label">New API Endpoints</div></div>
-      <div class="stat"><div class="num">7</div><div class="label">New Components</div></div>
-      <div class="stat"><div class="num">3</div><div class="label">New DB Tables</div></div>
+    <p><strong>Deploy:</strong> <a href="https://feel-better-club.vercel.app" style="color:var(--teal)">feel-better-club.vercel.app</a></p>
+    <p><strong>GitHub:</strong> <a href="https://github.com/feelbetterclub/webapp" style="color:var(--teal)">feelbetterclub/webapp</a></p>
+    <div class="grid">
+      <div class="stat"><div class="num">23</div><div class="lbl">Routes</div></div>
+      <div class="stat"><div class="num">8</div><div class="lbl">New Endpoints</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">New Components</div></div>
+      <div class="stat"><div class="num">8</div><div class="lbl">DB Tables</div></div>
     </div>
   </div>
 
-  <h2>Fase 0 — Resolver Incompatibilidades</h2>
-  <h3>1. Schema unification</h3>
-  <p><span class="badge fix">FIX</span> <span class="file">src/db/schema.ts</span> — Drizzle declared <code>schedules</code> but DB uses <code>schedules_v2</code>. Aligned to match reality.</p>
-  <h3>2. TOCTOU race condition</h3>
-  <p><span class="badge fix">FIX</span> <span class="file">src/app/api/bookings/route.ts</span> — Wrapped capacity check + insert in <code>client.transaction("write")</code> with rollback.</p>
+  <!-- ============ FASE 0 ============ -->
+  <h2>Fase 0 — Incompatibility Fixes</h2>
 
-  <h2>Sprint 1 — Visual Redesign + Content</h2>
-  <h3>Navigation</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">Header.tsx</span> — 6 items: About | Class Info | Class Program | Book | Rituals | Contact</p>
-  <h3>Hero</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">Hero.tsx</span> — "Personalised Workouts — Each of You Matters" + palm frond SVGs</p>
-  <h3>Class Info (4 types)</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">Services.tsx</span> — Mobility Flow, Strength Flow, Pilates Flow, Fun Burn + Book buttons</p>
-  <h3>About expanded</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">About.tsx</span> — Our Story + Meet the Founder (Monika bio, 5 paragraphs)</p>
-  <h3>Rituals placeholder</h3>
-  <p><span class="badge new">NEW</span> <span class="file">Rituals.tsx</span> — Coming soon: Nutrition, Sauna, Breathwork, Ice Bath</p>
-  <h3>i18n overhaul</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">en.ts</span> + <span class="file">es.ts</span> — All nav, hero, classInfo, about, rituals keys restructured</p>
+  <h3><span class="badge fix">FIX</span> Schema unification</h3>
+  <p><code>src/db/schema.ts</code> — Drizzle declared table <code>schedules</code> but the DB uses <code>schedules_v2</code>. Aligned to match reality — single-line change, zero DB migration.</p>
 
-  <h2>Sprint 2 — Community + Email</h2>
-  <h3>Resend email service</h3>
-  <p><span class="badge new">NEW</span> <span class="file">src/lib/email.ts</span> — Welcome email (Monika copy) + booking confirmation + cancel link. No-ops if API key missing.</p>
-  <h3>Community members</h3>
-  <p><span class="badge new">NEW</span> Table <code>community_members</code> + <span class="file">POST /api/community/signup</span></p>
-  <h3>Pop-up banner</h3>
-  <p><span class="badge new">NEW</span> <span class="file">CommunityPopup.tsx</span> — "UNLOCK A FREE OUTDOOR CLASS!" on first visit, localStorage dismiss</p>
-  <h3>Booking email + cancel token</h3>
-  <p><span class="badge edit">EDIT</span> Bookings POST generates <code>cancel_token</code>, sends confirmation email with cancel URL</p>
+  <h3><span class="badge fix">FIX</span> TOCTOU race condition</h3>
+  <p><code>src/app/api/bookings/route.ts</code> — Capacity check + insert were not atomic. Two concurrent requests could overbook. Fixed by wrapping in <code>client.transaction("write")</code> with rollback on each early return.</p>
 
+  <!-- ============ SPRINT 1 ============ -->
+  <h2>Sprint 1 — Visual Redesign + Content Overhaul</h2>
+
+  <h3><span class="badge edit">EDIT</span> Navigation restructure</h3>
+  <p><code>Header.tsx</code> — 6 items: About | Class Info | Class Program | Book | Rituals | Contact. Logo left, lang switcher. Responsive <code>lg</code> breakpoint.</p>
+
+  <h3><span class="badge edit">EDIT</span> Hero section</h3>
+  <p><code>Hero.tsx</code> — New headline: <em>"Personalised Workouts — Each of You Matters"</em>. Tagline: "Outdoor Training Community". Decorative palm frond SVGs shaded for text legibility.</p>
+
+  <h3><span class="badge edit">EDIT</span> Class Info (4 types)</h3>
+  <p><code>Services.tsx</code> — Reduced 6 &rarr; 4 classes with exact doc descriptions: Mobility Flow, Strength Flow, Pilates Flow, Fun Burn. Each card has a "Book" button.</p>
+
+  <h3><span class="badge edit">EDIT</span> About expanded</h3>
+  <p><code>About.tsx</code> — "Our Story" (2 paragraphs) + "Meet the Founder &amp; Coach — Monika" (5 paragraphs + signoff). 25+ years in sport, European-certified trainer.</p>
+
+  <h3><span class="badge new">NEW</span> Rituals placeholder</h3>
+  <p><code>Rituals.tsx</code> — Teal section with palm SVG. 4 icons: Nutrition, Sauna, Breathwork, Ice Bath. "Coming Soon" state.</p>
+
+  <h3><span class="badge edit">EDIT</span> i18n overhaul</h3>
+  <p><code>en.ts</code> + <code>es.ts</code> — Nav, hero, classInfo (4 classes), about (story + founder), rituals (placeholder), all anchors updated.</p>
+
+  <!-- ============ SPRINT 2 ============ -->
+  <h2>Sprint 2 — Community Sign-up + Email Infrastructure</h2>
+
+  <h3><span class="badge new">NEW</span> Resend email service</h3>
+  <p><code>src/lib/email.ts</code> — Branded HTML templates. <strong>sendWelcomeEmail()</strong> with Monika's exact welcome copy. <strong>sendBookingConfirmation()</strong> with class details + cancel link. Silently no-ops if <code>RESEND_API_KEY</code> not set.</p>
+
+  <h3><span class="badge new">NEW</span> Community members</h3>
+  <p>Table <code>community_members</code> + <code>POST /api/community/signup</code>. Validates name, email, country prefix + phone. Idempotent — existing email = silent success. Triggers welcome email.</p>
+
+  <h3><span class="badge new">NEW</span> Pop-up banner</h3>
+  <p><code>CommunityPopup.tsx</code> — "UNLOCK A FREE OUTDOOR CLASS!" modal on first visit. Form: name, email, prefix, mobile. localStorage dismiss. i18n EN/ES.</p>
+
+  <h3><span class="badge edit">EDIT</span> Booking confirmation + cancel token</h3>
+  <p>New column <code>cancel_token TEXT</code> (nullable). Idempotent ALTER migration. Booking POST generates cryptographic token (<code>randomBytes</code>), sends confirmation email with cancel URL.</p>
+
+  <!-- ============ SPRINT 3 ============ -->
   <h2>Sprint 3 — Booking Enhancements</h2>
-  <h3>Cancel self-service</h3>
-  <p><span class="badge new">NEW</span> <span class="file">/api/bookings/cancel</span> + <span class="file">/cancel/[token]</span> — GET info, POST cancel, 12h lockout</p>
-  <h3>On-demand requests</h3>
-  <p><span class="badge new">NEW</span> <span class="file">/api/requests</span> + <span class="file">OnDemandForm.tsx</span> — Private or group 5+ session requests</p>
-  <h3>Payment method</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">reservar/page.tsx</span> — CreditCard badge with "Cash / Card / Revolut" on each card</p>
 
+  <h3><span class="badge new">NEW</span> Cancel self-service</h3>
+  <p><code>/api/bookings/cancel</code> (GET info + POST cancel) + <code>/cancel/[token]</code> page. 12h lockout enforced. States: loading, confirm, cancelled, error, lockout warning.</p>
+
+  <h3><span class="badge new">NEW</span> On-demand requests</h3>
+  <p><code>/api/requests</code> + <code>OnDemandForm.tsx</code>. Private or group 5+ session requests. Integrated below class calendar in <code>/reservar</code>.</p>
+
+  <h3><span class="badge edit">EDIT</span> Payment method display</h3>
+  <p><code>reservar/page.tsx</code> — CreditCard icon + "Cash / Card / Revolut" badge on each schedule card.</p>
+
+  <!-- ============ SPRINT 4 ============ -->
   <h2>Sprint 4 — Footer + Social Proof</h2>
-  <h3>Footer 4 columns</h3>
-  <p><span class="badge edit">EDIT</span> <span class="file">Footer.tsx</span> — Ask us anything (form), Join Community, Connect (IG), Brand</p>
-  <h3>Testimonials</h3>
-  <p><span class="badge new">NEW</span> Table <code>testimonials</code> + public GET + admin CRUD. Star ratings above footer.</p>
-  <h3>Messages</h3>
-  <p><span class="badge new">NEW</span> Table <code>messages</code> + <span class="file">POST /api/messages</span> — Anonymous, no phone.</p>
 
-  <h2>Route Map (23 routes)</h2>
+  <h3><span class="badge edit">EDIT</span> Footer 4 columns</h3>
+  <table>
+    <tr><th>Column</th><th>Content</th></tr>
+    <tr><td>Ask us anything</td><td>Anonymous message form (text + optional email). <code>POST /api/messages</code></td></tr>
+    <tr><td>Join our Community</td><td>CTA text + link to explore classes</td></tr>
+    <tr><td>Connect &amp; Get Inspired</td><td>Instagram link (sole platform for now)</td></tr>
+    <tr><td>Brand</td><td>Logo + "Outdoor Training Community" + Tarifa, ES</td></tr>
+  </table>
+
+  <h3><span class="badge new">NEW</span> Testimonials</h3>
+  <p>Table <code>testimonials</code>. Public <code>GET /api/testimonials</code> (visible=1). Admin CRUD <code>/api/admin/testimonials</code> (create, toggle visibility, delete). Rendered as star-rated quote cards above footer.</p>
+
+  <h3><span class="badge new">NEW</span> Messages</h3>
+  <p>Table <code>messages</code>. <code>POST /api/messages</code> — anonymous, no phone (per doc: "I don't want to leave my mobile number there"). 3-2000 char limit.</p>
+
+  <!-- ============ REFACTOR ============ -->
+  <h2>Refactor</h2>
+
+  <h3><span class="badge ref">REFACTOR</span> i18n context — eliminate setState in effect</h3>
+  <p><code>src/lib/i18n/context.tsx</code> ��� Replaced <code>useEffect + setState</code> with <code>useSyncExternalStore</code> for server-safe, lint-clean initial language detection from localStorage.</p>
+
+  <h3><span class="badge ref">REFACTOR</span> All <code>&lt;a&gt;</code> → <code>&lt;Link&gt;</code></h3>
+  <p>Header, Hero, Footer, Cancel page — replaced 7 internal <code>&lt;a&gt;</code> elements with Next.js <code>&lt;Link&gt;</code> for client-side navigation and preloading.</p>
+
+  <h3><span class="badge ref">REFACTOR</span> Reservar initial state</h3>
+  <p><code>reservar/page.tsx</code> — Moved initial day/date calculation from useEffect into <code>useState</code> initializer. Eliminated cascading render.</p>
+
+  <h3><span class="badge ref">REFACTOR</span> Contact form connected</h3>
+  <p><code>Contact.tsx</code> — Was a no-op <code>setSubmitted(true)</code>. Now actually sends to <code>POST /api/messages</code> with name/email/interest/message.</p>
+
+  <h3><span class="badge ref">REFACTOR</span> class_requests table centralized</h3>
+  <p>Moved from inline <code>CREATE TABLE</code> in <code>/api/requests</code> handler to <code>ensure-tables.ts</code> for consistency with all other tables.</p>
+
+  <h3><span class="badge ref">REFACTOR</span> Unused imports cleaned</h3>
+  <p><code>admin/page.tsx</code> removed unused <code>Clock</code> import. <code>scripts/fix-locations.ts</code> removed unused <code>e</code> variable.</p>
+
+  <h3>Lint result: <strong style="color:var(--teal);">0 errors, 0 warnings</strong></h3>
+
+  <!-- ============ SECURITY AUDIT ============ -->
+  <h2>Security Audit (OWASP Top 10)</h2>
+
+  <table>
+    <tr><th>Severity</th><th>Issue</th><th>Status</th></tr>
+    <tr>
+      <td><span class="sev-crit">CRITICAL</span></td>
+      <td>JWT secret fallback hardcoded <code>"feel-better-club-secret-change-me"</code> in auth.ts</td>
+      <td><span class="badge sec">FIXED</span> Throws in production if <code>ADMIN_SECRET</code> env not set</td>
+    </tr>
+    <tr>
+      <td><span class="sev-crit">CRITICAL</span></td>
+      <td>Admin password fallback <code>"admin123"</code> if env missing</td>
+      <td><span class="badge sec">FIXED</span> Throws in production if <code>ADMIN_PASSWORD</code> env not set</td>
+    </tr>
+    <tr>
+      <td><span class="sev-high">HIGH</span></td>
+      <td>Timing attack on plain <code>===</code> password comparison</td>
+      <td><span class="badge sec">FIXED</span> Now uses <code>crypto.timingSafeEqual()</code></td>
+    </tr>
+    <tr>
+      <td><span class="sev-high">HIGH</span></td>
+      <td>SQL injection via table name interpolation in <code>rawInsert</code> / <code>rawSelect</code></td>
+      <td><span class="badge sec">FIXED</span> Added table name whitelist + orderBy sanitization</td>
+    </tr>
+    <tr>
+      <td><span class="sev-high">HIGH</span></td>
+      <td>Login endpoint crashes with malformed JSON body</td>
+      <td><span class="badge sec">FIXED</span> Added try/catch around <code>req.json()</code> + type check</td>
+    </tr>
+    <tr>
+      <td><span class="sev-med">MEDIUM</span></td>
+      <td>Contact form was a no-op (didn't send data anywhere)</td>
+      <td><span class="badge sec">FIXED</span> Now sends to <code>/api/messages</code></td>
+    </tr>
+    <tr>
+      <td><span class="sev-low">INFO</span></td>
+      <td>No rate limiting on login/signup/messages (infrastructure level)</td>
+      <td>Noted — use Vercel Edge Config or middleware for rate limiting</td>
+    </tr>
+    <tr>
+      <td><span class="sev-low">INFO</span></td>
+      <td>Cancel token has no expiry (valid forever)</td>
+      <td>Accepted — cancel is idempotent, token is one-use per booking</td>
+    </tr>
+  </table>
+
+  <h3>Secure-by-default patterns in place</h3>
+  <ul>
+    <li>All SQL queries use parameterized <code>args</code> (never string interpolation for values)</li>
+    <li>Admin routes protected by JWT via <code>requireAdmin()</code> middleware</li>
+    <li>Auth cookie: <code>httpOnly</code>, <code>secure</code> in production, <code>sameSite: "lax"</code></li>
+    <li>Email addresses validated via regex at all entry points</li>
+    <li>HTML email content escaped with dedicated <code>escape()</code> function</li>
+    <li>Cancel tokens: 192-bit cryptographic randomness (<code>randomBytes(24)</code>)</li>
+    <li>Community signup is idempotent — does not leak member existence</li>
+    <li>TOCTOU fixed: booking capacity check is atomic (write transaction)</li>
+  </ul>
+
+  <!-- ============ ROUTES ============ -->
+  <h2>Complete Route Map (23 routes)</h2>
   <table>
     <tr><th>Route</th><th>Type</th><th>Description</th></tr>
-    <tr><td><code>/</code></td><td>Static</td><td>Landing + Pop-up</td></tr>
-    <tr><td><code>/reservar</code></td><td>Static</td><td>Calendar + Booking + On-demand</td></tr>
-    <tr><td><code>/cancel/[token]</code></td><td>Dynamic</td><td>Self-service cancel</td></tr>
-    <tr><td><code>/admin/*</code></td><td>Static</td><td>Admin dashboard, classes, students, instructors, locations, login</td></tr>
-    <tr><td><code>/api/schedules</code></td><td>GET</td><td>Public schedules</td></tr>
-    <tr><td><code>/api/bookings</code></td><td>GET/POST</td><td>Bookings (atomic tx)</td></tr>
-    <tr><td><code>/api/bookings/cancel</code></td><td>GET/POST</td><td>Cancel flow</td></tr>
-    <tr><td><code>/api/community/signup</code></td><td>POST</td><td>Community signup + email</td></tr>
-    <tr><td><code>/api/requests</code></td><td>POST</td><td>On-demand requests</td></tr>
-    <tr><td><code>/api/messages</code></td><td>POST</td><td>Anonymous messages</td></tr>
-    <tr><td><code>/api/testimonials</code></td><td>GET</td><td>Public testimonials</td></tr>
-    <tr><td><code>/api/admin/*</code></td><td>CRUD</td><td>Classes, schedules, instructors, locations, testimonials, upcoming, login</td></tr>
+    <tr><td><code>/</code></td><td>Static</td><td>Landing: Hero + ClassInfo + About + Rituals + Contact + Popup</td></tr>
+    <tr><td><code>/reservar</code></td><td>Static</td><td>Class calendar + booking drawer + on-demand form</td></tr>
+    <tr><td><code>/cancel/[token]</code></td><td>Dynamic</td><td>Self-service booking cancellation</td></tr>
+    <tr><td><code>/admin</code></td><td>Static</td><td>Admin dashboard (upcoming sessions)</td></tr>
+    <tr><td><code>/admin/clases</code></td><td>Static</td><td>Class + schedule CRUD</td></tr>
+    <tr><td><code>/admin/alumnos</code></td><td>Static</td><td>Students / bookings</td></tr>
+    <tr><td><code>/admin/instructores</code></td><td>Static</td><td>Instructor CRUD</td></tr>
+    <tr><td><code>/admin/locations</code></td><td>Static</td><td>Location CRUD</td></tr>
+    <tr><td><code>/admin/login</code></td><td>Static</td><td>Admin login</td></tr>
+    <tr><td colspan="3" style="background:var(--sage);font-weight:600;">API — Public</td></tr>
+    <tr><td><code>GET /api/schedules</code></td><td>Dynamic</td><td>Schedules by date with availability</td></tr>
+    <tr><td><code>GET|POST /api/bookings</code></td><td>Dynamic</td><td>Bookings (atomic transaction)</td></tr>
+    <tr><td><code>GET|POST /api/bookings/cancel</code></td><td>Dynamic</td><td>Cancel flow (12h lockout)</td></tr>
+    <tr><td><code>POST /api/community/signup</code></td><td>Dynamic</td><td>Community signup + welcome email</td></tr>
+    <tr><td><code>POST /api/requests</code></td><td>Dynamic</td><td>On-demand class request</td></tr>
+    <tr><td><code>POST /api/messages</code></td><td>Dynamic</td><td>"Ask us anything" message</td></tr>
+    <tr><td><code>GET /api/testimonials</code></td><td>Dynamic</td><td>Public visible testimonials</td></tr>
+    <tr><td colspan="3" style="background:var(--sage);font-weight:600;">API �� Admin (JWT)</td></tr>
+    <tr><td><code>CRUD /api/admin/classes</code></td><td>Dynamic</td><td>Classes management</td></tr>
+    <tr><td><code>CRUD /api/admin/schedules</code></td><td>Dynamic</td><td>Schedule management</td></tr>
+    <tr><td><code>CRUD /api/admin/instructors</code></td><td>Dynamic</td><td>Instructor management</td></tr>
+    <tr><td><code>CRUD /api/admin/locations</code></td><td>Dynamic</td><td>Location management</td></tr>
+    <tr><td><code>CRUD /api/admin/testimonials</code></td><td>Dynamic</td><td>Testimonials management</td></tr>
+    <tr><td><code>GET /api/admin/upcoming</code></td><td>Dynamic</td><td>Dashboard upcoming</td></tr>
+    <tr><td><code>POST /api/admin/login</code></td><td>Dynamic</td><td>Admin authentication</td></tr>
   </table>
 
+  <!-- ============ DB ============ -->
   <h2>Database (8 tables)</h2>
   <table>
-    <tr><th>Table</th><th>Status</th></tr>
-    <tr><td>classes</td><td>Existing</td></tr>
-    <tr><td>schedules_v2</td><td>Existing (unified)</td></tr>
-    <tr><td>bookings</td><td>Extended (+cancel_token)</td></tr>
-    <tr><td>instructors</td><td>Existing</td></tr>
-    <tr><td>locations</td><td>Existing</td></tr>
-    <tr><td>community_members</td><td>New</td></tr>
-    <tr><td>testimonials</td><td>New</td></tr>
-    <tr><td>messages</td><td>New</td></tr>
+    <tr><th>Table</th><th>Status</th><th>Key Columns</th></tr>
+    <tr><td><code>classes</code></td><td>Existing</td><td>name, description, duration, capacity, location</td></tr>
+    <tr><td><code>schedules_v2</code></td><td>Existing (unified)</td><td>class_id, date, start_time, instructor</td></tr>
+    <tr><td><code>bookings</code></td><td>Extended</td><td>schedule_id, user_*, status, <strong>cancel_token</strong></td></tr>
+    <tr><td><code>instructors</code></td><td>Existing</td><td>name, email, phone</td></tr>
+    <tr><td><code>locations</code></td><td>Existing</td><td>name, url</td></tr>
+    <tr><td><code>community_members</code></td><td><strong>New</strong></td><td>name, email (UNIQUE), phone_prefix, phone, source</td></tr>
+    <tr><td><code>testimonials</code></td><td><strong>New</strong></td><td>author, text, class_type, rating, visible</td></tr>
+    <tr><td><code>messages</code></td><td><strong>New</strong></td><td>text, reply_email</td></tr>
   </table>
 
-  <h2>Env Variables</h2>
+  <!-- ============ ENV ============ -->
+  <h2>Environment Variables</h2>
   <table>
-    <tr><th>Variable</th><th>Required</th></tr>
-    <tr><td>TURSO_DATABASE_URL</td><td>Production</td></tr>
-    <tr><td>TURSO_AUTH_TOKEN</td><td>Production</td></tr>
-    <tr><td>ADMIN_PASSWORD</td><td>Yes</td></tr>
-    <tr><td>RESEND_API_KEY</td><td>For emails</td></tr>
-    <tr><td>EMAIL_FROM</td><td>Optional</td></tr>
-    <tr><td>NEXT_PUBLIC_SITE_URL</td><td>Optional</td></tr>
+    <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>TURSO_DATABASE_URL</code></td><td>Production</td><td>Turso remote DB URL</td></tr>
+    <tr><td><code>TURSO_AUTH_TOKEN</code></td><td>Production</td><td>Turso auth token</td></tr>
+    <tr><td><code>ADMIN_PASSWORD</code></td><td>Required (prod throws without)</td><td>Admin panel password</td></tr>
+    <tr><td><code>ADMIN_SECRET</code></td><td>Required (prod throws without)</td><td>JWT signing secret</td></tr>
+    <tr><td><code>RESEND_API_KEY</code></td><td>For emails</td><td>Resend API key (silently skips if not set)</td></tr>
+    <tr><td><code>EMAIL_FROM</code></td><td>Optional</td><td>Sender address (default: hello@feelbetterclub.com)</td></tr>
+    <tr><td><code>NEXT_PUBLIC_SITE_URL</code></td><td>Optional</td><td>Base URL for cancel links</td></tr>
   </table>
+
 </div>
-<footer>&copy; 2026 Feel Better Club &middot; Development Report</footer>
+
+<footer>
+  &copy; 2026 Feel Better Club &middot; Development Report &middot; Generated April 2026
+</footer>
+
 </body>
 </html>

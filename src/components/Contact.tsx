@@ -20,8 +20,23 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const { t } = useI18n();
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const interest = String(fd.get("interest") || "");
+    const message = String(fd.get("message") || "");
+    const name = String(fd.get("name") || "");
+    const email = String(fd.get("email") || "");
+    const text = `[Contact Form]\nName: ${name}\nEmail: ${email}\nInterest: ${interest}\n\n${message}`;
+    try {
+      await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, replyEmail: email }),
+      });
+    } catch {
+      /* best-effort */
+    }
     setSubmitted(true);
   }
 

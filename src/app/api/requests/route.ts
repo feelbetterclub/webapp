@@ -24,21 +24,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    // Ensure table exists (idempotent)
-    await client.execute(`
-      CREATE TABLE IF NOT EXISTS class_requests (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        phone TEXT,
-        group_size TEXT,
-        preferred_date TEXT,
-        notes TEXT,
-        status TEXT NOT NULL DEFAULT 'pending',
-        created_at TEXT NOT NULL
-      )
-    `);
-
     await client.execute({
       sql: `INSERT INTO class_requests (name, email, phone, group_size, preferred_date, notes, status, created_at)
             VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)`,

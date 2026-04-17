@@ -81,6 +81,18 @@ export async function ensureTables() {
       reply_email TEXT,
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS class_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT,
+      group_size TEXT,
+      preferred_date TEXT,
+      notes TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL
+    );
   `);
 
   // Idempotent ALTERs for pre-existing DBs. libSQL lacks IF NOT EXISTS
