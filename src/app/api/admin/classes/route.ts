@@ -8,7 +8,9 @@ export async function GET() {
   try {
     const denied = await requireAdmin();
     if (denied) return denied;
-    const result = await client.execute("SELECT * FROM classes ORDER BY name");
+    const result = await client.execute(
+      "SELECT id, name, description, duration_minutes AS durationMinutes, max_capacity AS maxCapacity, queue_capacity AS queueCapacity, icon, location, location_url AS locationUrl FROM classes ORDER BY name"
+    );
     return NextResponse.json(result.rows);
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
