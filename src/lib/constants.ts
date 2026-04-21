@@ -1,6 +1,6 @@
 export const DEFAULTS: { durationMinutes: number; maxCapacity: number; queueCapacity: number; icon: string } = {
   durationMinutes: 60,
-  maxCapacity: 15,
+  maxCapacity: 10,
   queueCapacity: 5,
   icon: "Sun",
 };

@@ -207,6 +207,20 @@ export default function ClasesPage() {
               <Input label="Duration (min)" type="number" min={15} max={180} value={form.durationMinutes} onChange={(e) => setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))} />
               <Input label="Capacity" type="number" min={1} max={100} value={form.maxCapacity} onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
               <Input label="Queue" type="number" min={0} max={50} value={form.queueCapacity} onChange={(e) => setForm((f) => ({ ...f, queueCapacity: Number(e.target.value) }))} />
+              <div>
+                <label className="block text-sm font-medium text-brand-deep mb-1 flex items-center gap-1">
+                  <Euro className="w-3.5 h-3.5" /> Price (EUR)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={form.sessionPrice}
+                  onChange={(e) => setForm((f) => ({ ...f, sessionPrice: e.target.value === "" ? "" : Number(e.target.value) }))}
+                  placeholder="Leave empty for free / donation"
+                  className="w-full px-3 py-2 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30"
+                />
+              </div>
               {locationsList.length > 0 && (
                 <Select label="Location" value={form.locationId} onChange={(e) => setForm((f) => ({ ...f, locationId: Number(e.target.value) }))}>
                   <option value={0}>No location</option>
@@ -232,37 +246,6 @@ export default function ClasesPage() {
                   ) : (
                     <Input label="Instructor" value={form.instructorName} placeholder="Name" onChange={(e) => setForm((f) => ({ ...f, instructorName: e.target.value }))} />
                   )}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-brand-deep mb-1 flex items-center gap-1">
-                      <Euro className="w-3.5 h-3.5" /> Price (EUR)
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      step={1}
-                      value={form.sessionPrice}
-                      onChange={(e) => setForm((f) => ({ ...f, sessionPrice: e.target.value === "" ? "" : Number(e.target.value) }))}
-                      placeholder="Leave empty for free / donation"
-                      className="w-full px-3 py-2 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-brand-deep mb-1 flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" /> Max Capacity
-                    </label>
-                    <input
-                      type="number"
-                      min={1}
-                      max={100}
-                      value={form.sessionMaxCapacity}
-                      onChange={(e) => setForm((f) => ({ ...f, sessionMaxCapacity: e.target.value === "" ? "" : Number(e.target.value) }))}
-                      placeholder={`Default: ${form.maxCapacity}`}
-                      className="w-full px-3 py-2 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30"
-                    />
-                  </div>
                 </div>
 
                 {/* Recurring */}
