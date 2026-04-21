@@ -6,6 +6,7 @@ export const classes = sqliteTable("classes", {
   description: text("description"),
   durationMinutes: integer("duration_minutes").notNull().default(60),
   maxCapacity: integer("max_capacity").notNull().default(15),
+  queueCapacity: integer("queue_capacity").notNull().default(5),
   icon: text("icon").default("Sun"),
   location: text("location"),
   locationUrl: text("location_url"),
@@ -21,6 +22,7 @@ export const schedules = sqliteTable("schedules_v2", {
   instructor: text("instructor"),
   price: integer("price"), // cents — null means free / donation-based
   maxCapacity: integer("max_capacity"), // override class default — null = use class default
+  queueCapacity: integer("queue_capacity"), // override class default — null = use class default
 });
 
 export const bookings = sqliteTable("bookings", {

@@ -8,7 +8,7 @@ export async function GET() {
     const denied = await requireAdmin();
     if (denied) return denied;
     const result = await client.execute(
-      "SELECT s.id, s.class_id as classId, s.date, s.start_time as startTime, s.instructor, s.price, s.max_capacity as maxCapacity, c.name as className FROM schedules_v2 s INNER JOIN classes c ON s.class_id = c.id ORDER BY s.date, s.start_time"
+      "SELECT s.id, s.class_id as classId, s.date, s.start_time as startTime, s.instructor, s.price, s.max_capacity as maxCapacity, s.queue_capacity as queueCapacity, c.name as className FROM schedules_v2 s INNER JOIN classes c ON s.class_id = c.id ORDER BY s.date, s.start_time"
     );
     return NextResponse.json(result.rows);
   } catch (err) {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   try {
     const denied = await requireAdmin();
     if (denied) return denied;
-    const { classId, date, startTime, instructor, recurring, untilDate, price, maxCapacity } = await req.json();
+    const { classId, date, startTime, instructor, recurring, untilDate, price, maxCapacity, queueCapacity } = await req.json();
     if (!classId || !date || !startTime) {
       return NextResponse.json({ error: "Class, date and time required" }, { status: 400 });
     }
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
           instructor: instructor || null,
           price: price != null ? Number(price) : null,
           max_capacity: maxCapacity != null ? Number(maxCapacity) : null,
+          queue_capacity: queueCapacity != null ? Number(queueCapacity) : null,
         });
         current.setDate(current.getDate() + 7);
         count++;
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
       instructor: instructor || null,
       price: price != null ? Number(price) : null,
       max_capacity: maxCapacity != null ? Number(maxCapacity) : null,
+      queue_capacity: queueCapacity != null ? Number(queueCapacity) : null,
     });
     return NextResponse.json({ success: true, count: 1 }, { status: 201 });
   } catch (err) {

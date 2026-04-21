@@ -1,6 +1,7 @@
-export const DEFAULTS: { durationMinutes: number; maxCapacity: number; icon: string } = {
+export const DEFAULTS: { durationMinutes: number; maxCapacity: number; queueCapacity: number; icon: string } = {
   durationMinutes: 60,
   maxCapacity: 15,
+  queueCapacity: 5,
   icon: "Sun",
 };
 
@@ -15,4 +16,5 @@ export const WAITLIST_STATUS = {
   EXPIRED: "expired" as const,
 };
 
+/** @deprecated Use per-class/session queueCapacity instead */
 export const WAITLIST_MAX = 5;

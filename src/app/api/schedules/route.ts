@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
           c.name as className, c.description as classDescription,
           c.duration_minutes as durationMinutes,
           COALESCE(s.max_capacity, c.max_capacity) as maxCapacity,
+          COALESCE(s.queue_capacity, c.queue_capacity, 5) as queueCapacity,
           c.icon, c.location, c.location_url as locationUrl,
           COALESCE(b.cnt, 0) as currentBookings,
           COALESCE(s.max_capacity, c.max_capacity) - COALESCE(b.cnt, 0) as spotsLeft,
@@ -43,10 +44,9 @@ export async function GET(req: NextRequest) {
       args: [date, date, date],
     });
 
-    const WAITLIST_MAX = 5;
     const rows = result.rows.map((r) => ({
       ...r,
-      waitlistFull: (r.waitlistCount as number) >= WAITLIST_MAX,
+      waitlistFull: (r.waitlistCount as number) >= (r.queueCapacity as number),
     }));
 
     return NextResponse.json(rows);

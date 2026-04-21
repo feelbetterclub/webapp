@@ -6,6 +6,7 @@ export interface ClassItem {
   description: string | null;
   durationMinutes: number;
   maxCapacity: number;
+  queueCapacity: number;
   icon: string | null;
   location: string | null;
   locationUrl: string | null;
@@ -26,6 +27,7 @@ export interface ScheduleItem {
   instructor: string | null;
   price: number | null;
   maxCapacity: number | null;
+  queueCapacity: number | null;
 }
 
 export interface ScheduleWithAvailability {
@@ -38,6 +40,7 @@ export interface ScheduleWithAvailability {
   classDescription: string | null;
   durationMinutes: number;
   maxCapacity: number;
+  queueCapacity: number;
   icon: string | null;
   location: string | null;
   locationUrl: string | null;

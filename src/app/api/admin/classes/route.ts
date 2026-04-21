@@ -19,13 +19,14 @@ export async function POST(req: NextRequest) {
   try {
     const denied = await requireAdmin();
     if (denied) return denied;
-    const { name, description, durationMinutes, maxCapacity, icon, location, locationUrl } = await req.json();
+    const { name, description, durationMinutes, maxCapacity, queueCapacity, icon, location, locationUrl } = await req.json();
     if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
     await rawInsert("classes", {
       name,
       description: description || null,
       duration_minutes: durationMinutes || DEFAULTS.durationMinutes,
       max_capacity: maxCapacity || DEFAULTS.maxCapacity,
+      queue_capacity: queueCapacity ?? DEFAULTS.queueCapacity,
       icon: icon || DEFAULTS.icon,
       location: location || null,
       location_url: locationUrl || null,
@@ -40,11 +41,11 @@ export async function PUT(req: NextRequest) {
   try {
     const denied = await requireAdmin();
     if (denied) return denied;
-    const { id, name, description, durationMinutes, maxCapacity, icon, location, locationUrl } = await req.json();
+    const { id, name, description, durationMinutes, maxCapacity, queueCapacity, icon, location, locationUrl } = await req.json();
     if (!id || !name) return NextResponse.json({ error: "ID and name required" }, { status: 400 });
     await client.execute({
-      sql: "UPDATE classes SET name=?, description=?, duration_minutes=?, max_capacity=?, icon=?, location=?, location_url=? WHERE id=?",
-      args: [name, description || null, durationMinutes || DEFAULTS.durationMinutes, maxCapacity || DEFAULTS.maxCapacity, icon || DEFAULTS.icon, location || null, locationUrl || null, id],
+      sql: "UPDATE classes SET name=?, description=?, duration_minutes=?, max_capacity=?, queue_capacity=?, icon=?, location=?, location_url=? WHERE id=?",
+      args: [name, description || null, durationMinutes || DEFAULTS.durationMinutes, maxCapacity || DEFAULTS.maxCapacity, queueCapacity ?? DEFAULTS.queueCapacity, icon || DEFAULTS.icon, location || null, locationUrl || null, id],
     });
     return NextResponse.json({ success: true });
   } catch (err) {

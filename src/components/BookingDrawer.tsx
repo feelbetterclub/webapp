@@ -180,8 +180,8 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
               {isWaitlistMode && (
                 <p className="text-xs text-amber-700 bg-amber-50 px-4 py-3 rounded-xl">
                   {lang === "es"
-                    ? `Esta clase está completa. Te apuntarás a la lista de espera (${schedule.waitlistCount}/5).`
-                    : `This class is full. You'll be added to the waitlist (${schedule.waitlistCount}/5).`}
+                    ? `Esta clase está completa. Te apuntarás a la lista de espera (${schedule.waitlistCount}/${schedule.queueCapacity}).`
+                    : `This class is full. You'll be added to the waitlist (${schedule.waitlistCount}/${schedule.queueCapacity}).`}
                 </p>
               )}
 

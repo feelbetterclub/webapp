@@ -28,6 +28,7 @@ const emptyForm = {
   indefinite: false,
   sessionPrice: "" as string | number,
   sessionMaxCapacity: "" as string | number,
+  queueCapacity: DEFAULTS.queueCapacity as number,
 };
 
 export default function ClasesPage() {
@@ -78,6 +79,7 @@ export default function ClasesPage() {
       description: c.description || "",
       durationMinutes: c.durationMinutes,
       maxCapacity: c.maxCapacity,
+      queueCapacity: c.queueCapacity ?? DEFAULTS.queueCapacity,
       locationId: loc?.id || 0,
       instructorName: defaultInstructor,
     });
@@ -99,6 +101,7 @@ export default function ClasesPage() {
         description: form.description,
         durationMinutes: form.durationMinutes,
         maxCapacity: form.maxCapacity,
+      queueCapacity: form.queueCapacity,
         icon: DEFAULTS.icon,
         location: selectedLocation?.name || null,
         locationUrl: selectedLocation?.url || null,
@@ -202,7 +205,8 @@ export default function ClasesPage() {
                 <Textarea label="Description" rows={2} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
               </div>
               <Input label="Duration (min)" type="number" min={15} max={180} value={form.durationMinutes} onChange={(e) => setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))} />
-              <Input label="Max Capacity" type="number" min={1} max={100} value={form.maxCapacity} onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
+              <Input label="Capacity" type="number" min={1} max={100} value={form.maxCapacity} onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
+              <Input label="Queue" type="number" min={0} max={50} value={form.queueCapacity} onChange={(e) => setForm((f) => ({ ...f, queueCapacity: Number(e.target.value) }))} />
               {locationsList.length > 0 && (
                 <Select label="Location" value={form.locationId} onChange={(e) => setForm((f) => ({ ...f, locationId: Number(e.target.value) }))}>
                   <option value={0}>No location</option>
@@ -328,7 +332,7 @@ export default function ClasesPage() {
                     {c.description && <p className="text-sm text-muted-foreground mt-0.5">{c.description}</p>}
                     <div className="flex flex-wrap gap-4 mt-2 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {c.durationMinutes} min</span>
-                      <span>{c.maxCapacity} spots</span>
+                      <span>{c.maxCapacity} spots + {c.queueCapacity ?? 5} queue</span>
                       {c.location && (
                         <span className="flex items-center gap-1">
                           <MapPin className="w-3 h-3" />

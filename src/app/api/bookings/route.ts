@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { client } from "@/db";
-import { BOOKING_STATUS, WAITLIST_STATUS, WAITLIST_MAX } from "@/lib/constants";
+import { BOOKING_STATUS, WAITLIST_STATUS } from "@/lib/constants";
 import { sendBookingConfirmation } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     const tx = await client.transaction("write");
     try {
       const scheduleResult = await tx.execute({
-        sql: "SELECT s.class_id, s.start_time, s.price, COALESCE(s.max_capacity, c.max_capacity) as max_capacity, c.name as class_name FROM schedules_v2 s INNER JOIN classes c ON s.class_id = c.id WHERE s.id = ?",
+        sql: "SELECT s.class_id, s.start_time, s.price, COALESCE(s.max_capacity, c.max_capacity) as max_capacity, COALESCE(s.queue_capacity, c.queue_capacity, 5) as queue_capacity, c.name as class_name FROM schedules_v2 s INNER JOIN classes c ON s.class_id = c.id WHERE s.id = ?",
         args: [scheduleId],
       });
 
@@ -75,6 +75,7 @@ export async function POST(req: NextRequest) {
 
       const row = scheduleResult.rows[0];
       const maxCapacity = row.max_capacity as number;
+      const queueCapacity = row.queue_capacity as number;
       scheduleInfo = {
         className: row.class_name as string,
         startTime: row.start_time as string,
@@ -114,7 +115,7 @@ export async function POST(req: NextRequest) {
         });
         const currentWaitlist = waitlistCount.rows[0]?.cnt as number;
 
-        if (currentWaitlist >= WAITLIST_MAX) {
+        if (currentWaitlist >= queueCapacity) {
           await tx.rollback();
           return NextResponse.json({ error: "Class and waitlist are full" }, { status: 409 });
         }
