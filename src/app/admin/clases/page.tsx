@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Pencil, Trash2, X, Clock, Calendar, MapPin, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Clock, Calendar, MapPin, RefreshCw, Euro, Users } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -26,6 +26,8 @@ const emptyForm = {
   recurring: false,
   untilDate: "",
   indefinite: false,
+  sessionPrice: "" as string | number,
+  sessionMaxCapacity: "" as string | number,
 };
 
 export default function ClasesPage() {
@@ -133,6 +135,8 @@ export default function ClasesPage() {
               instructor: form.instructorName || null,
               recurring: form.recurring,
               untilDate: form.recurring && !form.indefinite ? form.untilDate : null,
+              price: form.sessionPrice !== "" ? Number(form.sessionPrice) * 100 : null,
+              maxCapacity: form.sessionMaxCapacity !== "" ? Number(form.sessionMaxCapacity) : null,
             }),
           });
         }
@@ -226,6 +230,37 @@ export default function ClasesPage() {
                   )}
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-brand-deep mb-1 flex items-center gap-1">
+                      <Euro className="w-3.5 h-3.5" /> Price (EUR)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      step={1}
+                      value={form.sessionPrice}
+                      onChange={(e) => setForm((f) => ({ ...f, sessionPrice: e.target.value === "" ? "" : Number(e.target.value) }))}
+                      placeholder="Leave empty for free / donation"
+                      className="w-full px-3 py-2 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-brand-deep mb-1 flex items-center gap-1">
+                      <Users className="w-3.5 h-3.5" /> Max Capacity
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={form.sessionMaxCapacity}
+                      onChange={(e) => setForm((f) => ({ ...f, sessionMaxCapacity: e.target.value === "" ? "" : Number(e.target.value) }))}
+                      placeholder={`Default: ${form.maxCapacity}`}
+                      className="w-full px-3 py-2 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30"
+                    />
+                  </div>
+                </div>
+
                 {/* Recurring */}
                 <div className="flex flex-wrap items-center gap-4">
                   <label className="flex items-center gap-2 text-sm cursor-pointer">
@@ -316,6 +351,8 @@ export default function ClasesPage() {
                           <Calendar className="w-3 h-3" />
                           {new Date(s.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} {s.startTime}
                           {s.instructor && <span className="text-muted-foreground">· {s.instructor}</span>}
+                          {s.price != null && <span className="text-brand-teal">· {(s.price / 100).toFixed(0)}€</span>}
+                          {s.maxCapacity != null && <span className="text-muted-foreground">· {s.maxCapacity} spots</span>}
                           <button onClick={() => handleDeleteSchedule(s.id)} className="ml-1 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100">
                             <X className="w-3 h-3" />
                           </button>

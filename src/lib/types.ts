@@ -24,6 +24,8 @@ export interface ScheduleItem {
   date: string;
   startTime: string;
   instructor: string | null;
+  price: number | null;
+  maxCapacity: number | null;
 }
 
 export interface ScheduleWithAvailability {
@@ -41,6 +43,9 @@ export interface ScheduleWithAvailability {
   locationUrl: string | null;
   currentBookings: number;
   spotsLeft: number;
+  price: number | null;
+  waitlistCount: number;
+  waitlistFull: boolean;
 }
 
 export interface BookingItem {

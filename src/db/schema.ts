@@ -19,6 +19,8 @@ export const schedules = sqliteTable("schedules_v2", {
   date: text("date").notNull(), // "2026-04-15" — specific date
   startTime: text("start_time").notNull(), // "09:00"
   instructor: text("instructor"),
+  price: integer("price"), // cents — null means free / donation-based
+  maxCapacity: integer("max_capacity"), // override class default — null = use class default
 });
 
 export const bookings = sqliteTable("bookings", {
@@ -66,3 +68,19 @@ export const communityMembers = sqliteTable("community_members", {
 });
 
 export type CommunityMemberRow = typeof communityMembers.$inferSelect;
+
+export const waitlist = sqliteTable("waitlist", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  scheduleId: integer("schedule_id")
+    .references(() => schedules.id)
+    .notNull(),
+  date: text("date").notNull(),
+  userName: text("user_name").notNull(),
+  userEmail: text("user_email").notNull(),
+  userPhone: text("user_phone"),
+  position: integer("position").notNull(), // 1-5
+  status: text("status").notNull().default("waiting"), // waiting | promoted | expired
+  createdAt: text("created_at").notNull(),
+});
+
+export type WaitlistRow = typeof waitlist.$inferSelect;

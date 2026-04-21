@@ -27,7 +27,21 @@ export async function ensureTables() {
       class_id INTEGER NOT NULL REFERENCES classes(id),
       date TEXT NOT NULL,
       start_time TEXT NOT NULL,
-      instructor TEXT
+      instructor TEXT,
+      price INTEGER,
+      max_capacity INTEGER
+    );
+
+    CREATE TABLE IF NOT EXISTS waitlist (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      schedule_id INTEGER NOT NULL REFERENCES schedules_v2(id),
+      date TEXT NOT NULL,
+      user_name TEXT NOT NULL,
+      user_email TEXT NOT NULL,
+      user_phone TEXT,
+      position INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'waiting',
+      created_at TEXT NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS bookings (
@@ -109,6 +123,8 @@ export async function ensureTables() {
   };
 
   await safeAlter("ALTER TABLE bookings ADD COLUMN cancel_token TEXT");
+  await safeAlter("ALTER TABLE schedules_v2 ADD COLUMN price INTEGER");
+  await safeAlter("ALTER TABLE schedules_v2 ADD COLUMN max_capacity INTEGER");
 
   initialized = true;
 }

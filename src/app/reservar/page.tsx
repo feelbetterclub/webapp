@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { BookingDrawer } from "@/components/BookingDrawer";
 import { OnDemandForm } from "@/components/OnDemandForm";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { ChevronLeft, ChevronRight, Clock, Users, User, MapPin, CreditCard } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, Users, User, MapPin, CreditCard, Euro } from "lucide-react";
 import { DAY_NAMES_SHORT, DAY_NAMES } from "@/lib/days";
 import { useI18n } from "@/lib/i18n/context";
 import { todayISO, formatDateLocalized } from "@/lib/utils";
@@ -133,24 +133,35 @@ export default function ReservarPage() {
               {sortedSchedules.map((s) => (
                 <button
                   key={s.id}
-                  onClick={() => s.spotsLeft > 0 && setDrawerSchedule(s)}
-                  disabled={s.spotsLeft <= 0}
+                  onClick={() => {
+                    if (s.spotsLeft > 0 || !s.waitlistFull) setDrawerSchedule(s);
+                  }}
+                  disabled={s.spotsLeft <= 0 && s.waitlistFull}
                   className={`w-full text-left rounded-2xl overflow-hidden border transition-all ${
-                    s.spotsLeft <= 0
+                    s.spotsLeft <= 0 && s.waitlistFull
                       ? "border-gray-200 opacity-50 cursor-not-allowed"
                       : "border-brand-sage/30 bg-white hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
                   }`}
                 >
                   <div className="relative p-6 sm:p-8">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-teal rounded-l-2xl" />
+                    <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl ${s.spotsLeft <= 0 ? "bg-amber-400" : "bg-brand-teal"}`} />
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-deep">{s.className}</h3>
                         {s.classDescription && <p className="text-sm text-muted-foreground mt-1 max-w-lg">{s.classDescription}</p>}
                       </div>
-                      <StatusBadge variant={s.spotsLeft <= 0 ? "cancelled" : s.spotsLeft <= 3 ? "warning" : "confirmed"}>
-                        {s.spotsLeft <= 0 ? t.booking.full : `${s.spotsLeft} ${t.booking.spots}`}
-                      </StatusBadge>
+                      <div className="flex flex-col items-end gap-1">
+                        {s.price != null && s.price > 0 && (
+                          <span className="text-lg font-bold text-brand-deep">{(s.price / 100).toFixed(0)}€</span>
+                        )}
+                        <StatusBadge variant={s.spotsLeft <= 0 ? (s.waitlistFull ? "cancelled" : "warning") : s.spotsLeft <= 3 ? "warning" : "confirmed"}>
+                          {s.spotsLeft <= 0
+                            ? s.waitlistFull
+                              ? t.booking.full
+                              : (lang === "es" ? "Lista de espera" : "Join Waitlist")
+                            : `${s.spotsLeft} ${t.booking.spots}`}
+                        </StatusBadge>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{s.startTime} · {s.durationMinutes} min</span>
@@ -165,7 +176,10 @@ export default function ReservarPage() {
                           ) : s.location}
                         </span>
                       )}
-                      <span className="flex items-center gap-1"><CreditCard className="w-4 h-4" />{t.booking.paymentNote}</span>
+                      {s.price != null && s.price > 0
+                        ? <span className="flex items-center gap-1"><Euro className="w-4 h-4" />{(s.price / 100).toFixed(0)}€</span>
+                        : <span className="flex items-center gap-1"><CreditCard className="w-4 h-4" />{t.booking.paymentNote}</span>
+                      }
                     </div>
                   </div>
                 </button>

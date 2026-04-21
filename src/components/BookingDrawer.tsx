@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, CheckCircle } from "lucide-react";
+import { X, CheckCircle, Clock as ClockIcon } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { Input } from "./ui/input";
 import { BrandButton } from "./ui/brand-button";
@@ -35,8 +35,11 @@ interface Props {
 export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
   const { t, lang } = useI18n();
   const [form, setForm] = useState<StoredIdentity>(getStoredIdentity);
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "waitlisted" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [waitlistPosition, setWaitlistPosition] = useState(0);
+
+  const isWaitlistMode = schedule.spotsLeft <= 0;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -66,7 +69,13 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
       });
 
       if (res.ok) {
-        setStatus("success");
+        const data = await res.json();
+        if (data.waitlisted) {
+          setWaitlistPosition(data.position);
+          setStatus("waitlisted");
+        } else {
+          setStatus("success");
+        }
         onBooked();
       } else {
         const data = await res.json();
@@ -111,6 +120,28 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
                 {t.booking.bookAnother}
               </BrandButton>
             </div>
+          ) : status === "waitlisted" ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ClockIcon className="w-8 h-8 text-amber-600" />
+              </div>
+              <h3 className="font-heading text-xl font-bold text-brand-deep mb-2">
+                {lang === "es" ? "En lista de espera" : "You're on the Waitlist"}
+              </h3>
+              <p className="text-muted-foreground mb-2">
+                {lang === "es"
+                  ? `Posición #${waitlistPosition} para ${schedule.className} a las ${schedule.startTime}`
+                  : `Position #${waitlistPosition} for ${schedule.className} at ${schedule.startTime}`}
+              </p>
+              <p className="text-sm text-muted-foreground mb-6">
+                {lang === "es"
+                  ? "Si se libera una plaza, recibirás un email de confirmación automáticamente."
+                  : "If a spot opens up, you'll receive a confirmation email automatically."}
+              </p>
+              <BrandButton onClick={onClose} size="lg">
+                {lang === "es" ? "Entendido" : "Got it"}
+              </BrandButton>
+            </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
@@ -136,14 +167,32 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
                 placeholder={t.booking.emailPlaceholder}
               />
 
-              <p className="text-xs text-muted-foreground bg-brand-sage/20 px-4 py-3 rounded-xl">
-                {t.booking.paymentNote}
-              </p>
+              {schedule.price != null && schedule.price > 0 ? (
+                <p className="text-xs text-muted-foreground bg-brand-sage/20 px-4 py-3 rounded-xl">
+                  {lang === "es" ? "Precio" : "Price"}: <strong>{(schedule.price / 100).toFixed(0)}€</strong> — {t.booking.paymentNote}
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground bg-brand-sage/20 px-4 py-3 rounded-xl">
+                  {t.booking.paymentNote}
+                </p>
+              )}
+
+              {isWaitlistMode && (
+                <p className="text-xs text-amber-700 bg-amber-50 px-4 py-3 rounded-xl">
+                  {lang === "es"
+                    ? `Esta clase está completa. Te apuntarás a la lista de espera (${schedule.waitlistCount}/5).`
+                    : `This class is full. You'll be added to the waitlist (${schedule.waitlistCount}/5).`}
+                </p>
+              )}
 
               {status === "error" && <p className="text-red-600 text-sm">{errorMsg}</p>}
 
               <BrandButton type="submit" size="full" disabled={status === "loading"}>
-                {status === "loading" ? t.booking.booking : t.booking.confirm}
+                {status === "loading"
+                  ? t.booking.booking
+                  : isWaitlistMode
+                    ? (lang === "es" ? "Unirme a la lista de espera" : "Join Waitlist")
+                    : t.booking.confirm}
               </BrandButton>
             </form>
           )}

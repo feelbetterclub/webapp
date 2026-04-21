@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { client } from "@/db";
-import { BOOKING_STATUS } from "@/lib/constants";
+import { BOOKING_STATUS, WAITLIST_STATUS, WAITLIST_MAX } from "@/lib/constants";
 import { sendBookingConfirmation } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
@@ -57,11 +57,14 @@ export async function POST(req: NextRequest) {
 
     // Atomic capacity check + insert inside a write transaction to avoid TOCTOU.
     const cancelToken = randomBytes(24).toString("base64url");
-    let scheduleInfo: { className: string; startTime: string } | null = null;
+    let scheduleInfo: { className: string; startTime: string; price: number | null } | null = null;
+    let result: "booked" | "waitlisted" = "booked";
+    let waitlistPosition = 0;
+
     const tx = await client.transaction("write");
     try {
       const scheduleResult = await tx.execute({
-        sql: "SELECT s.class_id, s.start_time, c.max_capacity, c.name as class_name FROM schedules_v2 s INNER JOIN classes c ON s.class_id = c.id WHERE s.id = ?",
+        sql: "SELECT s.class_id, s.start_time, s.price, COALESCE(s.max_capacity, c.max_capacity) as max_capacity, c.name as class_name FROM schedules_v2 s INNER JOIN classes c ON s.class_id = c.id WHERE s.id = ?",
         args: [scheduleId],
       });
 
@@ -75,18 +78,10 @@ export async function POST(req: NextRequest) {
       scheduleInfo = {
         className: row.class_name as string,
         startTime: row.start_time as string,
+        price: row.price as number | null,
       };
 
-      const countResult = await tx.execute({
-        sql: "SELECT COUNT(*) as cnt FROM bookings WHERE schedule_id = ? AND date = ? AND status = ?",
-        args: [scheduleId, date, BOOKING_STATUS.CONFIRMED],
-      });
-      const currentCount = countResult.rows[0]?.cnt as number;
-      if (currentCount >= maxCapacity) {
-        await tx.rollback();
-        return NextResponse.json({ error: "Class is full" }, { status: 409 });
-      }
-
+      // Check duplicate in bookings OR waitlist
       const duplicateResult = await tx.execute({
         sql: "SELECT id FROM bookings WHERE schedule_id = ? AND date = ? AND user_email = ? AND status = ?",
         args: [scheduleId, date, userEmail, BOOKING_STATUS.CONFIRMED],
@@ -96,10 +91,47 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "You already have a booking" }, { status: 409 });
       }
 
-      await tx.execute({
-        sql: "INSERT INTO bookings (schedule_id, date, user_name, user_email, user_phone, status, cancel_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        args: [scheduleId, date, userName, userEmail, userPhone || null, BOOKING_STATUS.CONFIRMED, cancelToken, new Date().toISOString()],
+      const duplicateWaitlist = await tx.execute({
+        sql: "SELECT id FROM waitlist WHERE schedule_id = ? AND date = ? AND user_email = ? AND status = ?",
+        args: [scheduleId, date, userEmail, WAITLIST_STATUS.WAITING],
       });
+      if (duplicateWaitlist.rows.length > 0) {
+        await tx.rollback();
+        return NextResponse.json({ error: "You are already on the waitlist" }, { status: 409 });
+      }
+
+      const countResult = await tx.execute({
+        sql: "SELECT COUNT(*) as cnt FROM bookings WHERE schedule_id = ? AND date = ? AND status = ?",
+        args: [scheduleId, date, BOOKING_STATUS.CONFIRMED],
+      });
+      const currentCount = countResult.rows[0]?.cnt as number;
+
+      if (currentCount >= maxCapacity) {
+        // Class full — try waitlist
+        const waitlistCount = await tx.execute({
+          sql: "SELECT COUNT(*) as cnt FROM waitlist WHERE schedule_id = ? AND date = ? AND status = ?",
+          args: [scheduleId, date, WAITLIST_STATUS.WAITING],
+        });
+        const currentWaitlist = waitlistCount.rows[0]?.cnt as number;
+
+        if (currentWaitlist >= WAITLIST_MAX) {
+          await tx.rollback();
+          return NextResponse.json({ error: "Class and waitlist are full" }, { status: 409 });
+        }
+
+        waitlistPosition = currentWaitlist + 1;
+        await tx.execute({
+          sql: "INSERT INTO waitlist (schedule_id, date, user_name, user_email, user_phone, position, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          args: [scheduleId, date, userName, userEmail, userPhone || null, waitlistPosition, WAITLIST_STATUS.WAITING, new Date().toISOString()],
+        });
+        result = "waitlisted";
+      } else {
+        await tx.execute({
+          sql: "INSERT INTO bookings (schedule_id, date, user_name, user_email, user_phone, status, cancel_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          args: [scheduleId, date, userName, userEmail, userPhone || null, BOOKING_STATUS.CONFIRMED, cancelToken, new Date().toISOString()],
+        });
+        result = "booked";
+      }
 
       await tx.commit();
     } catch (txErr) {
@@ -107,8 +139,8 @@ export async function POST(req: NextRequest) {
       throw txErr;
     }
 
-    // Fire-and-forget confirmation email — failure must not break the booking.
-    if (scheduleInfo) {
+    // Fire-and-forget emails
+    if (scheduleInfo && result === "booked") {
       const origin =
         req.headers.get("origin") ||
         process.env.NEXT_PUBLIC_SITE_URL ||
@@ -124,7 +156,10 @@ export async function POST(req: NextRequest) {
       }).catch((e) => console.error("[bookings] confirmation email failed:", e));
     }
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    if (result === "waitlisted") {
+      return NextResponse.json({ success: true, waitlisted: true, position: waitlistPosition }, { status: 201 });
+    }
+    return NextResponse.json({ success: true, waitlisted: false }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
   }
