@@ -21,7 +21,8 @@ export async function GET(req: NextRequest) {
           s.id, s.date, s.start_time as startTime, s.instructor,
           c.name as className, c.location, c.location_url as locationUrl,
           c.max_capacity as maxCapacity,
-          COALESCE(b.cnt, 0) as bookingCount
+          COALESCE(b.cnt, 0) as bookingCount,
+          COALESCE(w.cnt, 0) as waitlistCount
         FROM schedules_v2 s
         INNER JOIN classes c ON s.class_id = c.id
         LEFT JOIN (
@@ -29,6 +30,11 @@ export async function GET(req: NextRequest) {
           FROM bookings WHERE status = 'confirmed'
           GROUP BY schedule_id
         ) b ON b.schedule_id = s.id
+        LEFT JOIN (
+          SELECT schedule_id, COUNT(*) as cnt
+          FROM waitlist WHERE status = 'waiting'
+          GROUP BY schedule_id
+        ) w ON w.schedule_id = s.id
         WHERE s.date >= ? AND s.date <= ?
         ORDER BY s.date, s.start_time
       `,

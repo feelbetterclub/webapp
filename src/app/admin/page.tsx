@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookOpen, Calendar, Users, TrendingUp, MapPin } from "lucide-react";
+import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -18,6 +18,21 @@ interface UpcomingSession {
   locationUrl: string | null;
   bookingCount: number;
   maxCapacity: number;
+  waitlistCount: number;
+}
+
+interface SessionStudent {
+  id: number;
+  userName: string;
+  userEmail: string;
+  userPhone: string | null;
+  status: string;
+  position?: number;
+}
+
+interface SessionDetail {
+  bookings: SessionStudent[];
+  waitlist: SessionStudent[];
 }
 
 export default function AdminDashboard() {
@@ -25,6 +40,10 @@ export default function AdminDashboard() {
   const [upcomingSessions, setUpcomingSessions] = useState<UpcomingSession[]>([]);
   const [classCount, setClassCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [expandedSession, setExpandedSession] = useState<string | null>(null);
+  const [sessionDetail, setSessionDetail] = useState<SessionDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [promoting, setPromoting] = useState<number | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -59,6 +78,49 @@ export default function AdminDashboard() {
 
     loadData();
   }, []);
+
+  async function toggleSession(session: UpcomingSession) {
+    const key = `${session.id}-${session.date}`;
+    if (expandedSession === key) {
+      setExpandedSession(null);
+      setSessionDetail(null);
+      return;
+    }
+    setExpandedSession(key);
+    setDetailLoading(true);
+    try {
+      const res = await fetch(`/api/admin/session-detail?scheduleId=${session.id}&date=${session.date}`);
+      if (res.ok) setSessionDetail(await res.json());
+    } catch { /* ignore */ } finally {
+      setDetailLoading(false);
+    }
+  }
+
+  async function promoteWaitlist(waitlistId: number, session: UpcomingSession) {
+    setPromoting(waitlistId);
+    try {
+      const res = await fetch("/api/admin/session-detail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ waitlistId, scheduleId: session.id, date: session.date }),
+      });
+      if (res.ok) {
+        // Refresh detail
+        const detailRes = await fetch(`/api/admin/session-detail?scheduleId=${session.id}&date=${session.date}`);
+        if (detailRes.ok) setSessionDetail(await detailRes.json());
+        // Update booking count in the session list
+        setUpcomingSessions((prev) =>
+          prev.map((s) =>
+            s.id === session.id && s.date === session.date
+              ? { ...s, bookingCount: s.bookingCount + 1, waitlistCount: Math.max(0, s.waitlistCount - 1) }
+              : s
+          )
+        );
+      }
+    } catch { /* ignore */ } finally {
+      setPromoting(null);
+    }
+  }
 
   if (loading) return <Loading />;
 
@@ -123,35 +185,113 @@ export default function AdminDashboard() {
                     </div>
                     {sessions
                       .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                      .map((s) => (
-                        <div key={s.id} className="px-6 py-3 flex items-center justify-between hover:bg-brand-light/30">
-                          <div className="flex items-center gap-4">
-                            <span className="text-sm font-mono text-muted-foreground w-12">{s.startTime}</span>
-                            <div>
-                              <span className="text-sm font-medium text-brand-deep">{s.className}</span>
-                              <div className="flex items-center gap-3 mt-0.5">
-                                {s.instructor && <span className="text-xs text-muted-foreground">{s.instructor}</span>}
-                                {s.location && (
-                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                    <MapPin className="w-3 h-3" />
-                                    {s.locationUrl ? (
-                                      <a href={s.locationUrl} target="_blank" rel="noopener noreferrer" className="text-brand-teal hover:underline">{s.location}</a>
-                                    ) : s.location}
+                      .map((s) => {
+                        const sessionKey = `${s.id}-${s.date}`;
+                        const isExpanded = expandedSession === sessionKey;
+                        return (
+                          <div key={s.id}>
+                            <button
+                              type="button"
+                              onClick={() => toggleSession(s)}
+                              className="w-full px-6 py-3 flex items-center justify-between hover:bg-brand-light/30 cursor-pointer text-left transition-colors"
+                            >
+                              <div className="flex items-center gap-4">
+                                <span className="text-sm font-mono text-muted-foreground w-12">{s.startTime}</span>
+                                <div>
+                                  <span className="text-sm font-medium text-brand-deep">{s.className}</span>
+                                  <div className="flex items-center gap-3 mt-0.5">
+                                    {s.instructor && <span className="text-xs text-muted-foreground">{s.instructor}</span>}
+                                    {s.location && (
+                                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                        <MapPin className="w-3 h-3" />
+                                        {s.location}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {s.waitlistCount > 0 && (
+                                  <span className="text-xs text-amber-600 flex items-center gap-1">
+                                    <Clock className="w-3 h-3" /> {s.waitlistCount} queue
                                   </span>
                                 )}
+                                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                  <Users className="w-3 h-3" /> {s.bookingCount}/{s.maxCapacity}
+                                </span>
+                                <StatusBadge variant={s.bookingCount >= s.maxCapacity ? "cancelled" : s.bookingCount > 0 ? "warning" : "confirmed"}>
+                                  {s.bookingCount >= s.maxCapacity ? "Full" : s.bookingCount > 0 ? `${s.bookingCount} booked` : "Open"}
+                                </StatusBadge>
+                                {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
                               </div>
-                            </div>
+                            </button>
+
+                            {isExpanded && (
+                              <div className="px-6 pb-4 bg-brand-light/20 border-t border-brand-sage/10">
+                                {detailLoading ? (
+                                  <p className="text-xs text-muted-foreground py-3">Loading...</p>
+                                ) : sessionDetail ? (
+                                  <div className="pt-3 space-y-4">
+                                    {/* Bookings */}
+                                    <div>
+                                      <h4 className="text-xs font-semibold text-brand-deep uppercase tracking-wider mb-2">
+                                        Students ({sessionDetail.bookings.length})
+                                      </h4>
+                                      {sessionDetail.bookings.length === 0 ? (
+                                        <p className="text-xs text-muted-foreground">No bookings yet</p>
+                                      ) : (
+                                        <div className="space-y-1.5">
+                                          {sessionDetail.bookings.map((b, i) => (
+                                            <div key={b.id} className="flex items-center justify-between bg-white rounded-lg px-3 py-2 text-sm">
+                                              <div className="flex items-center gap-3">
+                                                <span className="w-5 h-5 rounded-full bg-brand-teal/10 text-brand-teal text-xs flex items-center justify-center font-medium">{i + 1}</span>
+                                                <span className="font-medium text-brand-deep">{b.userName}</span>
+                                              </div>
+                                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                                <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {b.userEmail}</span>
+                                                {b.userPhone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {b.userPhone}</span>}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    {/* Waitlist */}
+                                    {sessionDetail.waitlist.length > 0 && (
+                                      <div>
+                                        <h4 className="text-xs font-semibold text-amber-600 uppercase tracking-wider mb-2">
+                                          Waitlist ({sessionDetail.waitlist.length})
+                                        </h4>
+                                        <div className="space-y-1.5">
+                                          {sessionDetail.waitlist.map((w) => (
+                                            <div key={w.id} className="flex items-center justify-between bg-amber-50 rounded-lg px-3 py-2 text-sm">
+                                              <div className="flex items-center gap-3">
+                                                <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-xs flex items-center justify-center font-medium">#{w.position}</span>
+                                                <span className="font-medium text-brand-deep">{w.userName}</span>
+                                                <span className="text-xs text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3" /> {w.userEmail}</span>
+                                              </div>
+                                              <button
+                                                type="button"
+                                                onClick={() => promoteWaitlist(w.id, s)}
+                                                disabled={promoting === w.id}
+                                                className="flex items-center gap-1 text-xs font-medium text-brand-teal hover:text-brand-dark bg-brand-teal/10 hover:bg-brand-teal/20 px-2.5 py-1 rounded-full transition-colors disabled:opacity-50"
+                                              >
+                                                <UserPlus className="w-3 h-3" />
+                                                {promoting === w.id ? "..." : "Accept"}
+                                              </button>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                ) : null}
+                              </div>
+                            )}
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Users className="w-3 h-3" /> {s.bookingCount}/{s.maxCapacity}
-                            </span>
-                            <StatusBadge variant={s.bookingCount >= s.maxCapacity ? "cancelled" : s.bookingCount > 0 ? "warning" : "confirmed"}>
-                              {s.bookingCount >= s.maxCapacity ? "Full" : s.bookingCount > 0 ? `${s.bookingCount} booked` : "Open"}
-                            </StatusBadge>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                   </div>
                 );
               })}
