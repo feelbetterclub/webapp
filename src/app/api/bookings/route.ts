@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { client } from "@/db";
 import { BOOKING_STATUS, WAITLIST_STATUS } from "@/lib/constants";
-import { sendBookingConfirmation } from "@/lib/email";
+import { sendBookingConfirmation, sendWaitlistConfirmation } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
   try {
@@ -157,7 +157,15 @@ export async function POST(req: NextRequest) {
       }).catch((e) => console.error("[bookings] confirmation email failed:", e));
     }
 
-    if (result === "waitlisted") {
+    if (result === "waitlisted" && scheduleInfo) {
+      sendWaitlistConfirmation({
+        to: userEmail,
+        userName,
+        date,
+        time: scheduleInfo.startTime,
+        classType: scheduleInfo.className,
+        position: waitlistPosition,
+      }).catch((e) => console.error("[bookings] waitlist email failed:", e));
       return NextResponse.json({ success: true, waitlisted: true, position: waitlistPosition }, { status: 201 });
     }
     return NextResponse.json({ success: true, waitlisted: false }, { status: 201 });

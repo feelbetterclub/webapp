@@ -77,6 +77,41 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<void> 
   await send(to, subject, wrapper(inner));
 }
 
+// ---------- Waitlist confirmation email ----------
+
+export interface WaitlistConfirmationData {
+  to: string;
+  userName: string;
+  date: string;
+  time: string;
+  classType: string;
+  position: number;
+}
+
+export async function sendWaitlistConfirmation(data: WaitlistConfirmationData): Promise<void> {
+  const { to, userName, date, time, classType, position } = data;
+  const subject = "You're on the Waitlist — We'll Let You Know";
+  const safeName = escape(userName || "there");
+  const safeClass = escape(classType);
+  const safeDate = escape(date);
+  const safeTime = escape(time);
+
+  const inner = `
+    <p>Hi ${safeName},</p>
+    <p>Thanks for your interest in joining us! The class is currently full, but you're on the waitlist.</p>
+    <p><strong>Your waitlist details:</strong></p>
+    <ul style="padding-left:20px;margin:12px 0;">
+      <li><strong>Class:</strong> ${safeClass}</li>
+      <li><strong>Date:</strong> ${safeDate}</li>
+      <li><strong>Time:</strong> ${safeTime}</li>
+      <li><strong>Position:</strong> #${position}</li>
+    </ul>
+    <p>If a spot opens up, you'll receive a confirmation email automatically with all the details and a cancellation link. No action needed from your side — just keep your fingers crossed!</p>
+    <p style="margin-top:32px;">See you soon, hopefully!<br/><strong>Moni</strong></p>
+  `;
+  await send(to, subject, wrapper(inner));
+}
+
 // ---------- Booking confirmation email ----------
 
 export interface BookingConfirmationData {
