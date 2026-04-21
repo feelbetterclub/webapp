@@ -13,22 +13,33 @@ import type { ClassItem, ScheduleItem, LocationItem } from "@/lib/types";
 
 interface Instructor { id: number; name: string; }
 
-const emptyForm = {
-  name: "",
-  description: "",
-  durationMinutes: DEFAULTS.durationMinutes,
-  maxCapacity: DEFAULTS.maxCapacity,
-  locationId: 0,
-  // Session fields
+interface SessionRow {
+  date: string;
+  startTime: string;
+  instructorName: string;
+  recurring: boolean;
+  untilDate: string;
+  indefinite: boolean;
+}
+
+const emptySession = (): SessionRow => ({
   date: todayISO(),
   startTime: "09:00",
   instructorName: "",
   recurring: false,
   untilDate: "",
   indefinite: false,
+});
+
+const emptyForm = {
+  name: "",
+  description: "",
+  durationMinutes: DEFAULTS.durationMinutes,
+  maxCapacity: DEFAULTS.maxCapacity,
+  locationId: 0,
   sessionPrice: "" as string | number,
-  sessionMaxCapacity: "" as string | number,
   queueCapacity: DEFAULTS.queueCapacity as number,
+  sessions: [emptySession()] as SessionRow[],
 };
 
 export default function ClasesPage() {
@@ -65,7 +76,7 @@ export default function ClasesPage() {
   const defaultInstructor = instructors.length > 0 ? instructors[0].name : "";
 
   function openNew() {
-    setForm({ ...emptyForm, instructorName: defaultInstructor, date: todayISO() });
+    setForm({ ...emptyForm, sessions: [{ ...emptySession(), instructorName: defaultInstructor }] });
     setEditingId(null);
     setError("");
     setShowForm(true);
@@ -81,11 +92,32 @@ export default function ClasesPage() {
       maxCapacity: c.maxCapacity,
       queueCapacity: c.queueCapacity ?? DEFAULTS.queueCapacity,
       locationId: loc?.id || 0,
-      instructorName: defaultInstructor,
+      sessions: [],
     });
     setEditingId(c.id);
     setError("");
     setShowForm(true);
+  }
+
+  function updateSession(index: number, updates: Partial<SessionRow>) {
+    setForm((f) => ({
+      ...f,
+      sessions: f.sessions.map((s, i) => i === index ? { ...s, ...updates } : s),
+    }));
+  }
+
+  function addSession() {
+    setForm((f) => ({
+      ...f,
+      sessions: [...f.sessions, { ...emptySession(), instructorName: defaultInstructor }],
+    }));
+  }
+
+  function removeSession(index: number) {
+    setForm((f) => ({
+      ...f,
+      sessions: f.sessions.filter((_, i) => i !== index),
+    }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -121,27 +153,30 @@ export default function ClasesPage() {
         return;
       }
 
-      // Create session for new classes
-      if (!editingId && form.date && form.startTime) {
+      // Create sessions for new classes
+      if (!editingId && form.sessions.length > 0) {
         const updatedRes = await fetch("/api/admin/classes");
         const updatedClasses: ClassItem[] = updatedRes.ok ? await updatedRes.json() : [];
         const newClass = updatedClasses.find((c) => c.name === form.name);
 
         if (newClass) {
-          await fetch("/api/admin/schedules", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              classId: newClass.id,
-              date: form.date,
-              startTime: form.startTime,
-              instructor: form.instructorName || null,
-              recurring: form.recurring,
-              untilDate: form.recurring && !form.indefinite ? form.untilDate : null,
-              price: form.sessionPrice !== "" ? Number(form.sessionPrice) * 100 : null,
-              maxCapacity: form.sessionMaxCapacity !== "" ? Number(form.sessionMaxCapacity) : null,
-            }),
-          });
+          for (const session of form.sessions) {
+            if (!session.date || !session.startTime) continue;
+            await fetch("/api/admin/schedules", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                classId: newClass.id,
+                date: session.date,
+                startTime: session.startTime,
+                instructor: session.instructorName || null,
+                recurring: form.sessions.length === 1 ? session.recurring : false,
+                untilDate: form.sessions.length === 1 && session.recurring && !session.indefinite ? session.untilDate : null,
+                price: form.sessionPrice !== "" ? Number(form.sessionPrice) * 100 : null,
+                maxCapacity: null,
+              }),
+            });
+          }
         }
       }
 
@@ -229,63 +264,85 @@ export default function ClasesPage() {
               )}
             </div>
 
-            {/* Session — only for new classes */}
-            {!editingId && (
-              <div className="bg-brand-light/50 p-4 rounded-xl space-y-4">
-                <h3 className="text-sm font-semibold text-brand-deep flex items-center gap-2">
-                  <Calendar className="w-4 h-4" /> Session
-                </h3>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Input label="Date *" type="date" value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} />
-                  <Input label="Time *" type="time" value={form.startTime} onChange={(e) => setForm((f) => ({ ...f, startTime: e.target.value }))} />
-                  {instructors.length > 0 ? (
-                    <Select label="Instructor" value={form.instructorName} onChange={(e) => setForm((f) => ({ ...f, instructorName: e.target.value }))}>
-                      {instructors.map((inst) => (<option key={inst.id} value={inst.name}>{inst.name}</option>))}
-                    </Select>
-                  ) : (
-                    <Input label="Instructor" value={form.instructorName} placeholder="Name" onChange={(e) => setForm((f) => ({ ...f, instructorName: e.target.value }))} />
-                  )}
-                </div>
-
-                {/* Recurring */}
-                <div className="flex flex-wrap items-center gap-4">
-                  <label className="flex items-center gap-2 text-sm cursor-pointer">
-                    <input type="checkbox" checked={form.recurring} onChange={(e) => setForm((f) => ({ ...f, recurring: e.target.checked }))}
-                      className="w-4 h-4 rounded border-brand-sage/30 text-brand-teal focus:ring-brand-teal/30" />
-                    <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-brand-deep font-medium">Repeat weekly</span>
-                  </label>
-
-                  {form.recurring && (
-                    <>
-                      <label className="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="radio" name="until" checked={form.indefinite} onChange={() => setForm((f) => ({ ...f, indefinite: true, untilDate: "" }))}
-                          className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
-                        <span>Indefinitely</span>
-                      </label>
-                      <label className="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="radio" name="until" checked={!form.indefinite} onChange={() => setForm((f) => ({ ...f, indefinite: false }))}
-                          className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
-                        <span>Until</span>
-                      </label>
-                      {!form.indefinite && (
-                        <input type="date" value={form.untilDate} min={form.date}
-                          onChange={(e) => setForm((f) => ({ ...f, untilDate: e.target.value }))}
-                          className="px-3 py-1.5 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+            {/* Sessions — only for new classes */}
+            {!editingId && form.sessions.length > 0 && (
+              <div className="space-y-3">
+                {form.sessions.map((session, idx) => (
+                  <div key={idx} className="bg-brand-light/50 p-4 rounded-xl space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-brand-deep flex items-center gap-2">
+                        <Calendar className="w-4 h-4" /> Session {form.sessions.length > 1 ? idx + 1 : ""}
+                      </h3>
+                      {form.sessions.length > 1 && (
+                        <button type="button" onClick={() => removeSession(idx)} className="text-red-400 hover:text-red-600">
+                          <X className="w-4 h-4" />
+                        </button>
                       )}
-                    </>
-                  )}
-                </div>
+                    </div>
 
-                {form.recurring && (
-                  <p className="text-xs text-muted-foreground">
-                    {form.indefinite
-                      ? `Will repeat every ${new Date(form.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} for ~6 months`
-                      : form.untilDate
-                        ? `Will repeat every ${new Date(form.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} until ${new Date(form.untilDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
-                        : "Select an end date"}
-                  </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <Input label="Date *" type="date" value={session.date} onChange={(e) => updateSession(idx, { date: e.target.value })} />
+                      <Input label="Time *" type="time" value={session.startTime} onChange={(e) => updateSession(idx, { startTime: e.target.value })} />
+                      {instructors.length > 0 ? (
+                        <Select label="Instructor" value={session.instructorName} onChange={(e) => updateSession(idx, { instructorName: e.target.value })}>
+                          {instructors.map((inst) => (<option key={inst.id} value={inst.name}>{inst.name}</option>))}
+                        </Select>
+                      ) : (
+                        <Input label="Instructor" value={session.instructorName} placeholder="Name" onChange={(e) => updateSession(idx, { instructorName: e.target.value })} />
+                      )}
+                    </div>
+
+                    {/* Recurring — only when single session */}
+                    {form.sessions.length === 1 && (
+                      <>
+                        <div className="flex flex-wrap items-center gap-4">
+                          <label className="flex items-center gap-2 text-sm cursor-pointer">
+                            <input type="checkbox" checked={session.recurring} onChange={(e) => updateSession(idx, { recurring: e.target.checked })}
+                              className="w-4 h-4 rounded border-brand-sage/30 text-brand-teal focus:ring-brand-teal/30" />
+                            <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
+                            <span className="text-brand-deep font-medium">Repeat weekly</span>
+                          </label>
+
+                          {session.recurring && (
+                            <>
+                              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                                <input type="radio" name="until" checked={session.indefinite} onChange={() => updateSession(idx, { indefinite: true, untilDate: "" })}
+                                  className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
+                                <span>Indefinitely</span>
+                              </label>
+                              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                                <input type="radio" name="until" checked={!session.indefinite} onChange={() => updateSession(idx, { indefinite: false })}
+                                  className="w-4 h-4 text-brand-teal focus:ring-brand-teal/30" />
+                                <span>Until</span>
+                              </label>
+                              {!session.indefinite && (
+                                <input type="date" value={session.untilDate} min={session.date}
+                                  onChange={(e) => updateSession(idx, { untilDate: e.target.value })}
+                                  className="px-3 py-1.5 rounded-lg border border-brand-sage/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+                              )}
+                            </>
+                          )}
+                        </div>
+
+                        {session.recurring && (
+                          <p className="text-xs text-muted-foreground">
+                            {session.indefinite
+                              ? `Will repeat every ${new Date(session.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} for ~6 months`
+                              : session.untilDate
+                                ? `Will repeat every ${new Date(session.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })} until ${new Date(session.untilDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                : "Select an end date"}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+
+                {form.sessions.length < 10 && (
+                  <button type="button" onClick={addSession}
+                    className="flex items-center gap-2 text-sm text-brand-teal hover:text-brand-dark font-medium px-4 py-2 rounded-lg border border-dashed border-brand-sage/40 hover:border-brand-teal/50 w-full justify-center transition-colors">
+                    <Plus className="w-4 h-4" /> Add Session
+                  </button>
                 )}
               </div>
             )}
