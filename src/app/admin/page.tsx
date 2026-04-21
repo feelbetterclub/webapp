@@ -39,6 +39,8 @@ export default function AdminDashboard() {
   const [todayBookings, setTodayBookings] = useState<BookingItem[]>([]);
   const [upcomingSessions, setUpcomingSessions] = useState<UpcomingSession[]>([]);
   const [classCount, setClassCount] = useState(0);
+  const [thisWeekBookings, setThisWeekBookings] = useState(0);
+  const [lastWeekBookings, setLastWeekBookings] = useState(0);
   const [loading, setLoading] = useState(true);
   const [expandedSession, setExpandedSession] = useState<string | null>(null);
   const [sessionDetail, setSessionDetail] = useState<SessionDetail | null>(null);
@@ -49,26 +51,47 @@ export default function AdminDashboard() {
     async function loadData() {
       try {
         const today = todayISO();
+        const now = new Date();
 
-        // Calculate end of next week (Sunday)
-        const endDate = new Date();
-        const daysUntilSunday = 7 - endDate.getDay() + 7; // rest of this week + next week
-        endDate.setDate(endDate.getDate() + daysUntilSunday);
-        const endDateISO = endDate.toISOString().split("T")[0];
+        // This week: Monday to Sunday
+        const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon...
+        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const thisMonday = new Date(now);
+        thisMonday.setDate(now.getDate() + mondayOffset);
+        const thisSunday = new Date(thisMonday);
+        thisSunday.setDate(thisMonday.getDate() + 6);
 
-        const [classesRes, bookingsRes, upcomingRes] = await Promise.all([
+        // Last week
+        const lastMonday = new Date(thisMonday);
+        lastMonday.setDate(thisMonday.getDate() - 7);
+        const lastSunday = new Date(thisMonday);
+        lastSunday.setDate(thisMonday.getDate() - 1);
+
+        // End of next week for upcoming display
+        const endNextWeek = new Date(thisSunday);
+        endNextWeek.setDate(thisSunday.getDate() + 7);
+
+        const fmt = (d: Date) => d.toISOString().split("T")[0];
+
+        const [classesRes, bookingsRes, upcomingRes, thisWeekRes, lastWeekRes] = await Promise.all([
           fetch("/api/admin/classes"),
           fetch(`/api/bookings?date=${today}`),
-          fetch(`/api/admin/upcoming?from=${today}&to=${endDateISO}`),
+          fetch(`/api/admin/upcoming?from=${today}&to=${fmt(endNextWeek)}`),
+          fetch(`/api/admin/upcoming?from=${fmt(thisMonday)}&to=${fmt(thisSunday)}`),
+          fetch(`/api/admin/upcoming?from=${fmt(lastMonday)}&to=${fmt(lastSunday)}`),
         ]);
 
         const classesData = classesRes.ok ? await classesRes.json() : [];
         const bookingsData = bookingsRes.ok ? await bookingsRes.json() : [];
         const upcomingData = upcomingRes.ok ? await upcomingRes.json() : [];
+        const thisWeekData: UpcomingSession[] = thisWeekRes.ok ? await thisWeekRes.json() : [];
+        const lastWeekData: UpcomingSession[] = lastWeekRes.ok ? await lastWeekRes.json() : [];
 
         setClassCount(safeArray(classesData).length);
         setTodayBookings(safeArray<BookingItem>(bookingsData));
         setUpcomingSessions(safeArray<UpcomingSession>(upcomingData));
+        setThisWeekBookings(thisWeekData.reduce((sum, s) => sum + s.bookingCount, 0));
+        setLastWeekBookings(lastWeekData.reduce((sum, s) => sum + s.bookingCount, 0));
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
       } finally {
@@ -127,8 +150,8 @@ export default function AdminDashboard() {
   const statCards = [
     { label: "Classes", value: classCount, icon: BookOpen, color: "bg-brand-teal/10 text-brand-teal" },
     { label: "Upcoming Sessions", value: upcomingSessions.length, icon: Calendar, color: "bg-blue-50 text-blue-600" },
-    { label: "Week Bookings", value: upcomingSessions.reduce((sum, s) => sum + s.bookingCount, 0), icon: Users, color: "bg-amber-50 text-amber-600" },
-    { label: "Trend", value: `+${todayBookings.length}`, icon: TrendingUp, color: "bg-green-50 text-green-600" },
+    { label: "Week Bookings", value: thisWeekBookings, icon: Users, color: "bg-amber-50 text-amber-600" },
+    { label: "Trend", value: `${thisWeekBookings - lastWeekBookings >= 0 ? "+" : ""}${thisWeekBookings - lastWeekBookings}`, icon: TrendingUp, color: thisWeekBookings >= lastWeekBookings ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600" },
   ];
 
   // Group upcoming by date
