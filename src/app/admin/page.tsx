@@ -127,7 +127,7 @@ export default function AdminDashboard() {
   const statCards = [
     { label: "Classes", value: classCount, icon: BookOpen, color: "bg-brand-teal/10 text-brand-teal" },
     { label: "Upcoming Sessions", value: upcomingSessions.length, icon: Calendar, color: "bg-blue-50 text-blue-600" },
-    { label: "Today's Bookings", value: todayBookings.length, icon: Users, color: "bg-amber-50 text-amber-600" },
+    { label: "Week Bookings", value: upcomingSessions.reduce((sum, s) => sum + s.bookingCount, 0), icon: Users, color: "bg-amber-50 text-amber-600" },
     { label: "Trend", value: `+${todayBookings.length}`, icon: TrendingUp, color: "bg-green-50 text-green-600" },
   ];
 
