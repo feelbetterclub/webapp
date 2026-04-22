@@ -3,10 +3,14 @@ const en = {
     about: "About",
     classInfo: "Class Info",
     classProgram: "Class Program",
-    book: "Book",
+    book: "Book a class",
     rituals: "Rituals",
     contact: "Contact",
     bookClass: "Book a Class",
+    method: "The Method",
+    classes: "Classes",
+    moni: "About Moni",
+    journal: "Journal",
   },
   hero: {
     tagline: "Outdoor Training Community",
@@ -17,6 +21,17 @@ const en = {
     comingSoon: "Holistic Health Rituals — coming soon. Stay tuned.",
     cta1: "Explore Classes",
     cta2: "Book a class",
+    badge: "Next class · Friday 7:30 am",
+    h1a: "Move like you mean it.",
+    h1b: "Feel like you deserve it.",
+    sub: "Feel Better Club is a holistic health community in Tarifa. Four disciplines, one philosophy — small, consistent steps that compound into a life you actually feel good in.",
+    primary: "Book your first class",
+    ghost: "See the method",
+    stats: [
+      { n: "4", l: "Disciplines" },
+      { n: "20", l: "Classes a week" },
+      { n: "3 yrs", l: "In Tarifa" },
+    ],
   },
   classInfo: {
     label: "Class Info",
@@ -133,7 +148,12 @@ const en = {
     joinCommunityBtn: "Join",
     connectTitle: "Connect and Get Inspired",
     testimonials: "Testimonials",
-    rights: "All rights reserved.",
+    rights: "Made in Tarifa, with wind.",
+    tag: "Small step — big impact",
+    colA: { title: "Classes", items: ["Mobility", "Strength", "Pilates", "Fun Burn", "Full schedule"] },
+    colB: { title: "The Club", items: ["About Moni", "The Method", "Rituals (soon)", "Journal"] },
+    colC: { title: "Contact", items: ["hello@feelbetter.club", "Tarifa, Cádiz", "@feelbetter.club"] },
+    legal: "© 2026 The Feel Better Club · Holistic health routines",
   },
   admin: {
     dashboard: "Dashboard",
@@ -196,6 +216,39 @@ const en = {
     disclaimer:
       "By signing up you agree to receive updates, nutrition tips and event news. Unsubscribe anytime.",
   },
+  marquee: ["Holistic health routines", "Small step — big impact", "Move · Breathe · Feel", "Tarifa · Costa de la Luz"],
+  methodEyebrow: "The Method",
+  methodTitle: "Four disciplines, one rhythm.",
+  methodSub: "We built the week as a complete cycle — so your body gets what it actually needs, when it needs it.",
+  disciplines: [
+    { n: "01", title: "Mobility", desc: "Unlock the joints, release tension, prime the body. A slow, deliberate start to the day.", tag: "Mon · Wed · Fri" },
+    { n: "02", title: "Strength", desc: "Functional load work. Build the foundation that carries everything else — posture, power, presence.", tag: "Tue · Thu" },
+    { n: "03", title: "Pilates", desc: "Core, control, coordination. The connective thread between mobility and strength.", tag: "Mon · Wed · Sat" },
+    { n: "04", title: "Fun Burn", desc: "High-energy cardio circuits. Music loud, spirits high. The reward at the end of the week.", tag: "Fri · Sat" },
+  ],
+  scheduleEyebrow: "This week",
+  scheduleTitle: "The week ahead.",
+  scheduleCta: "See full schedule →",
+  moni: {
+    eyebrow: "About Moni",
+    quote: "\"Health isn't a finish line. It's the small rituals you keep, quietly, every day.\"",
+    body: "Moni founded Feel Better Club in 2022 after a decade between physiotherapy, pilates studios and the mountains of Austria. She moved to Tarifa looking for the same thing she now teaches — space to breathe, sea, and a practice you actually want to return to.",
+    sign: "Moni",
+    role: "Founder · Coach",
+  },
+  pillars: {
+    eyebrow: "Our philosophy",
+    title: "Small step. Big impact.",
+    left: { eyebrow: "Small step", title: "Consistency beats intensity.", desc: "Thirty minutes, three times a week. That's the whole secret. Nothing heroic, nothing that breaks you — just the small things, done again." },
+    right: { eyebrow: "Big impact", title: "Compound, quietly.", desc: "The body keeps score of what you do often. After a month you move easier. After a year you are, genuinely, a different person." },
+  },
+  galleryEyebrow: "The club",
+  galleryTitle: "Where the good hours happen.",
+  gallerySub: "Classes on the sand, in the studio, between pines and wind. This is Tarifa, and this is the rhythm we keep.",
+  galleryLabels: ["Beach class · sunrise", "Studio interior", "Moni · coaching", "Playa Chica", "Fun Burn Friday", "Stretch session"],
+  testimonialsEyebrow: "From the club",
+  testimonialsTitle: "The people who keep showing up.",
+  cta: { line1: "Your first class", scriptLine: "is on us.", desc: "Come once, see how it feels. If it clicks, we'll talk about what fits after.", button: "Claim free class" },
 };
 
 // Deep make all values string for translation compatibility
@@ -204,7 +257,9 @@ type DeepStringify<T> = {
     ? string
     : T[K] extends readonly string[]
       ? string[]
-      : DeepStringify<T[K]>;
+      : T[K] extends readonly (infer U)[]
+        ? DeepStringify<U>[]
+        : DeepStringify<T[K]>;
 };
 
 export type Translations = DeepStringify<typeof en>;

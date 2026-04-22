@@ -1,99 +1,176 @@
 "use client";
 
-import { CheckCircle } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function About() {
   const { t } = useI18n();
 
+  // Pillars i18n with fallbacks
+  const pillars = (t as any).pillars || {
+    eyebrow: "Our philosophy",
+    title: "Small step. Big impact.",
+    left: {
+      eyebrow: "Small step",
+      title: "Consistency beats intensity.",
+      desc: "Thirty minutes, three times a week. That\u2019s where real change begins \u2014 not in extreme routines, but in showing up with intention, again and again.",
+    },
+    right: {
+      eyebrow: "Big impact",
+      title: "Compound, quietly.",
+      desc: "The body keeps score of every good decision. Small deposits of movement, breath, and care build a reserve you\u2019ll draw from for decades.",
+    },
+  };
+
+  // Moni i18n with fallbacks
+  const moni = (t as any).moni || (t as any).about?.founder || {
+    eyebrow: "About Moni",
+    quote: "\u201CHealth isn\u2019t a finish line \u2014 it\u2019s the way you walk the path.\u201D",
+    body: "Moni founded Feel Better Club in 2022 after more than 25 years dedicated to movement, coaching, and holistic wellness. Her approach blends functional training, breathwork, and mindful nutrition into a practice that fits real life \u2014 not the other way around.",
+    sign: "Moni",
+    role: "Founder \u00B7 Coach",
+  };
+
   return (
-    <section id="about" className="py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
-        {/* Our Story */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="relative">
-            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-brand-teal to-brand-dark overflow-hidden shadow-xl">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center px-8">
-                  <p className="text-brand-cream/60 uppercase tracking-[0.3em] text-xs mb-4">
-                    Est. 2026
-                  </p>
-                  <p className="font-heading text-5xl sm:text-6xl font-bold text-brand-cream mb-4">
-                    Feel<br />Better
-                  </p>
-                  <p className="text-brand-cream/80 italic text-lg">Club</p>
-                </div>
-              </div>
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-brand-cream rounded-2xl shadow-lg flex items-center justify-center">
-              <div className="text-center">
-                <p className="font-heading text-3xl font-bold text-brand-teal">+500</p>
-                <p className="text-brand-dark text-xs font-medium">{t.about.stat}</p>
-              </div>
-            </div>
-          </div>
+    <>
+      {/* ── Pillars ── */}
+      <section id="pillars" className="bg-fb-paper" style={{ padding: "80px 0" }}>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <p className="text-fb-mute uppercase tracking-[0.2em] text-xs font-semibold mb-3">
+            {pillars.eyebrow}
+          </p>
+          <h2 className="font-heading text-3xl sm:text-4xl font-bold text-fb-green mb-10">
+            {pillars.title}
+          </h2>
 
-          <div>
-            <p className="text-brand-teal uppercase tracking-[0.2em] text-xs font-semibold mb-3">
-              {t.about.label}
-            </p>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-deep mb-6">
-              {t.about.title}
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              {t.about.story.p1}
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              {t.about.story.p2}
-            </p>
+          {/* Two-column grid */}
+          <div
+            className="grid gap-6"
+            style={{
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+            }}
+          >
+            {/* Left card */}
+            <div
+              className="bg-fb-cream rounded-[28px] flex flex-col justify-between"
+              style={{ padding: "48px 40px", minHeight: 320 }}
+            >
+              <div>
+                <p className="text-fb-mute uppercase tracking-[0.2em] text-xs font-semibold mb-2">
+                  {pillars.left.eyebrow}
+                </p>
+                <h3 className="font-heading text-xl sm:text-2xl font-bold text-fb-green mb-3">
+                  {pillars.left.title}
+                </h3>
+                <p className="text-fb-mute leading-relaxed">{pillars.left.desc}</p>
+              </div>
+              <span
+                className="text-fb-green select-none self-end"
+                style={{
+                  fontFamily: "var(--f-script)",
+                  fontSize: 140,
+                  lineHeight: 1,
+                  opacity: 0.25,
+                }}
+              >
+                30&apos;
+              </span>
+            </div>
 
-            <ul className="space-y-4">
-              {t.about.highlights.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-brand-teal mt-0.5 shrink-0" />
-                  <span className="text-brand-deep font-medium">{item}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Right card */}
+            <div
+              className="bg-fb-green text-fb-paper rounded-[28px] flex flex-col justify-between"
+              style={{ padding: "48px 40px", minHeight: 320 }}
+            >
+              <div>
+                <p
+                  className="uppercase tracking-[0.2em] text-xs font-semibold mb-2"
+                  style={{ opacity: 0.7 }}
+                >
+                  {pillars.right.eyebrow}
+                </p>
+                <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3">
+                  {pillars.right.title}
+                </h3>
+                <p className="leading-relaxed" style={{ opacity: 0.85 }}>
+                  {pillars.right.desc}
+                </p>
+              </div>
+              <span
+                className="text-fb-paper select-none self-end"
+                style={{
+                  fontFamily: "var(--f-script)",
+                  fontSize: 140,
+                  lineHeight: 1,
+                  opacity: 0.3,
+                }}
+              >
+                365
+              </span>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Meet the Founder & Coach */}
-        <div id="founder" className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div className="lg:order-2 relative">
-            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-brand-cream to-brand-sage overflow-hidden shadow-xl flex items-center justify-center">
-              <div className="text-center px-8">
-                <p className="text-brand-teal uppercase tracking-[0.3em] text-xs mb-4">
-                  Founder & Coach
-                </p>
-                <p className="font-heading text-6xl sm:text-7xl font-bold text-brand-deep mb-2">
-                  Moni
-                </p>
-                <p className="text-brand-dark/70 italic">+25 years in sports</p>
-              </div>
-            </div>
-          </div>
+      {/* ── Moni ── */}
+      <section id="moni" className="bg-fb-paper" style={{ padding: "120px 0" }}>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div
+            className="grid items-center"
+            style={{
+              gridTemplateColumns: "1fr 1.1fr",
+              gap: 64,
+            }}
+          >
+            {/* Photo placeholder */}
+            <div
+              className="bg-fb-cream rounded-[28px] w-full"
+              style={{ aspectRatio: "4 / 5" }}
+            />
 
-          <div className="lg:order-1">
-            <p className="text-brand-teal uppercase tracking-[0.2em] text-xs font-semibold mb-3">
-              {t.about.founder.label}
-            </p>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-deep mb-6">
-              {t.about.founder.heading}
-            </h2>
-            <div className="space-y-5 text-muted-foreground leading-relaxed">
-              <p>{t.about.founder.p1}</p>
-              <p>{t.about.founder.p2}</p>
-              <p>{t.about.founder.p3}</p>
-              <p>{t.about.founder.p4}</p>
-              <p>{t.about.founder.p5}</p>
-              <p className="font-heading text-brand-deep italic text-lg pt-2">
-                {t.about.founder.signoff}
+            {/* Text */}
+            <div>
+              <p className="text-fb-mute uppercase tracking-[0.2em] text-xs font-semibold mb-3">
+                {moni.eyebrow}
               </p>
+              <p
+                className="text-fb-green mb-6"
+                style={{
+                  fontFamily: "var(--f-script)",
+                  fontSize: "clamp(32px, 4vw, 52px)",
+                  lineHeight: 1.2,
+                }}
+              >
+                {moni.quote}
+              </p>
+              <p className="text-fb-mute text-lg leading-relaxed mb-8">{moni.body}</p>
+
+              {/* Signature */}
+              <div>
+                <span
+                  className="text-fb-green block"
+                  style={{ fontFamily: "var(--f-script)", fontSize: 32 }}
+                >
+                  {moni.sign}
+                </span>
+                <span className="text-fb-mute uppercase tracking-[0.15em] text-xs">
+                  {moni.role}
+                </span>
+              </div>
             </div>
           </div>
+
+          {/* Responsive override for < 900px */}
+          <style>{`
+            @media (max-width: 899px) {
+              #moni .grid {
+                grid-template-columns: 1fr !important;
+                gap: 32px !important;
+              }
+            }
+          `}</style>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

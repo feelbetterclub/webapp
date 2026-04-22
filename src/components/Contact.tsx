@@ -1,107 +1,101 @@
 "use client";
 
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { useState, type FormEvent } from "react";
-import { SectionHeader } from "./SectionHeader";
-import { Input } from "./ui/input";
-import { Select } from "./ui/select";
-import { Textarea } from "./ui/textarea";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
-import { BrandButton } from "./ui/brand-button";
-
-const contactInfo = [
-  { icon: MapPin, label: "Location", value: "Tarifa, ES" },
-  { icon: Phone, label: "Phone", value: "+34 XXX XXX XXX" },
-  { icon: Mail, label: "Email", value: "hello@feelbetterclub.com" },
-  { icon: Clock, label: "Schedule", value: "Mon - Sat: 7:00 - 21:00" },
-];
 
 export default function Contact() {
-  const [submitted, setSubmitted] = useState(false);
   const { t } = useI18n();
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const interest = String(fd.get("interest") || "");
-    const message = String(fd.get("message") || "");
-    const name = String(fd.get("name") || "");
-    const email = String(fd.get("email") || "");
-    const text = `[Contact Form]\nName: ${name}\nEmail: ${email}\nInterest: ${interest}\n\n${message}`;
-    try {
-      await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, replyEmail: email }),
-      });
-    } catch {
-      /* best-effort */
-    }
-    setSubmitted(true);
-  }
-
-  const classOptions = [
-    { value: "mobility", label: t.classInfo.mobility.name },
-    { value: "strength", label: t.classInfo.strength.name },
-    { value: "pilates", label: t.classInfo.pilates.name },
-    { value: "fun-burn", label: t.classInfo.funBurn.name },
-    { value: "other", label: "Other" },
-  ];
+  const cta = (t as any).cta || {
+    line1: "Your first class",
+    scriptLine: "is on us.",
+    desc: "Come once, see how it feels. If it clicks, we'll talk about what fits after.",
+    button: "Claim free class",
+  };
+  const scheduleCta = (t as any).scheduleCta || "See full schedule →";
 
   return (
-    <section id="contact" className="py-24 bg-brand-light">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader label={t.contact.label} title={t.contact.title} description={t.contact.subtitle} />
+    <section id="contact" style={{ padding: "80px 0" }}>
+      <div className="mx-auto px-4 sm:px-6 lg:px-8" style={{ maxWidth: 1240 }}>
+        <div
+          className="rounded-[28px] grid items-center"
+          style={{
+            backgroundColor: "var(--fb-cream)",
+            padding: "80px 56px",
+            gridTemplateColumns: "1.2fr 1fr",
+            gap: 48,
+          }}
+        >
+          {/* Left column */}
+          <div>
+            <span
+              className="block mb-4 text-sm tracking-widest uppercase"
+              style={{ color: "var(--fb-green)", opacity: 0.5 }}
+            >
+              01 / 01
+            </span>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {contactInfo.map((item) => (
-                <div key={item.label} className="bg-white rounded-xl p-6 border border-brand-sage/30">
-                  <item.icon className="w-6 h-6 text-brand-teal mb-3" />
-                  <p className="text-sm text-muted-foreground mb-1">{item.label}</p>
-                  <p className="font-medium text-brand-deep">{item.value}</p>
-                </div>
-              ))}
-            </div>
+            <h2
+              style={{
+                fontSize: "clamp(44px, 6vw, 88px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.03em",
+                color: "var(--fb-green)",
+              }}
+              className="font-medium"
+            >
+              {cta.line1}
+              <br />
+              <span style={{ fontFamily: "var(--f-script)" }}>{cta.scriptLine}</span>
+            </h2>
 
-            <div className="bg-gradient-to-br from-brand-teal to-brand-dark rounded-2xl p-8 text-brand-cream">
-              <h3 className="font-heading text-2xl font-bold mb-3">{t.contact.trialTitle}</h3>
-              <p className="text-brand-cream/80 mb-6">{t.contact.trialText}</p>
-              <a href="/reservar" className="inline-block bg-brand-cream text-brand-deep px-6 py-3 rounded-full font-semibold hover:bg-white transition-colors">
-                {t.contact.trialCta}
-              </a>
-            </div>
+            <p
+              className="text-lg"
+              style={{ marginTop: 20, color: "var(--fb-green)", opacity: 0.7, maxWidth: 420 }}
+            >
+              {cta.desc}
+            </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-brand-sage/30">
-            {submitted ? (
-              <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                <div className="w-16 h-16 bg-brand-teal/10 rounded-full flex items-center justify-center mb-4">
-                  <Mail className="w-8 h-8 text-brand-teal" />
-                </div>
-                <h3 className="font-heading text-2xl font-bold text-brand-deep mb-2">{t.contact.form.sent}</h3>
-                <p className="text-muted-foreground">{t.contact.form.sentText}</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <Input id="name" name="name" label={t.contact.form.name} required placeholder={t.contact.form.name} />
-                <Input id="email" name="email" type="email" label={t.contact.form.email} required placeholder="you@email.com" />
-                <Select id="interest" name="interest" label={t.contact.form.interest}>
-                  <option value="">{t.contact.form.selectOption}</option>
-                  {classOptions.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </Select>
-                <Textarea id="message" name="message" label={t.contact.form.message} rows={4} placeholder={t.contact.form.messagePlaceholder} />
-                <BrandButton type="submit" size="full">
-                  {t.contact.form.submit}
-                </BrandButton>
-              </form>
-            )}
+          {/* Right column */}
+          <div className="flex flex-col gap-3 items-start">
+            <Link
+              href="/reservar"
+              className="inline-flex items-center justify-center rounded-full text-base font-medium transition-colors"
+              style={{
+                backgroundColor: "var(--fb-green)",
+                color: "var(--fb-paper)",
+                padding: "16px 36px",
+              }}
+            >
+              {cta.button} →
+            </Link>
+
+            <Link
+              href="/schedule"
+              className="inline-flex items-center justify-center rounded-full text-base font-medium transition-colors"
+              style={{
+                border: "1.5px solid var(--fb-green)",
+                color: "var(--fb-green)",
+                padding: "16px 36px",
+                backgroundColor: "transparent",
+              }}
+            >
+              {scheduleCta}
+            </Link>
           </div>
         </div>
       </div>
+
+      {/* Responsive override */}
+      <style>{`
+        @media (max-width: 820px) {
+          #contact .rounded-\\[28px\\] {
+            grid-template-columns: 1fr !important;
+            padding: 40px 24px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

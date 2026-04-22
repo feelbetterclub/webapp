@@ -10,6 +10,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-heading);
+  --font-script: var(--font-script);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -47,7 +48,21 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Brand colors — PRD exact palette */
+  /* Feel Better Club — v2 palette */
+  --color-fb-green: var(--fb-green);
+  --color-fb-green-deep: var(--fb-green-deep);
+  --color-fb-green-soft: var(--fb-green-soft);
+  --color-fb-green-mist: var(--fb-green-mist);
+  --color-fb-cream: var(--fb-cream);
+  --color-fb-bone: var(--fb-bone);
+  --color-fb-paper: var(--fb-paper);
+  --color-fb-sand: var(--fb-sand);
+  --color-fb-terracotta: var(--fb-terracotta);
+  --color-fb-ochre: var(--fb-ochre);
+  --color-fb-ink: var(--fb-ink);
+  --color-fb-mute: var(--fb-mute);
+
+  /* Brand colors — PRD exact palette (deprecated, kept for admin) */
   --color-brand-teal: #0d5e42;
   --color-brand-dark: #094a34;
   --color-brand-cream: #f4ebd0;
@@ -57,38 +72,73 @@
 }
 
 :root {
-  --background: #faf8f2;
-  --foreground: #062e21;
-  --card: #ffffff;
-  --card-foreground: #062e21;
-  --popover: #ffffff;
-  --popover-foreground: #062e21;
-  --primary: #0d5e42;
-  --primary-foreground: #f4ebd0;
-  --secondary: #f4ebd0;
-  --secondary-foreground: #0d5e42;
-  --muted: #e2ece9;
-  --muted-foreground: #4a6e5f;
-  --accent: #e2ece9;
-  --accent-foreground: #0d5e42;
+  /* ===== Feel Better Club — Design Tokens v2 ===== */
+  --fb-green: #1F5D3F;
+  --fb-green-deep: #163F2B;
+  --fb-green-soft: #3E7B5B;
+  --fb-green-mist: #D7E2D9;
+  --fb-cream: #F5EFE3;
+  --fb-bone: #FBF7EE;
+  --fb-paper: #FFFDF7;
+  --fb-sand: #E7DCC7;
+  --fb-terracotta: #C7613F;
+  --fb-ochre: #D8A24A;
+  --fb-ink: #14231B;
+  --fb-mute: #5A6A60;
+
+  /* System */
+  --fb-radius-sm: 6px;
+  --fb-radius: 14px;
+  --fb-radius-lg: 28px;
+  --fb-radius-xl: 999px;
+  --fb-shadow-sm: 0 1px 2px rgba(20,35,27,.06), 0 4px 10px rgba(20,35,27,.04);
+  --fb-shadow: 0 2px 4px rgba(20,35,27,.08), 0 20px 40px rgba(20,35,27,.08);
+  --fb-content: 1240px;
+
+  /* Typography */
+  --f-sans: var(--font-sans);
+  --f-script: var(--font-script);
+  --f-display: var(--font-sans);
+
+  /* Discipline accent colors */
+  --disc-mobility: #5FA37A;
+  --disc-strength: #1F5D3F;
+  --disc-pilates: #C97A5A;
+  --disc-funburn: #E8B94E;
+
+  /* shadcn tokens */
+  --background: #FBF7EE;
+  --foreground: #14231B;
+  --card: #FFFDF7;
+  --card-foreground: #14231B;
+  --popover: #FFFDF7;
+  --popover-foreground: #14231B;
+  --primary: #1F5D3F;
+  --primary-foreground: #FFFDF7;
+  --secondary: #F5EFE3;
+  --secondary-foreground: #1F5D3F;
+  --muted: #D7E2D9;
+  --muted-foreground: #5A6A60;
+  --accent: #D7E2D9;
+  --accent-foreground: #1F5D3F;
   --destructive: #ba1a1a;
-  --border: #c8d5cf;
-  --input: #e2ece9;
-  --ring: #0d5e42;
-  --chart-1: #0d5e42;
-  --chart-2: #e2ece9;
-  --chart-3: #f4ebd0;
-  --chart-4: #094a34;
-  --chart-5: #062e21;
+  --border: #E7DCC7;
+  --input: #D7E2D9;
+  --ring: #1F5D3F;
+  --chart-1: #1F5D3F;
+  --chart-2: #D7E2D9;
+  --chart-3: #F5EFE3;
+  --chart-4: #163F2B;
+  --chart-5: #14231B;
   --radius: 0.5rem;
-  --sidebar: #faf8f2;
-  --sidebar-foreground: #062e21;
-  --sidebar-primary: #0d5e42;
-  --sidebar-primary-foreground: #f4ebd0;
-  --sidebar-accent: #e2ece9;
-  --sidebar-accent-foreground: #0d5e42;
-  --sidebar-border: #c8d5cf;
-  --sidebar-ring: #0d5e42;
+  --sidebar: #FBF7EE;
+  --sidebar-foreground: #14231B;
+  --sidebar-primary: #1F5D3F;
+  --sidebar-primary-foreground: #FFFDF7;
+  --sidebar-accent: #D7E2D9;
+  --sidebar-accent-foreground: #1F5D3F;
+  --sidebar-border: #E7DCC7;
+  --sidebar-ring: #1F5D3F;
 }
 
 @layer base {
@@ -96,7 +146,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-fb-bone text-fb-ink;
   }
   html {
     @apply font-sans scroll-smooth;

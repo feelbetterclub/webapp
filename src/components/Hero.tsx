@@ -6,71 +6,106 @@ import { useI18n } from "@/lib/i18n/context";
 export default function Hero() {
   const { t } = useI18n();
 
+  /* ---- i18n with fallbacks ---- */
+  const h = (t as any).hero ?? {};
+  const h1a = h.h1a ?? h.headline1 ?? "Move like you mean it.";
+  const h1b = h.h1b ?? h.headline2 ?? "Feel like you deserve it.";
+  const sub =
+    h.sub ??
+    h.subtitle ??
+    "A holistic wellness club in Tarifa blending movement, breath-work and community so you can feel extraordinary every single day.";
+  const primaryCta = h.primary ?? h.cta1 ?? "Book your first class";
+  const ghostCta = h.ghost ?? h.cta2 ?? "See the method";
+  const badge = h.badge ?? "Next class · Friday 7:30 am";
+  const stats: { n: string; l: string }[] = h.stats ?? [
+    { n: "350+", l: "Members" },
+    { n: "28", l: "Weekly classes" },
+    { n: "4.9★", l: "Avg rating" },
+  ];
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-brand-teal overflow-hidden">
-      {/* Gradient wash */}
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-deep/70 via-brand-teal to-brand-dark/80" />
+    <section className="bg-fb-paper pt-14 pb-10">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        {/* Two-column grid: single col mobile, 1.25fr + 1fr above 980px */}
+        <div className="grid grid-cols-1 min-[980px]:grid-cols-[1.25fr_1fr] items-center gap-10 min-[980px]:gap-16">
+          {/* ---- Left column ---- */}
+          <div className="order-2 min-[980px]:order-1">
+            <h1 className="mb-6">
+              {/* Line 1 — display sans */}
+              <span className="block font-sans font-medium text-fb-green text-[clamp(56px,9vw,140px)] leading-[0.92] tracking-[-0.035em]">
+                {h1a}
+              </span>
+              {/* Line 2 — script accent */}
+              <span
+                className="block font-semibold text-fb-green text-[clamp(56px,9vw,140px)] leading-[0.92] tracking-[-0.035em]"
+                style={{ fontFamily: "var(--f-script), cursive" }}
+              >
+                {h1b}
+              </span>
+            </h1>
 
-      {/* Decorative palm frond SVG — shaded for text legibility */}
-      <svg
-        className="absolute -right-20 -top-10 w-[500px] h-[500px] text-brand-cream/10 pointer-events-none"
-        viewBox="0 0 200 200"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M100 20 C 105 60 110 90 120 110 C 140 90 160 85 180 90 C 160 100 140 115 130 130 C 150 130 170 140 185 155 C 160 150 140 155 130 165 C 145 175 155 190 160 205 C 140 185 120 180 105 185 C 105 170 105 150 100 20 Z" />
-        <path d="M100 20 C 95 60 90 90 80 110 C 60 90 40 85 20 90 C 40 100 60 115 70 130 C 50 130 30 140 15 155 C 40 150 60 155 70 165 C 55 175 45 190 40 205 C 60 185 80 180 95 185 C 95 170 95 150 100 20 Z" />
-      </svg>
-      <svg
-        className="absolute -left-32 bottom-0 w-[400px] h-[400px] text-brand-cream/8 pointer-events-none rotate-12"
-        viewBox="0 0 200 200"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M100 20 C 105 60 110 90 120 110 C 140 90 160 85 180 90 C 160 100 140 115 130 130 C 150 130 170 140 185 155 C 160 150 140 155 130 165 C 145 175 155 190 160 205 C 140 185 120 180 105 185 C 105 170 105 150 100 20 Z" />
-        <path d="M100 20 C 95 60 90 90 80 110 C 60 90 40 85 20 90 C 40 100 60 115 70 130 C 50 130 30 140 15 155 C 40 150 60 155 70 165 C 55 175 45 190 40 205 C 60 185 80 180 95 185 C 95 170 95 150 100 20 Z" />
-      </svg>
+            <p className="text-fb-mute text-lg sm:text-[22px] leading-relaxed max-w-[48ch] mb-8">
+              {sub}
+            </p>
 
-      <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.svg" alt="The Feel Better Club" className="w-full max-w-sm sm:max-w-md mx-auto mb-8" />
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-4 mb-10">
+              <Link
+                href="/reservar"
+                className="inline-flex items-center bg-fb-green text-fb-paper rounded-full px-6 py-3.5 text-base font-semibold transition-colors hover:opacity-90"
+              >
+                {primaryCta}
+                <span className="ml-1.5" aria-hidden="true">
+                  &rarr;
+                </span>
+              </Link>
+              <Link
+                href="/#method"
+                className="inline-flex items-center border border-fb-green text-fb-green rounded-full px-6 py-3.5 text-base font-semibold transition-colors hover:bg-fb-green hover:text-fb-paper"
+              >
+                {ghostCta}
+              </Link>
+            </div>
 
-        <p className="text-brand-cream/80 uppercase tracking-[0.25em] text-xs sm:text-sm mb-6">
-          {t.hero.tagline}
-        </p>
+            {/* Stats strip */}
+            <div className="grid grid-cols-3 gap-6 border-t border-fb-green/25 pt-6">
+              {stats.map((s, i) => (
+                <div key={i}>
+                  <p className="font-sans font-semibold text-fb-green text-[clamp(26px,3vw,38px)] leading-tight">
+                    {s.n}
+                  </p>
+                  <p className="text-fb-mute text-xs uppercase tracking-widest mt-1">
+                    {s.l}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold text-brand-cream mb-6 leading-tight">
-          {t.hero.headline1}
-          <span className="block text-brand-sage">{t.hero.headline2}</span>
-        </h1>
+          {/* ---- Right column ---- */}
+          <div className="relative order-1 min-[980px]:order-2">
+            {/* Photo placeholder */}
+            <div
+              className="w-full aspect-[4/5] bg-fb-green-mist rounded-[28px] flex items-center justify-center"
+              data-label="photo-placeholder"
+            >
+              <span className="text-fb-green/40 text-sm font-medium tracking-wide uppercase select-none">
+                Photo placeholder
+              </span>
+            </div>
 
-        <p className="text-brand-cream/80 text-lg sm:text-xl max-w-2xl mx-auto mb-4 leading-relaxed">
-          {t.hero.subtitle}
-        </p>
-
-        <p className="text-brand-cream/60 text-sm sm:text-base italic mb-10">
-          {t.hero.comingSoon}
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/#class-info"
-            className="bg-brand-cream text-brand-deep px-8 py-3.5 rounded-full text-base font-semibold hover:bg-white transition-colors shadow-lg"
-          >
-            {t.hero.cta1}
-          </Link>
-          <Link
-            href="/reservar"
-            className="border-2 border-brand-cream/40 text-brand-cream px-8 py-3.5 rounded-full text-base font-semibold hover:bg-brand-cream/10 transition-colors"
-          >
-            {t.hero.cta2}
-          </Link>
-        </div>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-brand-cream/40 rounded-full flex justify-center pt-2">
-          <div className="w-1.5 h-3 bg-brand-cream/60 rounded-full" />
+            {/* Badge overlay */}
+            <div className="absolute top-4 left-4 bg-fb-paper/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-sm">
+              {/* Pulse dot */}
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-fb-terracotta opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-fb-terracotta" />
+              </span>
+              <span className="text-fb-green text-sm font-medium">
+                {badge}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

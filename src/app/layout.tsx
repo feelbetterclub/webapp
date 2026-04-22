@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Manrope, Noto_Serif } from "next/font/google";
+import Script from "next/script";
+import { DM_Sans, Caveat } from "next/font/google";
 import { I18nProvider } from "@/lib/i18n/context";
 import "./globals.css";
 
-const manrope = Manrope({
+const dmSans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
 });
 
-const notoSerif = Noto_Serif({
-  variable: "--font-heading",
+const caveat = Caveat({
+  variable: "--font-script",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -55,9 +56,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${notoSerif.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${caveat.variable} h-full antialiased`}
     >
+      <head>
+        <Script id="gtm" strategy="afterInteractive">{`
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-N4HFZFLV');
+        `}</Script>
+      </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-N4HFZFLV"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <I18nProvider>{children}</I18nProvider>
       </body>
     </html>
