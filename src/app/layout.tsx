@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { DM_Sans, Caveat } from "next/font/google";
+import { Plus_Jakarta_Sans, Caveat, Chewy } from "next/font/google";
 import { I18nProvider } from "@/lib/i18n/context";
 import "./globals.css";
 
-const dmSans = DM_Sans({
+const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const caveat = Caveat({
   variable: "--font-script",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+});
+
+const chewy = Chewy({
+  variable: "--font-brand",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -56,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${caveat.variable} h-full antialiased`}
+      className={`${plusJakarta.variable} ${caveat.variable} ${chewy.variable} h-full antialiased`}
     >
       <head>
         <Script id="gtm" strategy="afterInteractive">{`

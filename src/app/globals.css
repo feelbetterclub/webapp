@@ -98,6 +98,7 @@
   /* Typography */
   --f-sans: var(--font-sans);
   --f-script: var(--font-script);
+  --f-brand: var(--font-brand), 'Chewy', cursive;
   --f-display: var(--font-sans);
 
   /* Discipline accent colors */

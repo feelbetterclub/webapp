@@ -69,10 +69,10 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<void> 
     <p>Hi ${safeName},</p>
     <p>I'm genuinely excited to have you with us. The Feel Better Club was created with one simple intention: to bring people together through movement, nature, and the kind of energy that only shared effort can create.</p>
     <p>Every session is designed to feel uplifting and connected — whether we're training on the beach at sunrise, doing mobility at sunset, or challenging ourselves in the forest at midday. My goal is to make each workout something you look forward to, not just for the training itself, but for the atmosphere and the people around you.</p>
-    <p>By joining, you're not just signing up for workouts. You're becoming part of a community that supports each other, grows together, and enjoys the outdoors as our "gym". I'm grateful to have you with us.</p>
-    <p>As a welcome gift, you'll receive the details about date and time for your free outdoor class in a separate message shortly. I can't wait for you to experience it and give us feedback. You'll also get updates about special events and holistic health tips fueled by science.</p>
-    <p>You'll receive weekly updates with the schedule, sign-ups, and any special sessions or events. And of course, you can always reach out if you have questions or ideas — this community grows stronger when we build it together.</p>
-    <p style="margin-top:32px;">See you outside.<br/><strong>Monika</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
+    <p>By joining, you're not just signing up for workouts. You're becoming part of a Feel Better Community that supports each other, grows together, and enjoys the outdoors as our "gym". I'm grateful to have you with us.</p>
+    <p>As a welcome gift, you'll receive the details about date and time for your free outdoor class in a separate message shortly. I can't wait for you to experience it and give us feedback.</p>
+    <p>As a member you can easily book a class or manage your reservations. You also get premium access to special events, sport nutrition tips and holistic health rituals. And of course, you can always reach out if you have questions or ideas — this community grows stronger when we build it together.</p>
+    <p style="margin-top:32px;">See you outside.<br/><strong>Moni</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
   `;
   await send(to, subject, wrapper(inner));
 }
@@ -138,7 +138,7 @@ export async function sendBookingConfirmation(data: BookingConfirmationData): Pr
 
   const inner = `
     <p>Hi ${safeName},</p>
-    <p>Thank you for choosing us and your reservation. You are the reason why I show up every day to lead a class and I am excited to train with you.</p>
+    <p>Thank you for choosing Feel Better Club and your reservation. I am excited to train with you. You are the reason why I show up every day to create the space where you can discover your inner Power and Connect with your true potential.</p>
     <p><strong>Your booking:</strong></p>
     <ul style="padding-left:20px;margin:12px 0;">
       <li><strong>Date:</strong> ${safeDate}</li>

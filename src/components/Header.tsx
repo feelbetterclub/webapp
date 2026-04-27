@@ -13,11 +13,10 @@ export default function Header() {
   const nav = t.nav as Record<string, string>;
 
   const navLinks = [
-    { href: "/#class-info", label: nav.method || nav.classInfo || "The Method" },
-    { href: "/reservar", label: nav.classes || nav.classProgram || "Classes" },
-    { href: "/#about", label: nav.moni || nav.about || "About Moni" },
-    { href: "/#rituals", label: nav.rituals || "Rituals" },
-    { href: "/#contact", label: nav.journal || nav.contact || "Contact" },
+    { href: "/#about", label: nav.about || "About" },
+    { href: "/#method", label: nav.classProgram || "Class Program" },
+    { href: "/#rituals", label: nav.rituals || "Rituals & Events" },
+    { href: "/contact", label: nav.contact || "Contact" },
   ];
 
   return (
@@ -83,7 +82,7 @@ export default function Header() {
                 href="/reservar"
                 className="bg-fb-green text-fb-paper rounded-full px-6 py-3 text-[15px] font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
               >
-                {nav.bookClass || nav.book || "Book a class"}
+                {nav.bookClass || "Book the Class"}
               </Link>
               <button
                 className="fbc-hamburger items-center justify-center text-fb-ink"

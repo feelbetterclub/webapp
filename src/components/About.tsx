@@ -5,6 +5,14 @@ import { useI18n } from "@/lib/i18n/context";
 export default function About() {
   const { t } = useI18n();
 
+  // Our Story i18n
+  const story = (t as any).about?.story || {
+    p1: "The Feel Better Club was created with a simple intention: to bring people together through movement, nature, and the kind of energy that only shared effort can create. What started as a few beach and garden sessions for friends has grown into a space where people challenge themselves, and discover how good it is to move with purpose — surrounded by fresh air, sunlight, and wildlife.",
+    p2: "Training Outside grounds us, Training Together lifts us up. And we keep showing up because it Feels Better — the endorphins and sound of waves bring out the smiles.",
+  };
+  const storyLabel = (t as any).about?.label || "About Us";
+  const storyTitle = (t as any).about?.title || "Our Story";
+
   // Pillars i18n with fallbacks
   const pillars = (t as any).pillars || {
     eyebrow: "Our philosophy",
@@ -23,19 +31,35 @@ export default function About() {
 
   // Moni i18n with fallbacks
   const moni = (t as any).moni || (t as any).about?.founder || {
-    eyebrow: "About Moni",
+    eyebrow: "Meet the Founder & Coach",
     quote: "\u201CHealth isn\u2019t a finish line \u2014 it\u2019s the way you walk the path.\u201D",
-    body: "Moni founded Feel Better Club in 2022 after more than 25 years dedicated to movement, coaching, and holistic wellness. Her approach blends functional training, breathwork, and mindful nutrition into a practice that fits real life \u2014 not the other way around.",
+    body: "Moni founded Feel Better Club after more than 25 years dedicated to movement, coaching, and holistic wellness.",
     sign: "Moni",
     role: "Founder \u00B7 Coach",
   };
 
+  // Split body into paragraphs
+  const bodyParagraphs = (moni.body || "").split("\n\n").filter(Boolean);
+
   return (
     <>
+      {/* ── Our Story ── */}
+      <section id="about" className="bg-fb-paper" style={{ padding: "80px 0" }}>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <p className="text-fb-mute uppercase tracking-[0.2em] text-xs font-semibold mb-3">
+            {storyLabel}
+          </p>
+          <h2 className="font-heading text-3xl sm:text-4xl font-bold text-fb-green mb-8">
+            {storyTitle}
+          </h2>
+          <p className="text-fb-mute text-lg leading-relaxed mb-4">{story.p1}</p>
+          <p className="text-fb-mute text-lg leading-relaxed">{story.p2}</p>
+        </div>
+      </section>
+
       {/* ── Pillars ── */}
       <section id="pillars" className="bg-fb-paper" style={{ padding: "80px 0" }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          {/* Header */}
           <p className="text-fb-mute uppercase tracking-[0.2em] text-xs font-semibold mb-3">
             {pillars.eyebrow}
           </p>
@@ -43,7 +67,6 @@ export default function About() {
             {pillars.title}
           </h2>
 
-          {/* Two-column grid */}
           <div
             className="grid gap-6"
             style={{
@@ -116,7 +139,7 @@ export default function About() {
       <section id="moni" className="bg-fb-paper" style={{ padding: "120px 0" }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div
-            className="grid items-center"
+            className="grid items-start"
             style={{
               gridTemplateColumns: "1fr 1.1fr",
               gap: 64,
@@ -143,10 +166,14 @@ export default function About() {
               >
                 {moni.quote}
               </p>
-              <p className="text-fb-mute text-lg leading-relaxed mb-8">{moni.body}</p>
+              {bodyParagraphs.map((para: string, idx: number) => (
+                <p key={idx} className="text-fb-mute text-lg leading-relaxed mb-4">
+                  {para}
+                </p>
+              ))}
 
               {/* Signature */}
-              <div>
+              <div className="mt-8">
                 <span
                   className="text-fb-green block"
                   style={{ fontFamily: "var(--f-script)", fontSize: 32 }}

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feel Better Club — Backlog Completo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      background: #f5f0eb;
+      color: #2d2d2d;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #4a7c59;
+    }
+    header h1 { font-size: 2rem; color: #4a7c59; margin-bottom: 0.25rem; }
+    header p { color: #888; font-size: 0.95rem; }
+    .section-title {
+      font-size: 1.3rem;
+      color: #4a7c59;
+      margin: 2.5rem 0 1rem;
+      padding-left: 0.5rem;
+      border-left: 4px solid #4a7c59;
+    }
+    .task-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .task-id {
+      background: #4a7c59;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      min-width: 62px;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .task-id.bug { background: #c0392b; }
+    .task-id.coach { background: #2c3e50; }
+    .task-id.ux { background: #7f8c8d; }
+    .task-id.content { background: #8e6e3a; }
+    .task-id.nav { background: #2471a3; }
+    .task-id.typo { background: #7d3c98; }
+    .task-body h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .task-body p { font-size: 0.88rem; color: #555; margin-bottom: 0.4rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag.frontend { background: #d5f5e3; color: #1e8449; }
+    .tag.backend { background: #d6eaf8; color: #2471a3; }
+    .tag.email { background: #fdebd0; color: #ca6f1e; }
+    .tag.admin { background: #f5e6ff; color: #7d3c98; }
+    .tag.contenido { background: #fef3cd; color: #856404; }
+    .tag.navegacion { background: #cce5ff; color: #004085; }
+    .tag.tipografia { background: #e8d5f5; color: #6f42c1; }
+    .tag.ux { background: #d1ecf1; color: #0c5460; }
+    .tag.i18n { background: #e2e3e5; color: #383d41; }
+    .tag.schema { background: #f8d7da; color: #721c24; }
+    .priority {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 0.12rem 0.4rem;
+      border-radius: 3px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .priority.alta { background: #e74c3c; color: #fff; }
+    .priority.media { background: #f39c12; color: #fff; }
+    .priority.baja { background: #95a5a6; color: #fff; }
+    .priority.decision { background: #8e44ad; color: #fff; }
+    .stats {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #ddd;
+    }
+    .stat-box {
+      flex: 1;
+      min-width: 120px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-box .num { font-size: 1.8rem; font-weight: 700; color: #4a7c59; }
+    .stat-box .label { font-size: 0.75rem; color: #888; }
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0 2rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .legend-title { width: 100%; font-size: 0.8rem; color: #888; margin-bottom: 0.3rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Feel Better Club</h1>
+      <p>Backlog Completo — Actualizado 27 abril 2026</p>
+    </header>
+
+    <div class="legend">
+      <div class="legend-title">Etiquetas de tipologia</div>
+      <span class="tag contenido">Contenido</span>
+      <span class="tag navegacion">Navegacion</span>
+      <span class="tag frontend">Frontend</span>
+      <span class="tag backend">Backend</span>
+      <span class="tag email">Email</span>
+      <span class="tag admin">Admin</span>
+      <span class="tag tipografia">Tipografia</span>
+      <span class="tag ux">UX</span>
+      <span class="tag i18n">i18n</span>
+      <span class="tag schema">Schema/DB</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CONTENIDO — Fidelidad al doc de Monika -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Contenido — Fidelidad al documento</h2>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-74</span>
+      <div class="task-body">
+        <h3>Renombrar clases al copy oficial</h3>
+        <p>"Open-Air Kite Mobility Flow", "Open-Air Sculpt Flow", "Open-Air Pilates Flow", "Open-Air Dance Burn". Actualizar Services.tsx + i18n EN/ES + admin + DB.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag i18n">i18n</span>
+          <span class="tag schema">Schema/DB</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-75</span>
+      <div class="task-body">
+        <h3>Actualizar descripciones de clases</h3>
+        <p>Cada clase tiene un copy de ~50 palabras especificado en el documento. Verificar y reemplazar en Services.tsx + i18n EN/ES.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-76</span>
+      <div class="task-body">
+        <h3>Actualizar texto pop-up</h3>
+        <p>Doc: "UNLOCK A FREE OUTDOOR CLASS! Click the button below to join the #FEELBETTERCLUB Community..." Actual: "Try your first class free". Alinear copy + CTA.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-77</span>
+      <div class="task-body">
+        <h3>Verificar headline home</h3>
+        <p>Doc: "Outdoor Training Community. Personalised Workouts because Each of You Matters. Fueled by Endorphins and Sea Vitamins. Sport. Nature. Connection. Holistic Health Rituals."</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-78</span>
+      <div class="task-body">
+        <h3>Verificar bio Moni</h3>
+        <p>Doc tiene bio completa: basketball a los 7, jugadora profesional, danza/tenis/ski/pilates, kitesurfing 2016, Tarifa 2021, 25+ anos experiencia. Verificar fidelidad.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-79</span>
+      <div class="task-body">
+        <h3>Verificar Our Story</h3>
+        <p>Doc: "created with a simple intention... beach and garden sessions for friends... challenge themselves... fresh air, sunlight, and wildlife." Verificar About.tsx.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-80</span>
+      <div class="task-body">
+        <h3>Verificar copy Welcome Email</h3>
+        <p>Doc tiene email completo con subject, body y firma. Verificar que el template Resend actual coincide al 100%.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag email">Email</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id content">FBC-81</span>
+      <div class="task-body">
+        <h3>Verificar copy Booking Email</h3>
+        <p>Doc: Subject "Your Spot Is Confirmed - See You Outdoors", body con variables {{date}}, {{time}}, {{class_type}}, {{cancellation_link}}. Verificar template.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag contenido">Contenido</span>
+          <span class="tag email">Email</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NAVEGACION Y ESTRUCTURA                -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Navegacion y Estructura</h2>
+
+    <div class="task-card">
+      <span class="task-id nav">FBC-82</span>
+      <div class="task-body">
+        <h3>Renombrar items top menu</h3>
+        <p>Doc: "About | Class Program | Rituals &amp; Events | Contact | Book the Class". Actual: "The Method | Classes | About Moni | Rituals | Contact". Cambiar Header.tsx + i18n.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag navegacion">Navegacion</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id nav">FBC-58</span>
+      <div class="task-body">
+        <h3>Pagina Contact independiente</h3>
+        <p>Form de contacto con preferencia de contacto (movil/email). Actualmente no existe como pagina, solo hay CTA section. Doc lo pide como seccion de nav.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag navegacion">Navegacion</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id nav">FBC-83</span>
+      <div class="task-body">
+        <h3>Flujo registro completo tras pop-up</h3>
+        <p>Al click en popup: sign-up form (name, email, phone+prefix, password) que crea membership #FEELBETTERCLUB con acceso a booking/news/events. Actualmente solo redirige a booking.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag navegacion">Navegacion</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag backend">Backend</span>
+          <span class="tag schema">Schema/DB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ALTA PRIORIDAD (Legacy backlog)        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Features — Alta Prioridad</h2>
+
+    <div class="task-card">
+      <span class="task-id">FBC-16</span>
+      <div class="task-body">
+        <h3>Ritual Wall</h3>
+        <p>Banners visuales por clase con imagen de fondo. Vertical feed de "Banner Blocks" con foto, nombre de clase, ubicacion y descripcion de 50 palabras.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag ux">UX</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id">FBC-52</span>
+      <div class="task-body">
+        <h3>Slot "Events" en top menu</h3>
+        <p>Reservar item visible en nav. Activacion futura. Doc: "in the future we would add Events as section".</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag navegacion">Navegacion</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id">FBC-50</span>
+      <div class="task-body">
+        <h3>Flujo Free Outdoor Class</h3>
+        <p>Segundo email automatico con fecha, hora y ubicacion de la clase gratuita. Completa el funnel del pop-up.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag email">Email</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id">FBC-60</span>
+      <div class="task-body">
+        <h3>Google Maps embed por location</h3>
+        <p>Sustituir link por embed interactivo. Doc: "location with Google Map pin".</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag ux">UX</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id">FBC-19</span>
+      <div class="task-body">
+        <h3>Seccion "Upcoming Class"</h3>
+        <p>Banner para usuarios con reserva activa: fecha, hora, ubicacion, disciplina + boton "Cancel Spot". Doc lo confirma como requisito.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag backend">Backend</span>
+          <span class="tag ux">UX</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id">FBC-21</span>
+      <div class="task-body">
+        <h3>Deteccion usuario recurrente</h3>
+        <p>localStorage para persistir identidad. Ocultar pop-up, "Welcome back", acceso rapido. Doc: "Uses LocalStorage to persist user identity".</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag ux">UX</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BUGS                                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Bugs</h2>
+
+    <div class="task-card">
+      <span class="task-id bug">BUG-01</span>
+      <div class="task-body">
+        <h3>Boton editar clase no funciona en admin</h3>
+        <p>Click en "Edit" no hace nada. Bloquea gestion de clases.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id bug">BUG-02</span>
+      <div class="task-body">
+        <h3>Link de About Moni no funciona</h3>
+        <p>Enlace no navega a la seccion. El usuario no puede acceder a la bio de Monika.</p>
+        <div class="tags">
+          <span class="priority alta">Alta</span>
+          <span class="tag navegacion">Navegacion</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- COACH DASHBOARD                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Coach Dashboard</h2>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-67</span>
+      <div class="task-body">
+        <h3>Pestana Analytics en admin</h3>
+        <p>Metricas de bookings, comunidad, ingresos, actividad. Trend week over week (doc).</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-68</span>
+      <div class="task-body">
+        <h3>Seccion admin Community Members</h3>
+        <p>Listado de community_members: nombre, email, telefono, fecha registro.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-69</span>
+      <div class="task-body">
+        <h3>Quitar posicion waitlist</h3>
+        <p>Eliminar #N del email/UI de waitlist.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag email">Email</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-70</span>
+      <div class="task-body">
+        <h3>Email confirmacion on-demand</h3>
+        <p>Email automatico al usuario tras solicitud on-demand.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag email">Email</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-71</span>
+      <div class="task-body">
+        <h3>Notificacion lead al coach</h3>
+        <p>Email a feelbettermove@gmail.com con info del on-demand request.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag email">Email</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-72</span>
+      <div class="task-body">
+        <h3>Flujo emails completo</h3>
+        <p>Cuenta Resend propia FBC. Unificar: welcome, booking, on-demand, lead, free class.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag email">Email</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-26</span>
+      <div class="task-body">
+        <h3>WhatsApp Bridge</h3>
+        <p>Boton chat con alumno desde admin. Pre-rellena numero + welcome en su idioma.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-27</span>
+      <div class="task-body">
+        <h3>Toggle "Paid" por alumno</h3>
+        <p>Marcar pago Cash/Card/Revolut/Bizum/Pix por asistente.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-28</span>
+      <div class="task-body">
+        <h3>Revenue tracker por clase</h3>
+        <p>Suma automatica de ingresos por sesion.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ADMIN NUEVAS FEATURES (Doc Monika)     -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Admin — Nuevas Features (Doc)</h2>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-84</span>
+      <div class="task-body">
+        <h3>Multi-moneda en clases</h3>
+        <p>EUR (default), USD, BRL en creacion de clase. Nuevo campo currency en schema.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag schema">Schema/DB</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-85</span>
+      <div class="task-body">
+        <h3>Payment methods ampliados</h3>
+        <p>Anadir Bizum/Pix como opciones ademas de Cash/Card/Revolut.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-86</span>
+      <div class="task-body">
+        <h3>Opcion Donation-based / Free</h3>
+        <p>Clases sociales o free para nuevos miembros. Campo especial en precio.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag schema">Schema/DB</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-87</span>
+      <div class="task-body">
+        <h3>Bio + foto instructor en admin</h3>
+        <p>Campo bio (textarea) y foto (upload opcional) en formulario de instructores.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-88</span>
+      <div class="task-body">
+        <h3>Badge "Member" en Students</h3>
+        <p>Icono/badge para alumnos registrados como miembros de la comunidad (via pop-up free class).</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id coach">FBC-89</span>
+      <div class="task-body">
+        <h3>Seccion Messaging en admin</h3>
+        <p>Inbox de emails + enviar emails individuales o masivos. Nueva seccion en AdminSidebar.</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag email">Email</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TIPOGRAFIA                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Tipografia</h2>
+
+    <div class="task-card">
+      <span class="task-id typo">FBC-90</span>
+      <div class="task-body">
+        <h3>Tipografia segun brand kit</h3>
+        <p>Doc especifica: Chewy (logo), Codec Pro (headlines), Abramo (accents). Actual: DM Sans + Caveat. Requiere decision de Monika.</p>
+        <div class="tags">
+          <span class="priority decision">Decision</span>
+          <span class="tag tipografia">Tipografia</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MEJORAS UX                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Mejoras UX</h2>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-17</span>
+      <div class="task-body">
+        <h3>Vista calendario scroll horizontal</h3>
+        <p>Calendario con scroll horizontal por dia del mes. Doc: "calendar view with horizontal scroll by day".</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag ux">UX</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-30</span>
+      <div class="task-body">
+        <h3>Jerarquia geografica</h3>
+        <p>Region > Country > City > Sanctuary (Beach/Venue). Doc lo confirma.</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag schema">Schema/DB</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-23</span>
+      <div class="task-body">
+        <h3>Master Templates clases recurrentes</h3>
+        <p>Templates con campos EN/ES/PT. Doc: "selecting a template pulls the correct localized strings".</p>
+        <div class="tags">
+          <span class="priority media">Media</span>
+          <span class="tag admin">Admin</span>
+          <span class="tag i18n">i18n</span>
+          <span class="tag backend">Backend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-11</span>
+      <div class="task-body">
+        <h3>Estructura portugues (PT)</h3>
+        <p>Preparar i18n para PT. Doc: "Tertiary/Future: Portuguese".</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag i18n">i18n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-65</span>
+      <div class="task-body">
+        <h3>Tag "Donation-based"</h3>
+        <p>Badge visual en clases sociales. Relacionado con FBC-86.</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag frontend">Frontend</span>
+          <span class="tag ux">UX</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-66</span>
+      <div class="task-body">
+        <h3>Pagina Events</h3>
+        <p>Estructura para activacion futura. Breadwork, ice bath, sauna events.</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag navegacion">Navegacion</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ROADMAP FUTURO                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 class="section-title">Roadmap Futuro</h2>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-33</span>
+      <div class="task-body">
+        <h3>Stripe / Apple Pay</h3>
+        <p>Depositos online. Doc Phase 2.</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag backend">Backend</span>
+          <span class="tag frontend">Frontend</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-id ux">FBC-35</span>
+      <div class="task-body">
+        <h3>Multi-moneda expansion</h3>
+        <p>Soporte monedas locales para expansion global. Doc Phase 4. Parcialmente cubierto por FBC-84.</p>
+        <div class="tags">
+          <span class="priority baja">Baja</span>
+          <span class="tag backend">Backend</span>
+          <span class="tag schema">Schema/DB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STATS                                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="stats">
+      <div class="stat-box">
+        <div class="num">8</div>
+        <div class="label">Contenido</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">3</div>
+        <div class="label">Navegacion</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">6</div>
+        <div class="label">Features</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">2</div>
+        <div class="label">Bugs</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">15</div>
+        <div class="label">Coach/Admin</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">34</div>
+        <div class="label">Total</div>
+      </div>
+    </div>
+
+    <footer>
+      Feel Better Club &mdash; Backlog generado el 27/04/2026 &mdash; Fuente: Doc Monika + Legacy backlog
+    </footer>
+  </div>
+</body>
+</html>
