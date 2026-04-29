@@ -9,7 +9,7 @@ import { Resend } from "resend";
  * triggered it (signup, booking).
  */
 
-const FROM = process.env.EMAIL_FROM || "Feel Better Club <hello@feelbetterclub.com>";
+const FROM = process.env.EMAIL_FROM || "Feel Better Club <onboarding@resend.dev>";
 
 function getClient(): Resend | null {
   const key = process.env.RESEND_API_KEY;
