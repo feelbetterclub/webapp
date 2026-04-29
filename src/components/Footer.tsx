@@ -106,20 +106,7 @@ export default function Footer() {
         className="bg-[var(--fb-green-deep)] text-[var(--fb-paper)]/[0.85]"
         style={{ marginTop: 80, padding: "80px 0 32px" }}
       >
-        {/* ── Top grid ── */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div
-            className="grid gap-10"
-            style={{
-              gridTemplateColumns:
-                "1.5fr 1fr 1fr 1fr",
-            }}
-          >
-            {/* Responsive override via className */}
-            {/* We rely on inline grid + responsive classes below */}
-          </div>
-
-          {/* Use a responsive-friendly approach */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
             {/* 1 — Logo column */}
             <div>

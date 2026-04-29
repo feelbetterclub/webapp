@@ -37,7 +37,7 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
   const [form, setForm] = useState<StoredIdentity>(getStoredIdentity);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "waitlisted" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
-  const [waitlistPosition, setWaitlistPosition] = useState(0);
+  const [, setWaitlistPosition] = useState(0);
 
   const isWaitlistMode = schedule.spotsLeft <= 0;
 

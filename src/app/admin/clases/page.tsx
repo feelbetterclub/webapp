@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Pencil, Trash2, X, Clock, Calendar, MapPin, RefreshCw, Euro, Users } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Clock, Calendar, MapPin, RefreshCw } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
