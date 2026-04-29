@@ -104,7 +104,7 @@ export async function sendWaitlistConfirmation(data: WaitlistConfirmationData): 
       <li><strong>Class:</strong> ${safeClass}</li>
       <li><strong>Date:</strong> ${safeDate}</li>
       <li><strong>Time:</strong> ${safeTime}</li>
-      <li><strong>Position:</strong> #${position}</li>
+      <li><strong>Status:</strong> On the waitlist</li>
     </ul>
     <p>If a spot opens up, you'll receive a confirmation email automatically with all the details and a cancellation link. No action needed from your side — just keep your fingers crossed!</p>
     <p style="margin-top:32px;">See you soon, hopefully!<br/><strong>Moni</strong></p>

@@ -130,8 +130,8 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
               </h3>
               <p className="text-muted-foreground mb-2">
                 {lang === "es"
-                  ? `Posición #${waitlistPosition} para ${schedule.className} a las ${schedule.startTime}`
-                  : `Position #${waitlistPosition} for ${schedule.className} at ${schedule.startTime}`}
+                  ? `Estás en la lista de espera para ${schedule.className} a las ${schedule.startTime}`
+                  : `You're on the waitlist for ${schedule.className} at ${schedule.startTime}`}
               </p>
               <p className="text-sm text-muted-foreground mb-6">
                 {lang === "es"

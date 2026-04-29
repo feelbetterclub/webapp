@@ -72,7 +72,7 @@ export default function Contact() {
             </Link>
 
             <Link
-              href="/schedule"
+              href="/reservar"
               className="inline-flex items-center justify-center rounded-full text-base font-medium transition-colors"
               style={{
                 border: "1.5px solid var(--fb-green)",
