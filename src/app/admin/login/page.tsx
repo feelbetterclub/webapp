@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
       <div className="bg-white rounded-2xl p-8 shadow-lg border border-brand-sage/30 w-full max-w-sm">
         <div className="text-center mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-v3.png" alt="Feel Better Club" className="h-12 mx-auto mb-4" />
+          <img src="/logo-v4.svg" alt="Feel Better" className="h-12 mx-auto mb-4" />
           <h1 className="font-heading text-2xl font-bold text-brand-deep">Coach Panel</h1>
           <p className="text-sm text-muted-foreground mt-1">Restricted access</p>
         </div>

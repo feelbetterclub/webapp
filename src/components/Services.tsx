@@ -56,6 +56,11 @@ export default function Services() {
 
   return (
     <section id="method" className="py-0">
+      <style>{`
+        @media (max-width: 639px) {
+          .disc-card { border-right: none !important; }
+        }
+      `}</style>
       <div
         className="bg-fb-green rounded-[28px] mx-4 sm:mx-6 lg:mx-8"
         style={{ padding: "clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px)" }}
@@ -98,7 +103,7 @@ export default function Services() {
           {disciplines.map((d, i) => (
             <div
               key={d.n}
-              className="flex flex-col justify-between cursor-pointer transition-colors duration-300"
+              className="disc-card flex flex-col justify-between cursor-pointer transition-colors duration-300"
               style={{
                 padding: "32px 28px",
                 minHeight: "340px",

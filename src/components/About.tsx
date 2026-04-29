@@ -139,7 +139,7 @@ export default function About() {
       <section id="moni" className="bg-fb-paper" style={{ padding: "120px 0" }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div
-            className="grid items-start"
+            className="grid items-stretch"
             style={{
               gridTemplateColumns: "1fr 1.1fr",
               gap: 64,
@@ -147,8 +147,7 @@ export default function About() {
           >
             {/* Photo placeholder */}
             <div
-              className="bg-fb-cream rounded-[28px] w-full"
-              style={{ aspectRatio: "4 / 5" }}
+              className="bg-fb-cream rounded-[28px] w-full min-h-[400px]"
             />
 
             {/* Text */}

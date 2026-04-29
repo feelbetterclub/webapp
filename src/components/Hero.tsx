@@ -32,13 +32,12 @@ export default function Hero() {
           <div className="order-2 min-[980px]:order-1">
             <h1 className="mb-6">
               {/* Line 1 — display sans */}
-              <span className="block font-sans font-medium text-fb-green text-[clamp(56px,9vw,140px)] leading-[0.92] tracking-[-0.035em]">
+              <span className="block font-sans font-medium text-fb-green text-[clamp(40px,5.5vw,80px)] leading-[1] tracking-[-0.035em]">
                 {h1a}
               </span>
               {/* Line 2 — script accent */}
               <span
-                className="block font-semibold text-fb-green text-[clamp(56px,9vw,140px)] leading-[0.92] tracking-[-0.035em]"
-                style={{ fontFamily: "var(--f-script), cursive" }}
+                className="block font-sans font-medium text-fb-green text-[clamp(40px,5.5vw,80px)] leading-[1] tracking-[-0.035em]"
               >
                 {h1b}
               </span>
@@ -86,7 +85,7 @@ export default function Hero() {
           <div className="relative order-1 min-[980px]:order-2">
             {/* Photo placeholder */}
             <div
-              className="w-full aspect-[4/5] bg-fb-green-mist rounded-[28px] flex items-center justify-center"
+              className="w-full aspect-[4/3] min-[980px]:aspect-[4/5] bg-fb-green-mist rounded-[28px] flex items-center justify-center"
               data-label="photo-placeholder"
             >
               <span className="text-fb-green/40 text-sm font-medium tracking-wide uppercase select-none">

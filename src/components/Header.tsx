@@ -42,12 +42,12 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-3" style={{ minHeight: "76px" }}>
             {/* Left — Logo */}
-            <Link href="/" className="flex-shrink-0">
+            <Link href="/" className="flex-shrink-0 max-w-[40vw] sm:max-w-none">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo-v3.png"
-                alt="The Feel Better Club"
-                className="h-12"
+                src="/logo-v4.svg"
+                alt="Feel Better"
+                className="h-10 sm:h-10 w-auto"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
                   const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
@@ -73,25 +73,27 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* Right — Language + CTA + Hamburger */}
+            {/* Center — CTA (visible on mobile, moves to right group on desktop) */}
             <div className="flex items-center gap-3">
               <div className="hidden sm:block">
                 <LanguageSwitcher />
               </div>
               <Link
                 href="/reservar"
-                className="bg-fb-green text-fb-paper rounded-full px-6 py-3 text-[15px] font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
+                className="bg-fb-green text-fb-paper rounded-full px-4 py-2 text-[13px] sm:px-6 sm:py-3 sm:text-[15px] font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
               >
                 {nav.bookClass || "Book the Class"}
               </Link>
-              <button
-                className="fbc-hamburger items-center justify-center text-fb-ink"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle menu"
-              >
-                {menuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
             </div>
+
+            {/* Right — Hamburger */}
+            <button
+              className="fbc-hamburger items-center justify-center text-fb-ink"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
 

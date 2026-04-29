@@ -124,9 +124,9 @@ export default function Footer() {
             {/* 1 — Logo column */}
             <div>
               <img
-                src="/logo-v3-white.png"
+                src="/logo-v4-white.svg"
                 alt="Feel Better Club"
-                className="h-[90px] w-auto mb-4"
+                className="h-10 w-auto mb-4"
               />
               <p className="text-sm max-w-[28ch] text-[var(--fb-paper)]/75 leading-relaxed">
                 {tag}

@@ -26,7 +26,7 @@ export default function AdminSidebar() {
     <aside className="w-64 bg-white border-r border-brand-sage/30 min-h-screen p-6 hidden md:block">
       <div className="flex items-center gap-2 mb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-v3.png" alt="Feel Better Club" className="h-8" />
+        <img src="/logo-v4.svg" alt="Feel Better" className="h-8" />
       </div>
 
       <nav className="space-y-1">
