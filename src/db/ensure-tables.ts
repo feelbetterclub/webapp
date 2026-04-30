@@ -128,5 +128,18 @@ export async function ensureTables() {
   await safeAlter("ALTER TABLE classes ADD COLUMN queue_capacity INTEGER NOT NULL DEFAULT 5");
   await safeAlter("ALTER TABLE schedules_v2 ADD COLUMN queue_capacity INTEGER");
 
+  // Settings table for admin toggles
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    )
+  `);
+  // Default: popup enabled
+  await client.execute({
+    sql: "INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)",
+    args: ["popup_enabled", "true"],
+  });
+
   initialized = true;
 }

@@ -242,7 +242,14 @@ export default function ClasesPage() {
               <Input label="Duration (min)" type="number" min={15} max={180} value={form.durationMinutes} onChange={(e) => setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))} />
               <Input label="Capacity" type="number" min={1} max={100} value={form.maxCapacity} onChange={(e) => setForm((f) => ({ ...f, maxCapacity: Number(e.target.value) }))} />
               <Input label="Queue" type="number" min={0} max={50} value={form.queueCapacity} onChange={(e) => setForm((f) => ({ ...f, queueCapacity: Number(e.target.value) }))} />
-              <Input label="Price (EUR)" type="number" min={0} step={1} value={form.sessionPrice} placeholder="Free / donation" onChange={(e) => setForm((f) => ({ ...f, sessionPrice: e.target.value === "" ? "" : Number(e.target.value) }))} />
+              <div>
+                <Input label="Price (EUR)" type="number" min={0} step={1} value={form.sessionPrice} placeholder="Free / donation" onChange={(e) => setForm((f) => ({ ...f, sessionPrice: e.target.value === "" ? "" : Number(e.target.value) }))} />
+                <label className="flex items-center gap-2 mt-2 text-sm cursor-pointer">
+                  <input type="checkbox" checked={form.sessionPrice === 0} onChange={(e) => setForm((f) => ({ ...f, sessionPrice: e.target.checked ? 0 : "" }))}
+                    className="w-4 h-4 rounded border-brand-sage/30 text-brand-teal focus:ring-brand-teal/30" />
+                  <span className="text-brand-deep font-medium">Free class</span>
+                </label>
+              </div>
               {locationsList.length > 0 && (
                 <Select label="Location" value={form.locationId} onChange={(e) => setForm((f) => ({ ...f, locationId: Number(e.target.value) }))}>
                   <option value={0}>No location</option>

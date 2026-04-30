@@ -46,6 +46,23 @@ export default function AdminDashboard() {
   const [sessionDetail, setSessionDetail] = useState<SessionDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [promoting, setPromoting] = useState<number | null>(null);
+  const [popupEnabled, setPopupEnabled] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/admin/settings").then(r => r.json()).then(s => {
+      setPopupEnabled(s.popup_enabled !== "false");
+    }).catch(() => {});
+  }, []);
+
+  async function togglePopup() {
+    const newValue = !popupEnabled;
+    setPopupEnabled(newValue);
+    await fetch("/api/admin/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "popup_enabled", value: String(newValue) }),
+    });
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -201,6 +218,20 @@ export default function AdminDashboard() {
             <p className="text-2xl font-bold text-brand-deep">{s.value}</p>
           </div>
         ))}
+      </div>
+
+      {/* Settings */}
+      <div className="bg-white rounded-xl border border-brand-sage/30 p-4 mb-8 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-semibold text-brand-deep">Welcome Pop-up</p>
+          <p className="text-xs text-muted-foreground">Show &quot;Unlock Free Class&quot; pop-up to new visitors</p>
+        </div>
+        <button
+          onClick={togglePopup}
+          className={`relative w-12 h-6 rounded-full transition-colors ${popupEnabled ? "bg-brand-teal" : "bg-gray-300"}`}
+        >
+          <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${popupEnabled ? "left-[26px]" : "left-0.5"}`} />
+        </button>
       </div>
 
       {/* Upcoming Sessions */}

@@ -8,6 +8,8 @@ import {
   Users,
   UserCircle,
   MapPin,
+  Heart,
+  BarChart3,
   ArrowLeft,
 } from "lucide-react";
 
@@ -17,6 +19,8 @@ const links = [
   { href: "/admin/instructores", label: "Instructors", icon: UserCircle },
   { href: "/admin/locations", label: "Locations", icon: MapPin },
   { href: "/admin/alumnos", label: "Students", icon: Users },
+  { href: "/admin/community", label: "Community", icon: Heart },
+  { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
 ];
 
 export default function AdminSidebar() {

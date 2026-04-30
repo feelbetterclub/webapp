@@ -25,18 +25,31 @@ export function CommunityPopup() {
   const foot2 = p.foot2 || "Small groups";
   const foot3 = p.foot3 || "Outdoor sessions";
 
-  /* ── Show after 8s if not dismissed this session ── */
+  /* ── Show after 8s if not dismissed and popup enabled ── */
   useEffect(() => {
     if (typeof window === "undefined") return;
     const dismissed = sessionStorage.getItem(STORAGE_KEY);
     if (dismissed) return;
 
-    const timer = setTimeout(() => {
-      setVisible(true);
-      // Trigger enter animation on next frame
-      requestAnimationFrame(() => setAnimate(true));
-    }, 8000);
-    return () => clearTimeout(timer);
+    // Check if popup is enabled via settings
+    fetch("/api/admin/settings")
+      .then((r) => r.json())
+      .then((s) => {
+        if (s.popup_enabled === "false") return;
+        const timer = setTimeout(() => {
+          setVisible(true);
+          requestAnimationFrame(() => setAnimate(true));
+        }, 8000);
+        return () => clearTimeout(timer);
+      })
+      .catch(() => {
+        // Default: show popup if settings API fails
+        const timer = setTimeout(() => {
+          setVisible(true);
+          requestAnimationFrame(() => setAnimate(true));
+        }, 8000);
+        return () => clearTimeout(timer);
+      });
   }, []);
 
   /* ── Dismiss handler ── */

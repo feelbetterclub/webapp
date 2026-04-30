@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 
 interface Discipline {
@@ -101,9 +102,10 @@ export default function Services() {
           style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}
         >
           {disciplines.map((d, i) => (
-            <div
+            <Link
+              href="/reservar"
               key={d.n}
-              className="disc-card flex flex-col justify-between cursor-pointer transition-colors duration-300"
+              className="disc-card flex flex-col justify-between cursor-pointer transition-colors duration-300 no-underline"
               style={{
                 padding: "32px 28px",
                 minHeight: "340px",
@@ -155,7 +157,7 @@ export default function Services() {
                   {d.tag}
                 </p>
               )}
-            </div>
+            </Link>
           ))}
         </div>
       </div>
