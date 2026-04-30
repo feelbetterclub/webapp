@@ -117,7 +117,7 @@ const es: Translations = {
     firstNamePlaceholder: "Tu nombre",
     mobile: "Número de móvil",
     mobilePlaceholder: "+34 612 345 678",
-    emailOptional: "Email (opcional)",
+    emailOptional: "Email",
     emailPlaceholder: "tu@email.com",
     paymentNote: "El pago se realiza en el sitio (Efectivo / Tarjeta / Revolut).",
     confirm: "Confirmar reserva",

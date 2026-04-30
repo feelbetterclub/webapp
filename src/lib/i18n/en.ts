@@ -115,7 +115,7 @@ const en = {
     firstNamePlaceholder: "Your first name",
     mobile: "Mobile Number",
     mobilePlaceholder: "+34 612 345 678",
-    emailOptional: "Email (optional)",
+    emailOptional: "Email",
     emailPlaceholder: "you@email.com",
     paymentNote: "Payment is handled on-site (Cash / Card / Revolut).",
     confirm: "Confirm Booking",

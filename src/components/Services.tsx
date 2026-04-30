@@ -142,17 +142,19 @@ export default function Services() {
                   {d.desc}
                 </p>
               </div>
-              <p
-                className="text-fb-paper uppercase"
-                style={{
-                  fontSize: "11px",
-                  letterSpacing: "0.12em",
-                  opacity: 0.7,
-                  marginTop: "24px",
-                }}
-              >
-                {d.tag}
-              </p>
+              {d.tag && (
+                <p
+                  className="text-fb-paper uppercase"
+                  style={{
+                    fontSize: "11px",
+                    letterSpacing: "0.12em",
+                    opacity: 0.7,
+                    marginTop: "24px",
+                  }}
+                >
+                  {d.tag}
+                </p>
+              )}
             </div>
           ))}
         </div>

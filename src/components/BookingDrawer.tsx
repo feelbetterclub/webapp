@@ -63,7 +63,7 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
           scheduleId: schedule.id,
           date,
           userName: form.userName,
-          userEmail: form.userEmail || `${form.userPhone.replace(/\D/g, "")}@placeholder.fbc`,
+          userEmail: form.userEmail,
           userPhone: form.userPhone,
         }),
       });
@@ -160,8 +160,9 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
                 placeholder={t.booking.mobilePlaceholder}
               />
               <Input
-                label={t.booking.emailOptional}
+                label={`${t.booking.emailOptional} *`}
                 type="email"
+                required
                 value={form.userEmail}
                 onChange={(e) => setForm((f) => ({ ...f, userEmail: e.target.value }))}
                 placeholder={t.booking.emailPlaceholder}

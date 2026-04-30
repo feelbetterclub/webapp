@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone } from "lucide-react";
+import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone, Trash2 } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -145,6 +145,28 @@ export default function AdminDashboard() {
     }
   }
 
+  async function deleteBooking(bookingId: number, session: UpcomingSession) {
+    if (!confirm("Remove this student from the class?")) return;
+    try {
+      const res = await fetch("/api/admin/session-detail", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId }),
+      });
+      if (res.ok) {
+        const detailRes = await fetch(`/api/admin/session-detail?scheduleId=${session.id}&date=${session.date}`);
+        if (detailRes.ok) setSessionDetail(await detailRes.json());
+        setUpcomingSessions((prev) =>
+          prev.map((s) =>
+            s.id === session.id && s.date === session.date
+              ? { ...s, bookingCount: Math.max(0, s.bookingCount - 1) }
+              : s
+          )
+        );
+      }
+    } catch { /* ignore */ }
+  }
+
   if (loading) return <Loading />;
 
   const statCards = [
@@ -273,6 +295,14 @@ export default function AdminDashboard() {
                                               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                                                 <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {b.userEmail}</span>
                                                 {b.userPhone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {b.userPhone}</span>}
+                                                <button
+                                                  type="button"
+                                                  onClick={() => deleteBooking(b.id, s)}
+                                                  className="text-red-400 hover:text-red-600 transition-colors p-1"
+                                                  title="Remove student"
+                                                >
+                                                  <Trash2 className="w-3.5 h-3.5" />
+                                                </button>
                                               </div>
                                             </div>
                                           ))}

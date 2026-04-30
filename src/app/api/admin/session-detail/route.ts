@@ -121,3 +121,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
   }
 }
+
+/**
+ * DELETE /api/admin/session-detail
+ * Remove a booking (cancel by admin).
+ * Body: { bookingId }
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
+    const { bookingId } = await req.json();
+    if (!bookingId) {
+      return NextResponse.json({ error: "bookingId required" }, { status: 400 });
+    }
+
+    await client.execute({
+      sql: "UPDATE bookings SET status = ? WHERE id = ?",
+      args: [BOOKING_STATUS.CANCELLED, bookingId],
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
+}
