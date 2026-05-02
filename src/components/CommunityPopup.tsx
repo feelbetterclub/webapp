@@ -100,11 +100,9 @@ export function CommunityPopup() {
     >
       {/* ── Card ── */}
       <div
-        className="relative w-full max-w-[720px] bg-fb-paper rounded-[28px] shadow-2xl overflow-hidden"
+        className="relative w-full max-w-[480px] bg-fb-paper rounded-[28px] shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
         style={{
-          display: "grid",
-          gridTemplateColumns: "1.25fr 1fr",
           transform: animate
             ? "translateY(0) scale(1)"
             : "translateY(28px) scale(0.97)",
@@ -201,59 +199,9 @@ export function CommunityPopup() {
           </div>
         </div>
 
-        {/* ── Right column ── */}
-        <div
-          className="hidden min-[640px]:flex flex-col justify-between bg-fb-green text-fb-paper relative overflow-hidden"
-          style={{ padding: "40px 32px" }}
-        >
-          {/* Gradient overlay */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--fb-terracotta) 60%, transparent) 0%, transparent 55%)",
-              opacity: 0.4,
-            }}
-          />
-
-          {/* Monogram */}
-          <span
-            className="relative z-[1]"
-            style={{
-              fontFamily: "var(--f-script, 'Caveat', cursive)",
-              fontSize: 96,
-              lineHeight: 1,
-            }}
-          >
-            FBC
-          </span>
-
-          {/* Established */}
-          <span
-            className="relative z-[1]"
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.22em",
-              opacity: 0.8,
-            }}
-          >
-            Est. 2026 · Tarifa
-          </span>
-        </div>
       </div>
 
       {/* ── Responsive: single column below 640px ── */}
-      <style>{`
-        @media (max-width: 639px) {
-          [aria-labelledby="fbc-popup-title"] > div:first-child {
-            grid-template-columns: 1fr !important;
-          }
-          [aria-labelledby="fbc-popup-title"] > div:first-child > div:first-of-type {
-            padding: 32px 24px !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

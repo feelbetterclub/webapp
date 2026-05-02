@@ -145,10 +145,17 @@ export default function About() {
               gap: 64,
             }}
           >
-            {/* Photo placeholder */}
-            <div
-              className="bg-fb-cream rounded-[28px] w-full min-h-[400px]"
-            />
+            {/* Photo */}
+            <div className="rounded-[28px] overflow-hidden w-full min-h-[400px]">
+              <picture>
+                <source media="(max-width: 899px)" srcSet="/moni-collage-mobile.jpg" />
+                <img
+                  src="/moni-collage-desktop.jpg"
+                  alt="Moni — Founder & Coach"
+                  className="w-full h-full object-cover"
+                />
+              </picture>
+            </div>
 
             {/* Text */}
             <div>
