@@ -65,3 +65,14 @@ export interface BookingItem {
   dayOfWeek: number;
   instructor: string | null;
 }
+
+export interface StudentRecord {
+  email: string;
+  name: string;
+  phone: string | null;
+  totalClasses: number;
+  lastClassDate: string;
+  lastClassName: string;
+  firstClassDate: string;
+  isCommunityMember: boolean;
+}

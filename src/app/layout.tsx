@@ -23,7 +23,7 @@ const chewy = Chewy({
 });
 
 export const metadata: Metadata = {
-  title: "Feel Better Club | Holistic Health Routines",
+  title: "Feel Better Club | Health routines community",
   description:
     "Morning Endorphins & Sea Vitamins. Holistic health rituals for lifestyle-driven athletes. Mobility, Strength, Pilates, Breathwork.",
   keywords: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Feel Better Club | Holistic Health Routines",
+    title: "Feel Better Club | Health routines community",
     description:
       "Morning Endorphins & Sea Vitamins. Strong Body and Clear Mind. Reconnect with Nature.",
     type: "website",
