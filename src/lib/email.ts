@@ -150,3 +150,147 @@ export async function sendBookingConfirmation(data: BookingConfirmationData): Pr
   `;
   await send(to, subject, wrapper(inner));
 }
+
+// ---------- Contact form notification (to coach) ----------
+
+const COACH_EMAIL = "feelbettermove@gmail.com";
+
+export interface ContactNotificationData {
+  name: string;
+  email: string;
+  phone?: string;
+  preferredContact: string;
+  message: string;
+}
+
+export async function sendContactNotification(data: ContactNotificationData): Promise<void> {
+  const { name, email, phone, preferredContact, message } = data;
+  const subject = "New Contact Message — Feel Better Club";
+  const safeName = escape(name);
+  const safeEmail = escape(email);
+  const safePhone = phone ? escape(phone) : null;
+  const safePreferred = escape(preferredContact);
+  const safeMessage = escape(message);
+
+  const phoneRow = safePhone
+    ? `<li><strong>Phone:</strong> ${safePhone}</li>`
+    : "";
+
+  const inner = `
+    <p>You have received a new contact message from your website.</p>
+    <p><strong>Sender details:</strong></p>
+    <ul style="padding-left:20px;margin:12px 0;">
+      <li><strong>Name:</strong> ${safeName}</li>
+      <li><strong>Email:</strong> ${safeEmail}</li>
+      ${phoneRow}
+      <li><strong>Preferred contact:</strong> ${safePreferred}</li>
+    </ul>
+    <p><strong>Message:</strong></p>
+    <p style="background:#f4ebd0;padding:16px;border-radius:8px;white-space:pre-wrap;">${safeMessage}</p>
+  `;
+  await send(COACH_EMAIL, subject, wrapper(inner));
+}
+
+// ---------- Anonymous message notification (to coach) ----------
+
+export interface MessageNotificationData {
+  text: string;
+  replyEmail?: string | null;
+}
+
+export async function sendMessageNotification(data: MessageNotificationData): Promise<void> {
+  const { text, replyEmail } = data;
+  const subject = "New Message — Feel Better Club";
+  const safeText = escape(text);
+  const timestamp = escape(new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC");
+
+  const replyBlock = replyEmail
+    ? `<p><strong>Reply to:</strong> <a href="mailto:${escape(replyEmail)}" style="color:#0d5e42;">${escape(replyEmail)}</a></p>`
+    : `<p><em>No reply email provided — this message is anonymous.</em></p>`;
+
+  const inner = `
+    <p>A new anonymous message has been submitted via the "Ask us anything" form.</p>
+    <blockquote style="border-left:4px solid #0d5e42;margin:16px 0;padding:12px 16px;background:#f4ebd0;border-radius:4px;font-style:italic;">
+      ${safeText}
+    </blockquote>
+    ${replyBlock}
+    <p style="font-size:13px;color:#555;margin-top:24px;"><strong>Received:</strong> ${timestamp}</p>
+  `;
+  await send(COACH_EMAIL, subject, wrapper(inner));
+}
+
+// ---------- On-demand class request — user confirmation (FBC-70) ----------
+
+export interface OnDemandConfirmationData {
+  to: string;
+  userName: string;
+  groupSize?: string;
+  preferredDate?: string;
+}
+
+export async function sendOnDemandConfirmation(data: OnDemandConfirmationData): Promise<void> {
+  const { to, userName, groupSize, preferredDate } = data;
+  const subject = "Your Request Has Been Received — Feel Better Club";
+  const safeName = escape(userName || "there");
+
+  const detailRows = [
+    groupSize ? `<li><strong>Group size:</strong> ${escape(groupSize)}</li>` : "",
+    preferredDate ? `<li><strong>Preferred date:</strong> ${escape(preferredDate)}</li>` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const detailBlock = detailRows
+    ? `<p><strong>Your request details:</strong></p>
+       <ul style="padding-left:20px;margin:12px 0;">
+         ${detailRows}
+       </ul>`
+    : "";
+
+  const inner = `
+    <p>Hi ${safeName},</p>
+    <p>Thank you for reaching out! We've received your on-demand class request and we're excited to make it happen.</p>
+    ${detailBlock}
+    <p>Moni will review your request and get back to you shortly to confirm the details and arrange everything just right for you.</p>
+    <p>In the meantime, if you have any questions feel free to reply to this email.</p>
+    <p style="margin-top:32px;">See you outside!<br/><strong>Moni</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
+  `;
+  await send(to, subject, wrapper(inner));
+}
+
+// ---------- On-demand class request — coach lead notification (FBC-71) ----------
+
+export interface OnDemandLeadData {
+  userName: string;
+  userEmail: string;
+  userPhone?: string;
+  groupSize?: string;
+  preferredDate?: string;
+  notes?: string;
+}
+
+export async function sendOnDemandLeadNotification(data: OnDemandLeadData): Promise<void> {
+  const { userName, userEmail, userPhone, groupSize, preferredDate, notes } = data;
+  const subject = "New On-Demand Class Request";
+
+  const rows = [
+    `<li><strong>Name:</strong> ${escape(userName)}</li>`,
+    `<li><strong>Email:</strong> ${escape(userEmail)}</li>`,
+    userPhone ? `<li><strong>Phone:</strong> ${escape(userPhone)}</li>` : "",
+    groupSize ? `<li><strong>Group size:</strong> ${escape(groupSize)}</li>` : "",
+    preferredDate ? `<li><strong>Preferred date:</strong> ${escape(preferredDate)}</li>` : "",
+    notes ? `<li><strong>Notes:</strong> ${escape(notes)}</li>` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const inner = `
+    <p>Hi Moni,</p>
+    <p>You have a new on-demand class request. Here are the details:</p>
+    <ul style="padding-left:20px;margin:12px 0;">
+      ${rows}
+    </ul>
+    <p>Log in to your admin panel to follow up.</p>
+  `;
+  await send(COACH_EMAIL, subject, wrapper(inner));
+}

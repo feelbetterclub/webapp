@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/db";
+import { sendMessageNotification } from "@/lib/email";
 
 /**
  * POST /api/messages — "Ask us anything" anonymous message.
@@ -24,6 +25,10 @@ export async function POST(req: NextRequest) {
       sql: "INSERT INTO messages (text, reply_email, created_at) VALUES (?, ?, ?)",
       args: [text, replyEmail, new Date().toISOString()],
     });
+
+    sendMessageNotification({ text, replyEmail }).catch((err) =>
+      console.error("[messages] notification email failed:", err)
+    );
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {

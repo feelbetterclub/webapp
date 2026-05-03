@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/db";
+import { sendOnDemandConfirmation, sendOnDemandLeadNotification } from "@/lib/email";
 
 /**
  * POST /api/requests
@@ -29,6 +30,11 @@ export async function POST(req: NextRequest) {
             VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)`,
       args: [name, email, phone || null, groupSize || null, preferredDate || null, notes || null, new Date().toISOString()],
     });
+
+    sendOnDemandConfirmation({ to: email, userName: name, groupSize: groupSize || undefined, preferredDate: preferredDate || undefined })
+      .catch((err) => console.error("[email] sendOnDemandConfirmation failed:", err));
+    sendOnDemandLeadNotification({ userName: name, userEmail: email, userPhone: phone || undefined, groupSize: groupSize || undefined, preferredDate: preferredDate || undefined, notes: notes || undefined })
+      .catch((err) => console.error("[email] sendOnDemandLeadNotification failed:", err));
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {

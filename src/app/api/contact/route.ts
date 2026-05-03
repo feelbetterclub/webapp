@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sendContactNotification } from "@/lib/email";
 
 /**
  * POST /api/contact — Contact form submission.
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message too long (max 2000 chars)" }, { status: 400 });
     }
 
-    // Log the contact request — email delivery to be implemented
+    // Log the contact request
     console.log("[contact]", {
       name,
       email,
@@ -37,6 +38,10 @@ export async function POST(req: NextRequest) {
       message,
       receivedAt: new Date().toISOString(),
     });
+
+    // Notify the coach — fire-and-forget, same pattern as other routes
+    sendContactNotification({ name, email, phone: phone || undefined, preferredContact, message })
+      .catch(e => console.error("[contact] email notification failed:", e));
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
