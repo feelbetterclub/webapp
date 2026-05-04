@@ -6,7 +6,6 @@ import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { todayISO, safeArray } from "@/lib/utils";
-import type { BookingItem } from "@/lib/types";
 
 interface UpcomingSession {
   id: number;
@@ -36,7 +35,7 @@ interface SessionDetail {
 }
 
 export default function AdminDashboard() {
-  const [todayBookings, setTodayBookings] = useState<BookingItem[]>([]);
+  const [newMembers, setNewMembers] = useState<{ email: string; name: string; phone: string | null; joinedAt: string; source: string }[]>([]);
   const [upcomingSessions, setUpcomingSessions] = useState<UpcomingSession[]>([]);
   const [classCount, setClassCount] = useState(0);
   const [thisWeekBookings, setThisWeekBookings] = useState(0);
@@ -90,22 +89,22 @@ export default function AdminDashboard() {
 
         const fmt = (d: Date) => d.toISOString().split("T")[0];
 
-        const [classesRes, bookingsRes, upcomingRes, thisWeekRes, lastWeekRes] = await Promise.all([
+        const [classesRes, newMembersRes, upcomingRes, thisWeekRes, lastWeekRes] = await Promise.all([
           fetch("/api/admin/classes"),
-          fetch(`/api/bookings?date=${today}`),
+          fetch("/api/admin/new-members"),
           fetch(`/api/admin/upcoming?from=${today}&to=${fmt(endNextWeek)}`),
           fetch(`/api/admin/upcoming?from=${fmt(thisMonday)}&to=${fmt(thisSunday)}`),
           fetch(`/api/admin/upcoming?from=${fmt(lastMonday)}&to=${fmt(lastSunday)}`),
         ]);
 
         const classesData = classesRes.ok ? await classesRes.json() : [];
-        const bookingsData = bookingsRes.ok ? await bookingsRes.json() : [];
+        const newMembersData = newMembersRes.ok ? await newMembersRes.json() : [];
         const upcomingData = upcomingRes.ok ? await upcomingRes.json() : [];
         const thisWeekData: UpcomingSession[] = thisWeekRes.ok ? await thisWeekRes.json() : [];
         const lastWeekData: UpcomingSession[] = lastWeekRes.ok ? await lastWeekRes.json() : [];
 
         setClassCount(safeArray(classesData).length);
-        setTodayBookings(safeArray<BookingItem>(bookingsData));
+        setNewMembers(safeArray(newMembersData));
         setUpcomingSessions(safeArray<UpcomingSession>(upcomingData));
         setThisWeekBookings(thisWeekData.reduce((sum, s) => sum + s.bookingCount, 0));
         setLastWeekBookings(lastWeekData.reduce((sum, s) => sum + s.bookingCount, 0));
@@ -355,37 +354,52 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* Today's Bookings */}
+      {/* New Members */}
       <div className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
         <div className="px-6 py-4 border-b border-brand-sage/20">
-          <h2 className="font-heading text-lg font-semibold text-brand-deep">Today&apos;s Bookings</h2>
+          <h2 className="font-heading text-lg font-semibold text-brand-deep">New Members</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">First-time students and community members in the last 7 days</p>
         </div>
-        {todayBookings.length === 0 ? (
-          <div className="p-6"><EmptyState text="No bookings for today" /></div>
+        {newMembers.length === 0 ? (
+          <div className="p-6"><EmptyState text="No new members this week" /></div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="bg-brand-light/50">
-                  {["Student", "Email", "Class", "Time", "Status"].map((h) => (
+                  {["Name", "Email", "Phone", "Joined", "Source"].map((h) => (
                     <th key={h} className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-sage/20">
-                {todayBookings.map((b) => (
-                  <tr key={b.id} className="hover:bg-brand-light/30">
-                    <td className="px-6 py-4 text-sm font-medium text-brand-deep">{b.userName}</td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">{b.userEmail}</td>
-                    <td className="px-6 py-4 text-sm text-brand-deep">{b.className}</td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">{b.startTime}</td>
-                    <td className="px-6 py-4">
-                      <StatusBadge variant={b.status === "confirmed" ? "confirmed" : "cancelled"}>
-                        {b.status === "confirmed" ? "Confirmed" : "Cancelled"}
-                      </StatusBadge>
-                    </td>
-                  </tr>
-                ))}
+                {newMembers.map((m) => {
+                  const joined = new Date(m.joinedAt);
+                  const diffMs = Date.now() - joined.getTime();
+                  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                  const joinedLabel =
+                    diffDays === 0 ? "Today" :
+                    diffDays === 1 ? "Yesterday" :
+                    `${diffDays} days ago`;
+
+                  return (
+                    <tr key={m.email} className="hover:bg-brand-light/30">
+                      <td className="px-6 py-4 text-sm font-medium text-brand-deep">{m.name}</td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">{m.email}</td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">{m.phone ?? "—"}</td>
+                      <td className="px-6 py-4 text-sm text-muted-foreground">{joinedLabel}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          m.source === "booking"
+                            ? "bg-brand-teal/10 text-brand-teal"
+                            : "bg-amber-50 text-amber-600"
+                        }`}>
+                          {m.source === "booking" ? "Booking" : "Community"}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
