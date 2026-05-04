@@ -149,7 +149,7 @@ const es: Translations = {
     tag: "Pequeño paso — gran impacto",
     colA: { title: "Clases", items: ["Kite Mobility", "Pilates Flow", "Dance Burn", "Horario completo"] },
     colB: { title: "El Club", items: ["Nosotros", "Programa", "Rituales", "Contacto"] },
-    colC: { title: "Contacto", items: ["feelbettermove@gmail.com", "Tarifa, Cádiz"] },
+    colC: { title: "Contacto", items: ["feelbettermove@gmail.com"] },
     legal: "© 2026 The Feel Better Club · Rutinas de salud holística",
     rights: "Hecho con amor, para que te sientas mejor.",
   },

@@ -163,14 +163,14 @@ export default function Footer() {
               <ul className="space-y-2">
                 {colC.items.map((item: string) => (
                   <li key={item}>
-                    <span className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors cursor-default">
+                    <a href={`mailto:${item}`} className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors">
                       {item}
-                    </span>
+                    </a>
                   </li>
                 ))}
                 <li>
                   <a
-                    href="https://www.instagram.com/feelbetter.club"
+                    href="https://www.instagram.com/feelbetter.club?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors"
