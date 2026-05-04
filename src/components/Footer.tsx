@@ -142,13 +142,16 @@ export default function Footer() {
                 {colB.title}
               </h4>
               <ul className="space-y-2">
-                {colB.items.map((item: string) => (
-                  <li key={item}>
-                    <span className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors cursor-default">
-                      {item}
-                    </span>
-                  </li>
-                ))}
+                {colB.items.map((item: string, i: number) => {
+                  const hrefs = ["/#about", "/#method", "/#rituals", "/contact"];
+                  return (
+                    <li key={item}>
+                      <a href={hrefs[i] || "/"} className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors">
+                        {item}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
 
