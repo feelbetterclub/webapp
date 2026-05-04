@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 
@@ -44,6 +44,26 @@ export async function GET() {
     }));
 
     return NextResponse.json(students);
+  } catch (err) {
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
+    const { email } = await req.json();
+    if (!email || typeof email !== "string") {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    await client.execute({ sql: "DELETE FROM bookings WHERE user_email = ?", args: [email] });
+    await client.execute({ sql: "DELETE FROM waitlist WHERE user_email = ?", args: [email] });
+    await client.execute({ sql: "DELETE FROM community_members WHERE email = ?", args: [email] });
+
+    return NextResponse.json({ success: true, deleted: email });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }

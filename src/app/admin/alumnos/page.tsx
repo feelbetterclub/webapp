@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Search, Download, ChevronUp, ChevronDown } from "lucide-react";
+import { Search, Download, ChevronUp, ChevronDown, Trash2 } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -97,6 +97,20 @@ export default function AlumnosPage() {
     URL.revokeObjectURL(url);
   }
 
+  async function deleteStudent(email: string, name: string) {
+    if (!confirm(`Delete all records for "${name}" (${email})? This removes bookings, waitlist entries and community membership.`)) return;
+    try {
+      const res = await fetch("/api/admin/students", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setStudents((prev) => prev.filter((s) => s.email !== email));
+      }
+    } catch { /* ignore */ }
+  }
+
   const columns: { label: string; key?: SortKey }[] = [
     { label: "Name", key: "name" },
     { label: "Email", key: "email" },
@@ -106,6 +120,7 @@ export default function AlumnosPage() {
     { label: "Last Class Name" },
     { label: "Member Since", key: "firstClassDate" },
     { label: "Community" },
+    { label: "" },
   ];
 
   function SortIcon({ col }: { col: typeof columns[number] }) {
@@ -179,6 +194,15 @@ export default function AlumnosPage() {
                       {s.isCommunityMember && (
                         <StatusBadge variant="confirmed">Member</StatusBadge>
                       )}
+                    </td>
+                    <td className="px-6 py-3">
+                      <button
+                        onClick={() => deleteStudent(s.email, s.name)}
+                        className="text-red-400 hover:text-red-600 transition-colors"
+                        title="Delete student"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 ))}
