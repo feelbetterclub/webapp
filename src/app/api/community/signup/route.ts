@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
     const email = String(body.email || "").trim().toLowerCase();
     const phonePrefix = String(body.phonePrefix || "").trim();
     const phone = String(body.phone || "").trim();
+    const interests = body.interests ? String(body.interests).trim().slice(0, 500) : null;
 
     if (!name || !email || !phonePrefix || !phone) {
       return NextResponse.json(
@@ -44,6 +45,7 @@ export async function POST(req: NextRequest) {
       phone_prefix: phonePrefix,
       phone,
       source: String(body.source || "popup"),
+      ...(interests ? { interests } : {}),
       created_at: new Date().toISOString(),
     });
 

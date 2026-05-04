@@ -145,7 +145,7 @@ const en = {
     connectTitle: "Connect and Get Inspired",
     testimonials: "Testimonials",
     tag: "Small step — big impact",
-    colA: { title: "Classes", items: ["Kite Mobility", "Sculpt Flow", "Pilates Flow", "Dance Burn", "Full schedule"] },
+    colA: { title: "Classes", items: ["Kite Mobility", "Pilates Flow", "Dance Burn", "Full schedule"] },
     colB: { title: "The Club", items: ["About", "Class Program", "Rituals (soon)", "Contact"] },
     colC: { title: "Contact", items: ["feelbettermove@gmail.com", "Tarifa, Cádiz"] },
     legal: "© 2026 The Feel Better Club · Holistic health routines",

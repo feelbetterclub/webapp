@@ -67,7 +67,7 @@ export function CommunityPopup() {
   /* ── CTA handler ── */
   const handleCta = useCallback(() => {
     close();
-    router.push("/book");
+    router.push("/join");
   }, [close, router]);
 
   /* ── ESC key ── */

@@ -60,7 +60,7 @@ export default function Contact() {
           {/* Right column */}
           <div className="flex flex-col gap-3 items-start">
             <Link
-              href="/book"
+              href="/join"
               className="inline-flex items-center justify-center rounded-full text-base font-medium transition-colors"
               style={{
                 backgroundColor: "var(--fb-green)",
