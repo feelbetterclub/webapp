@@ -72,7 +72,7 @@ export default function Hero() {
           <div className="relative order-1 min-[980px]:order-2">
             {/* Photo placeholder */}
             <div
-              className="w-full aspect-[4/3] min-[980px]:aspect-[4/5] bg-fb-green-mist rounded-[28px] flex items-center justify-center"
+              className="w-full aspect-[4/3] min-[980px]:aspect-[3/3] bg-fb-green-mist rounded-[28px] flex items-center justify-center"
               data-label="photo-placeholder"
             >
               <span className="text-fb-green/40 text-sm font-medium tracking-wide uppercase select-none">
