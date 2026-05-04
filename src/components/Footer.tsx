@@ -128,9 +128,9 @@ export default function Footer() {
               <ul className="space-y-2">
                 {colA.items.map((item: string) => (
                   <li key={item}>
-                    <span className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors cursor-default">
+                    <a href="/book" className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors">
                       {item}
-                    </span>
+                    </a>
                   </li>
                 ))}
               </ul>
