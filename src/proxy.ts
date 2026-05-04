@@ -20,7 +20,7 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
 
-  if (pathname === "/admin/login" || pathname === "/api/admin/login") {
+  if (pathname === "/admin/login" || pathname === "/api/admin/login" || pathname === "/api/admin/settings") {
     return NextResponse.next();
   }
 
