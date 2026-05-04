@@ -3,7 +3,7 @@
 import { useI18n } from "@/lib/i18n/context";
 
 const FALLBACK_TAGLINES = [
-  "Holistic health routines",
+  "Health routines community",
   "Small step — big impact",
   "Move \u00B7 Breathe \u00B7 Feel",
   "Tarifa \u00B7 Costa de la Luz",

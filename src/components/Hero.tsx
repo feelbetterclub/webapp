@@ -13,7 +13,7 @@ export default function Hero() {
   const sub =
     h.sub ??
     h.subtitle ??
-    "A holistic wellness club in Tarifa blending movement, breath-work and community so you can feel extraordinary every single day.";
+    "A wellness club in Tarifa blending movement, breath-work and community so you can feel extraordinary every single day.";
   const primaryCta = h.primary ?? h.cta1 ?? "Book your first class";
   const ghostCta = h.ghost ?? h.cta2 ?? "See the method";
   const badge = h.badge ?? "Next class · Friday 7:30 am";

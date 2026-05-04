@@ -19,7 +19,7 @@ const en = {
     headline2: "Each of You Matters",
     subtitle:
       "Fueled by Endorphins and Sea Vitamins. Nature. Connection. Fun.",
-    comingSoon: "Holistic Health Rituals — coming soon. Stay tuned.",
+    comingSoon: "Health Rituals — coming soon. Stay tuned.",
     cta1: "Explore Classes",
     cta2: "Book a class",
     badge: "Next class · Friday 7:30 am",
@@ -40,11 +40,11 @@ const en = {
     subtitle: "Four disciplines designed to move, strengthen, and connect you with nature.",
     bookButton: "Book",
     mobility: {
-      name: "Open-Air Kite Mobility Flow",
+      name: "Open-Air Mobility Flow",
       description: "Dynamic stretching for the joints and muscles most used in water sports (kite/windsurfing, wingfoil, surfing). Focus on shoulders, thoracic spine, quads & hips, ankles. This workout releases tension, supports recovery, and helps prevent injuries. Each session is designed to help you feel flexible and fully present in your body, surrounded by the ocean breeze and morning sun.",
     },
     strength: {
-      name: "Open-Air Sculpt Flow",
+      name: "Open-Air Strength Flow",
       description: "Class designed to shape full-body, increase muscle mass and build strength. Energising sequence using bodyweight and accessories such as dumbbells, resistance bands and ankle weights. Empowering and open to all levels. Outdoor sessions challenge the body in a natural, functional way - improving overall performance and supporting all sports you love.",
     },
     pilates: {
@@ -83,7 +83,7 @@ const en = {
   },
   rituals: {
     label: "Rituals",
-    title: "Holistic Rituals — Coming Soon",
+    title: "Rituals — Coming Soon",
     subtitle:
       "Whole-food high-protein nutrition tips, sauna, breathwork and ice bath events to support your training and recovery.",
     comingSoon: "Stay tuned",
@@ -148,7 +148,7 @@ const en = {
     colA: { title: "Classes", items: ["Mobility Flow", "Pilates Flow", "Dance Burn", "Full schedule"] },
     colB: { title: "The Club", items: ["About", "Class Program", "Rituals", "Contact"] },
     colC: { title: "Contact", items: ["feelbettermove@gmail.com"] },
-    legal: "© 2026 The Feel Better Club · Holistic health routines",
+    legal: "© 2026 The Feel Better Club · Health routines community",
     rights: "Made with Love, to make you Feel Better.",
   },
   admin: {
@@ -217,7 +217,7 @@ const en = {
     close: "Close",
     disclaimer: "By signing up you agree to receive updates, nutrition tips and event news. Unsubscribe anytime.",
   },
-  marquee: ["Holistic health routines", "Small step — big impact", "Move · Breathe · Feel", "Tarifa · Costa de la Luz"],
+  marquee: ["Health routines community", "Small step — big impact", "Move · Breathe · Feel", "Tarifa · Costa de la Luz"],
   methodEyebrow: "The Method",
   methodTitle: "Four disciplines, one flow. You Choose.",
   methodSub: "We built the week as a complete cycle — so your body and mind gets what it needs, when it needs it.",

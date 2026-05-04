@@ -41,11 +41,11 @@ const es: Translations = {
     subtitle: "Cuatro disciplinas diseñadas para moverte, fortalecerte y conectar con la naturaleza.",
     bookButton: "Reservar",
     mobility: {
-      name: "Open-Air Kite Mobility Flow",
+      name: "Open-Air Mobility Flow",
       description: "Estiramientos dinámicos para las articulaciones y músculos más usados en deportes acuáticos (kite/windsurf, wingfoil, surf). Foco en hombros, columna torácica, quads, caderas y tobillos. Libera tensión, apoya la recuperación y previene lesiones. Cada sesión te ayuda a sentirte flexible y presente en tu cuerpo, rodeado de brisa marina y sol de la mañana.",
     },
     strength: {
-      name: "Open-Air Sculpt Flow",
+      name: "Open-Air Strength Flow",
       description: "Clase diseñada para tonificar el cuerpo completo, ganar masa muscular y fuerza. Secuencia energizante usando peso corporal y accesorios como mancuernas, bandas de resistencia y tobilleras lastradas. Para todos los niveles. Las sesiones outdoor desafían el cuerpo de forma natural y funcional, mejorando el rendimiento y apoyando todos los deportes que amas.",
     },
     pilates: {

@@ -58,7 +58,7 @@ export default function Footer() {
     items: ["hello@feelbetter.club", "Tarifa, Cádiz", "@feelbetter.club"],
   };
   const legal =
-    ft.legal || "© 2026 The Feel Better Club · Holistic health routines";
+    ft.legal || "© 2026 The Feel Better Club · Health routines community";
   const rights = ft.rights || "Made with Love, to make you Feel Better.";
 
   return (

@@ -25,7 +25,7 @@ const chewy = Chewy({
 export const metadata: Metadata = {
   title: "Feel Better Club | Health routines community",
   description:
-    "Morning Endorphins & Sea Vitamins. Holistic health rituals for lifestyle-driven athletes. Mobility, Strength, Pilates, Breathwork.",
+    "Morning Endorphins & Sea Vitamins. Health routines for lifestyle-driven athletes. Mobility, Strength, Pilates, Breathwork.",
   keywords: [
     "wellness",
     "mobility",
