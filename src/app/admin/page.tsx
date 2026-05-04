@@ -269,7 +269,7 @@ export default function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => toggleSession(s)}
-                              className="w-full px-6 py-3 flex items-center justify-between hover:bg-brand-light/30 cursor-pointer text-left transition-colors"
+                              className="w-full px-6 py-3 flex flex-col items-start sm:flex-row sm:items-center sm:justify-between hover:bg-brand-light/30 cursor-pointer text-left transition-colors gap-2"
                             >
                               <div className="flex items-center gap-4">
                                 <span className="text-sm font-mono text-muted-foreground w-12">{s.startTime}</span>
@@ -286,7 +286,7 @@ export default function AdminDashboard() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-1.5">
                                 {s.waitlistCount > 0 && (
                                   <span className="text-xs text-amber-600 flex items-center gap-1">
                                     <Clock className="w-3 h-3" /> {s.waitlistCount} queue
@@ -318,12 +318,12 @@ export default function AdminDashboard() {
                                       ) : (
                                         <div className="space-y-1.5">
                                           {sessionDetail.bookings.map((b, i) => (
-                                            <div key={b.id} className="flex items-center justify-between bg-white rounded-lg px-3 py-2 text-sm">
+                                            <div key={b.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white rounded-lg px-3 py-2 text-sm gap-1 sm:gap-0">
                                               <div className="flex items-center gap-3">
                                                 <span className="w-5 h-5 rounded-full bg-brand-teal/10 text-brand-teal text-xs flex items-center justify-center font-medium">{i + 1}</span>
                                                 <span className="font-medium text-brand-deep">{b.userName}</span>
                                               </div>
-                                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                              <div className="flex items-center gap-3 text-xs text-muted-foreground pl-8 sm:pl-0">
                                                 <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {b.userEmail}</span>
                                                 {b.userPhone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {b.userPhone}</span>}
                                                 <button
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
           <div className="p-6"><EmptyState text="No bookings for today" /></div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="bg-brand-light/50">
                   {["Student", "Email", "Class", "Time", "Status"].map((h) => (
