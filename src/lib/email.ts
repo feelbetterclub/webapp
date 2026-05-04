@@ -294,3 +294,17 @@ export async function sendOnDemandLeadNotification(data: OnDemandLeadData): Prom
   `;
   await send(COACH_EMAIL, subject, wrapper(inner));
 }
+
+// ---------- Contact form — auto-reply to user ----------
+
+export async function sendContactAutoReply(to: string, name: string): Promise<void> {
+  const safeName = escape(name || "there");
+  const subject = "We Got Your Message — Feel Better Club";
+  const inner = `
+    <p>Hi ${safeName},</p>
+    <p>Thank you for reaching out! We've received your message and Moni will get back to you as soon as possible.</p>
+    <p>In the meantime, feel free to check out our classes and upcoming sessions at <a href="https://thefeelbetterclub.com/book" style="color:#0d5e42;text-decoration:underline;">thefeelbetterclub.com</a>.</p>
+    <p style="margin-top:32px;">See you outside!<br/><strong>Moni</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
+  `;
+  await send(to, subject, wrapper(inner));
+}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendContactNotification } from "@/lib/email";
+import { sendContactNotification, sendContactAutoReply } from "@/lib/email";
 
 /**
  * POST /api/contact — Contact form submission.
@@ -39,9 +39,13 @@ export async function POST(req: NextRequest) {
       receivedAt: new Date().toISOString(),
     });
 
-    // Notify the coach — fire-and-forget, same pattern as other routes
+    // Notify the coach — fire-and-forget
     sendContactNotification({ name, email, phone: phone || undefined, preferredContact, message })
       .catch(e => console.error("[contact] email notification failed:", e));
+
+    // Auto-reply to the user
+    sendContactAutoReply(email, name)
+      .catch(e => console.error("[contact] auto-reply failed:", e));
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
