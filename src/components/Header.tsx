@@ -79,7 +79,7 @@ export default function Header() {
                 <LanguageSwitcher />
               </div>
               <Link
-                href="/reservar"
+                href="/book"
                 className="bg-fb-green text-fb-paper rounded-full px-4 py-2 text-[13px] sm:px-6 sm:py-3 sm:text-[15px] font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
               >
                 {nav.bookClass || "Book the Class"}

@@ -50,7 +50,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 mb-10">
               <Link
-                href="/reservar"
+                href="/book"
                 className="inline-flex items-center bg-fb-green text-fb-paper rounded-full px-6 py-3.5 text-base font-semibold transition-colors hover:opacity-90"
               >
                 {primaryCta}

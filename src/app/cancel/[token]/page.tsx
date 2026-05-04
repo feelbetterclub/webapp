@@ -97,7 +97,7 @@ export default function CancelPage({ params }: { params: Promise<{ token: string
                   {info.className} · {info.date} · {info.startTime}
                 </p>
                 <p className="text-sm text-muted-foreground">{t.cancel.cancelledText}</p>
-                <Link href="/reservar" className="inline-block mt-6 bg-brand-teal text-brand-cream px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark transition-colors">
+                <Link href="/book" className="inline-block mt-6 bg-brand-teal text-brand-cream px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark transition-colors">
                   {t.cancel.bookAnother}
                 </Link>
               </>

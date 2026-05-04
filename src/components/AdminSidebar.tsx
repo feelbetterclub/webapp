@@ -18,10 +18,10 @@ import {
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/clases", label: "Classes", icon: BookOpen },
-  { href: "/admin/instructores", label: "Instructors", icon: UserCircle },
+  { href: "/admin/classes", label: "Classes", icon: BookOpen },
+  { href: "/admin/instructors", label: "Instructors", icon: UserCircle },
   { href: "/admin/locations", label: "Locations", icon: MapPin },
-  { href: "/admin/alumnos", label: "Students", icon: Users },
+  { href: "/admin/students", label: "Students", icon: Users },
   { href: "/admin/community", label: "Community", icon: Heart },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
 ];

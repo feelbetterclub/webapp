@@ -2,8 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { SECRET, COOKIE_NAME } from "@/lib/auth";
 
+const REDIRECTS: Record<string, string> = {
+  "/reservar": "/book",
+  "/admin/clases": "/admin/classes",
+  "/admin/alumnos": "/admin/students",
+  "/admin/instructores": "/admin/instructors",
+};
+
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Legacy Spanish URL redirects
+  const redirect = REDIRECTS[pathname];
+  if (redirect) {
+    const url = req.nextUrl.clone();
+    url.pathname = redirect;
+    return NextResponse.redirect(url, 308);
+  }
 
   if (pathname === "/admin/login" || pathname === "/api/admin/login") {
     return NextResponse.next();
@@ -30,5 +45,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/api/admin/:path*", "/reservar"],
 };

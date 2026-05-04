@@ -103,7 +103,7 @@ export default function Services() {
         >
           {disciplines.map((d, i) => (
             <Link
-              href="/reservar"
+              href="/book"
               key={d.n}
               className="disc-card flex flex-col justify-between cursor-pointer transition-colors duration-300 no-underline"
               style={{
