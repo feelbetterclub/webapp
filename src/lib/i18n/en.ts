@@ -225,7 +225,7 @@ const en = {
     { n: "01", title: "Mobility Flow", desc: "Class focused on dynamic stretching and deep breath. Activates joints, lymphatic system and releases tension. Supports recovery and prevents injuries. Each session is designed to help you feel flexible and fully present in your body, surrounded by the ocean breeze and morning sun.", tag: "" },
     { n: "02", title: "Strength Flow", desc: "Class designed to shape full-body and increase muscle mass. Energizing sequence using bodyweight and accessories such as dumbbells, resistance bands and ankle weights. Empowering and open to all levels. This outdoor session will challenge your body in functional way.", tag: "" },
     { n: "03", title: "Pilates Flow", desc: "A controlled yet powerful class using the pilates ball to activate deep muscles and improve balance. Through precise movement, it strengthens the core and enhances overall alignment. Moving in nature helps regulate the nervous system and calm the mind.", tag: "" },
-    { n: "04", title: "Burn Flow", desc: "A dynamic cardio workout with dance-inspired elements. Great for burning calories, boosting endurance and enjoying a music-driven session. Fresh air, sunshine and the open sky turn the class into a mini outdoor party that lifts your mood and your heart rate.", tag: "" },
+    { n: "04", title: "Dance Burn", desc: "A dynamic cardio workout with dance-inspired elements. Great for burning calories, boosting endurance and enjoying a music-driven session. Fresh air, sunshine and the open sky turn the class into a mini outdoor party that lifts your mood and your heart rate.", tag: "" },
   ],
   scheduleEyebrow: "This week",
   scheduleTitle: "The week ahead.",

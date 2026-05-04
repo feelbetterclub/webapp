@@ -227,7 +227,7 @@ const es: Translations = {
     { n: "01", title: "Mobility Flow", desc: "Clase de estiramientos dinámicos y respiración profunda. Activa articulaciones, sistema linfático y libera tensión. Cada sesión te ayuda a sentirte flexible y presente, rodeado de brisa marina y sol de la mañana.", tag: "" },
     { n: "02", title: "Strength Flow", desc: "Diseñada para tonificar el cuerpo y ganar masa muscular. Secuencia energizante con peso corporal, mancuernas, bandas de resistencia y tobilleras. Para todos los niveles. Desafía tu cuerpo de forma funcional.", tag: "" },
     { n: "03", title: "Pilates Flow", desc: "Clase controlada y potente con pelota de pilates para activar músculos profundos y mejorar el equilibrio. Fortalece el core y mejora la alineación. Moverse en la naturaleza calma la mente.", tag: "" },
-    { n: "04", title: "Burn Flow", desc: "Cardio dinámico con elementos de danza. Ideal para quemar calorías, mejorar resistencia y disfrutar al ritmo de la música. Aire fresco, sol y cielo abierto convierten la clase en una mini fiesta outdoor.", tag: "" },
+    { n: "04", title: "Dance Burn", desc: "Cardio dinámico con elementos de danza. Ideal para quemar calorías, mejorar resistencia y disfrutar al ritmo de la música. Aire fresco, sol y cielo abierto convierten la clase en una mini fiesta outdoor.", tag: "" },
   ],
   scheduleEyebrow: "Esta semana",
   scheduleTitle: "La semana que viene.",
