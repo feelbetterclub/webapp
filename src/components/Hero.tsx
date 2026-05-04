@@ -24,7 +24,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="bg-fb-paper pt-14 pb-10">
+    <section className="bg-fb-paper pt-14 pb-4">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {/* Two-column grid: single col mobile, 1.25fr + 1fr above 980px */}
         <div className="grid grid-cols-1 min-[980px]:grid-cols-[1.25fr_1fr] items-center gap-10 min-[980px]:gap-16">
@@ -66,19 +66,6 @@ export default function Hero() {
               </Link>
             </div>
 
-            {/* Stats strip */}
-            <div className="grid grid-cols-3 gap-6 border-t border-fb-green/25 pt-6">
-              {stats.map((s, i) => (
-                <div key={i}>
-                  <p className="font-sans font-semibold text-fb-green text-[clamp(26px,3vw,38px)] leading-tight">
-                    {s.n}
-                  </p>
-                  <p className="text-fb-mute text-xs uppercase tracking-widest mt-1">
-                    {s.l}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* ---- Right column ---- */}
