@@ -195,7 +195,7 @@ export default function JoinPage() {
                   Welcome to the club!
                 </h2>
                 <p style={{ color: "var(--fb-mute)" }}>
-                  Check your inbox for a welcome message.
+                  Check your inbox for a welcome message with the details of your free outdoor class.
                 </p>
               </div>
             ) : status === "alreadyMember" ? (
@@ -343,6 +343,10 @@ export default function JoinPage() {
                     {errorMessage}
                   </p>
                 )}
+
+                <p className="text-xs" style={{ color: "var(--fb-mute)" }}>
+                  Once you join, we'll send you an email with the details for your free outdoor class.
+                </p>
 
                 <button
                   type="submit"
