@@ -15,6 +15,7 @@ const ALLOWED_TABLES = new Set([
   "messages",
   "class_requests",
   "waitlist",
+  "contact_messages",
 ]);
 
 function assertTable(table: string): void {

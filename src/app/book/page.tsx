@@ -42,6 +42,20 @@ export default function ReservarPage() {
     return getWeekDates(base);
   }, [weekOffset]);
 
+  // Sync selectedDay/selectedDate when weekOffset changes
+  useEffect(() => {
+    if (weekOffset === 0) {
+      // Current week: select today
+      const d = new Date().getDay();
+      setSelectedDay(d === 0 ? 7 : d);
+      setSelectedDate(todayISO());
+    } else {
+      // Other weeks: select Monday
+      setSelectedDay(1);
+      setSelectedDate(weekDates[0].iso);
+    }
+  }, [weekOffset, weekDates]);
+
   const sortedSchedules = useMemo(
     () => [...schedules].sort((a, b) => a.startTime.localeCompare(b.startTime)),
     [schedules]

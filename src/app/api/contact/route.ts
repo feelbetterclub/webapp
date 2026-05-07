@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendContactNotification, sendContactAutoReply } from "@/lib/email";
+import { client } from "@/db";
 
 /**
  * POST /api/contact — Contact form submission.
- * Logs the message for now; email delivery to be wired up later.
+ * Stores the message in DB, then sends email notifications (fire-and-forget).
  */
 export async function POST(req: NextRequest) {
   try {
@@ -29,6 +30,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message too long (max 2000 chars)" }, { status: 400 });
     }
 
+    // Persist to DB — this is the source of truth even if emails fail
+    const now = new Date().toISOString();
+    await client.execute({
+      sql: `INSERT INTO contact_messages (name, email, phone, preferred_contact, message, status, created_at)
+            VALUES (?, ?, ?, ?, ?, 'new', ?)`,
+      args: [name, email, phone || null, preferredContact, message, now],
+    });
+
     // Log the contact request
     console.log("[contact]", {
       name,
@@ -36,7 +45,7 @@ export async function POST(req: NextRequest) {
       phone: phone || null,
       preferredContact,
       message,
-      receivedAt: new Date().toISOString(),
+      receivedAt: now,
     });
 
     // Notify the coach — fire-and-forget

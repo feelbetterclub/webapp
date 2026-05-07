@@ -10,6 +10,8 @@ import {
   UserCircle,
   MapPin,
   Heart,
+  MessageSquare,
+  MessageCircle,
   BarChart3,
   ArrowLeft,
   Menu,
@@ -23,6 +25,8 @@ const links = [
   { href: "/admin/locations", label: "Locations", icon: MapPin },
   { href: "/admin/students", label: "Students", icon: Users },
   { href: "/admin/community", label: "Community", icon: Heart },
+  { href: "/admin/contact-requests", label: "Contact Requests", icon: MessageSquare },
+  { href: "/admin/requests", label: "Class Requests", icon: MessageCircle },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
 ];
 

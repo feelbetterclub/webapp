@@ -5,6 +5,7 @@ import { useI18n, type Lang } from "@/lib/i18n/context";
 const langs: { code: Lang; label: string }[] = [
   { code: "en", label: "EN" },
   { code: "es", label: "ES" },
+  { code: "pt", label: "PT" },
 ];
 
 export function LanguageSwitcher() {

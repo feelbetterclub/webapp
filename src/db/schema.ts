@@ -86,3 +86,16 @@ export const waitlist = sqliteTable("waitlist", {
 });
 
 export type WaitlistRow = typeof waitlist.$inferSelect;
+
+export const contactMessages = sqliteTable("contact_messages", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  preferredContact: text("preferred_contact").notNull().default("email"),
+  message: text("message").notNull(),
+  status: text("status").notNull().default("new"), // new | read | archived
+  createdAt: text("created_at").notNull(),
+});
+
+export type ContactMessageRow = typeof contactMessages.$inferSelect;

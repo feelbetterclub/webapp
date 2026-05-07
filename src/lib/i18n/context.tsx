@@ -3,10 +3,11 @@
 import { createContext, useContext, useState, useSyncExternalStore, useCallback, type ReactNode } from "react";
 import en, { type Translations } from "./en";
 import es from "./es";
+import pt from "./pt";
 
-type Lang = "en" | "es";
+type Lang = "en" | "es" | "pt";
 
-const dictionaries: Record<Lang, Translations> = { en, es };
+const dictionaries: Record<Lang, Translations> = { en, es, pt };
 
 interface I18nContextValue {
   lang: Lang;
