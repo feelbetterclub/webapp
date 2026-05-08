@@ -340,20 +340,34 @@ export default function AdminDashboard() {
                                       ) : (
                                         <div className="space-y-1.5">
                                           {sessionDetail.bookings.map((b, i) => (
-                                            <div key={b.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white rounded-lg px-3 py-2 text-sm gap-1 sm:gap-0">
-                                              <div className="flex items-center gap-3">
-                                                <span className="w-5 h-5 rounded-full bg-brand-teal/10 text-brand-teal text-xs flex items-center justify-center font-medium">{i + 1}</span>
-                                                <span className="font-medium text-brand-deep">{b.userName}</span>
+                                            <div key={b.id} className="bg-white rounded-lg px-3 py-2.5 text-sm space-y-2">
+                                              {/* Row 1: Number + Name + Delete */}
+                                              <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                  <span className="w-5 h-5 rounded-full bg-brand-teal/10 text-brand-teal text-xs flex items-center justify-center font-medium shrink-0">{i + 1}</span>
+                                                  <span className="font-medium text-brand-deep">{b.userName}</span>
+                                                </div>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => deleteBooking(b.id, s)}
+                                                  className="text-red-400 hover:text-red-600 transition-colors p-1 shrink-0"
+                                                  title="Remove student"
+                                                >
+                                                  <Trash2 className="w-3.5 h-3.5" />
+                                                </button>
                                               </div>
-                                              <div className="flex items-center gap-3 text-xs text-muted-foreground pl-8 sm:pl-0">
+                                              {/* Row 2: Contact info */}
+                                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground pl-8">
                                                 <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {b.userEmail}</span>
                                                 {b.userPhone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {b.userPhone}</span>}
-                                                {/* Payment toggle */}
+                                              </div>
+                                              {/* Row 3: Payment controls */}
+                                              <div className="flex items-center gap-2 pl-8">
                                                 <button
                                                   type="button"
                                                   onClick={() => togglePayment(b.id, b.paid || 0, b.paymentMethod || null, s)}
                                                   disabled={togglingPayment === b.id}
-                                                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors font-medium ${
+                                                  className={`flex items-center gap-1 px-3 py-1 rounded-full transition-colors font-medium text-xs ${
                                                     b.paid
                                                       ? "bg-green-100 text-green-700 hover:bg-green-200"
                                                       : "bg-gray-100 text-gray-500 hover:bg-gray-200"
@@ -363,26 +377,17 @@ export default function AdminDashboard() {
                                                   <Check className="w-3 h-3" />
                                                   {togglingPayment === b.id ? "..." : b.paid ? "Paid" : "Unpaid"}
                                                 </button>
-                                                {/* Payment method selector (only when paid) */}
                                                 {b.paid ? (
                                                   <select
                                                     value={b.paymentMethod || "cash"}
                                                     onChange={(e) => changePaymentMethod(b.id, e.target.value, s)}
-                                                    className="text-xs bg-white border border-brand-sage/30 rounded px-1.5 py-0.5 text-brand-deep"
+                                                    className="text-xs bg-white border border-brand-sage/30 rounded-full px-3 py-1 text-brand-deep"
                                                   >
                                                     <option value="cash">Cash</option>
                                                     <option value="card">Card</option>
                                                     <option value="revolut">Revolut</option>
                                                   </select>
                                                 ) : null}
-                                                <button
-                                                  type="button"
-                                                  onClick={() => deleteBooking(b.id, s)}
-                                                  className="text-red-400 hover:text-red-600 transition-colors p-1"
-                                                  title="Remove student"
-                                                >
-                                                  <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
                                               </div>
                                             </div>
                                           ))}
