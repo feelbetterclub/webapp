@@ -3,12 +3,12 @@
 import { useI18n } from "@/lib/i18n/context";
 
 const cellConfig = [
-  { span: "col-span-4", aspect: "aspect-[4/5]", mt: "", bg: "bg-fb-green-mist" },
-  { span: "col-span-4", aspect: "aspect-square", mt: "mt-10", bg: "bg-fb-cream" },
-  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", bg: "bg-fb-sand" },
-  { span: "col-span-3", aspect: "aspect-square", mt: "", bg: "bg-fb-green-mist" },
-  { span: "col-span-6", aspect: "aspect-[16/10]", mt: "", bg: "bg-fb-cream" },
-  { span: "col-span-3", aspect: "aspect-square", mt: "mt-5", bg: "bg-fb-sand" },
+  { span: "col-span-4", aspect: "aspect-[4/5]", mt: "", img: "/gallery-1.webp" },
+  { span: "col-span-4", aspect: "aspect-square", mt: "mt-10", img: "/gallery-2.webp" },
+  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", img: "/gallery-3.webp" },
+  { span: "col-span-3", aspect: "aspect-square", mt: "", img: "/gallery-4.webp" },
+  { span: "col-span-6", aspect: "aspect-[16/10]", mt: "", img: "/gallery-5.webp" },
+  { span: "col-span-3", aspect: "aspect-square", mt: "mt-5", img: "/gallery-6.webp" },
 ];
 
 export default function Gallery() {
@@ -55,9 +55,16 @@ export default function Gallery() {
               className={`${cell.span} max-md:col-span-3 ${cell.mt} max-md:mt-0`}
             >
               <div
-                className={`${cell.bg} ${cell.aspect} max-md:aspect-square rounded-[14px] flex items-end justify-start p-4`}
+                className={`${cell.aspect} max-md:aspect-square rounded-[14px] overflow-hidden relative`}
               >
-                <span className="text-fb-green/70 text-sm font-medium">
+                <img
+                  src={cell.img}
+                  alt={labels[i] ?? ""}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <span className="absolute bottom-3 left-4 text-white/90 text-sm font-medium drop-shadow-sm">
                   {labels[i] ?? ""}
                 </span>
               </div>

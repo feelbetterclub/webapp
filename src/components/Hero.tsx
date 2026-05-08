@@ -15,10 +15,13 @@ interface UpcomingClass {
   icon: string | null;
 }
 
-const CARD_COLORS = [
-  "bg-fb-green text-fb-paper",
-  "bg-fb-green-mist text-fb-green",
-  "bg-fb-cream text-fb-green",
+const CARD_IMAGES = [
+  "/hero-1.webp",
+  "/hero-2.webp",
+  "/hero-3.webp",
+  "/hero-4.webp",
+  "/hero-5.webp",
+  "/hero-6.webp",
 ];
 
 function formatDate(dateStr: string, lang: string): string {
@@ -93,7 +96,7 @@ export default function Hero() {
                 <ClassCard
                   key={cls.id}
                   cls={cls}
-                  colorClass={CARD_COLORS[i % CARD_COLORS.length]}
+                  image={CARD_IMAGES[i % CARD_IMAGES.length]}
                   lang={lang}
                 />
               ))}
@@ -103,7 +106,7 @@ export default function Hero() {
             <div className="md:hidden">
               <ClassCard
                 cls={classes[activeIndex]}
-                colorClass={CARD_COLORS[activeIndex % CARD_COLORS.length]}
+                image={CARD_IMAGES[activeIndex % CARD_IMAGES.length]}
                 lang={lang}
               />
               {classes.length > 1 && (
@@ -148,43 +151,56 @@ export default function Hero() {
 
 function ClassCard({
   cls,
-  colorClass,
+  image,
   lang,
 }: {
   cls: UpcomingClass;
-  colorClass: string;
+  image: string;
   lang: string;
 }) {
   return (
     <Link
       href="/book"
-      className={`block rounded-[28px] p-7 ${colorClass} transition-transform hover:scale-[1.02] hover:shadow-lg`}
+      className="block rounded-[28px] overflow-hidden relative transition-transform hover:scale-[1.02] hover:shadow-lg"
+      style={{ minHeight: 220 }}
     >
-      <h2 className="text-2xl font-semibold mb-4 leading-tight">
-        {cls.className}
-      </h2>
+      {/* Background image */}
+      <img
+        src={image}
+        alt={cls.className}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-      <div className="flex items-center gap-2 mb-2 opacity-85">
-        <Calendar size={16} />
-        <span className="text-sm font-medium capitalize">
-          {formatDate(cls.date, lang)}
-        </span>
-      </div>
+      {/* Content */}
+      <div className="relative z-10 p-7 flex flex-col justify-end h-full text-fb-paper" style={{ minHeight: 220 }}>
+        <h2 className="text-2xl font-semibold mb-3 leading-tight drop-shadow-sm">
+          {cls.className}
+        </h2>
 
-      <div className="flex items-center gap-2 mb-2 opacity-85">
-        <Clock size={16} />
-        <span className="text-sm font-medium">
-          {formatTime(cls.startTime)}
-          {cls.durationMinutes ? ` (${cls.durationMinutes} min)` : ""}
-        </span>
-      </div>
-
-      {cls.location && (
-        <div className="flex items-center gap-2 opacity-85">
-          <MapPin size={16} />
-          <span className="text-sm font-medium">{cls.location}</span>
+        <div className="flex items-center gap-2 mb-1.5 opacity-90">
+          <Calendar size={16} />
+          <span className="text-sm font-medium capitalize">
+            {formatDate(cls.date, lang)}
+          </span>
         </div>
-      )}
+
+        <div className="flex items-center gap-2 mb-1.5 opacity-90">
+          <Clock size={16} />
+          <span className="text-sm font-medium">
+            {formatTime(cls.startTime)}
+            {cls.durationMinutes ? ` (${cls.durationMinutes} min)` : ""}
+          </span>
+        </div>
+
+        {cls.location && (
+          <div className="flex items-center gap-2 opacity-90">
+            <MapPin size={16} />
+            <span className="text-sm font-medium">{cls.location}</span>
+          </div>
+        )}
+      </div>
     </Link>
   );
 }
