@@ -105,6 +105,9 @@ const pt: Translations = {
       selectOption: "Selecione uma opcao",
       message: "Mensagem",
       messagePlaceholder: "Conta pra gente o que voce precisa...",
+      phone: "Telefone",
+      preferredContact: "Contacto preferido",
+      sendAnother: "Enviar outra mensagem",
       submit: "Enviar mensagem",
       sent: "Mensagem enviada",
       sentText: "Vamos responder o mais rapido possivel.",
@@ -161,6 +164,7 @@ const pt: Translations = {
     backToSite: "Voltar ao site",
   },
   common: {
+    back: "Voltar",
     loading: "Carregando...",
     noData: "Nenhum dado disponivel",
   },

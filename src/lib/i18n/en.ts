@@ -103,6 +103,9 @@ const en = {
       selectOption: "Select an option",
       message: "Message",
       messagePlaceholder: "Tell us what you need...",
+      phone: "Phone",
+      preferredContact: "Preferred contact",
+      sendAnother: "Send another message",
       submit: "Send message",
       sent: "Message sent",
       sentText: "We'll get back to you as soon as possible.",
@@ -159,6 +162,7 @@ const en = {
     backToSite: "Back to site",
   },
   common: {
+    back: "Back",
     loading: "Loading...",
     noData: "No data available",
   },

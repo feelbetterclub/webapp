@@ -6,13 +6,8 @@ import { useI18n } from "@/lib/i18n/context";
 export default function Contact() {
   const { t } = useI18n();
 
-  const cta = (t as any).cta || {
-    line1: "Your first class",
-    scriptLine: "is on us.",
-    desc: "Come once, see how it feels. If it clicks, we'll talk about what fits after.",
-    button: "Claim free class",
-  };
-  const scheduleCta = (t as any).scheduleCta || "See full schedule →";
+  const cta = t.cta;
+  const scheduleCta = t.scheduleCta;
 
   return (
     <section id="contact" style={{ padding: "80px 0" }}>

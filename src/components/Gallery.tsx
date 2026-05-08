@@ -13,7 +13,7 @@ const cellConfig = [
 
 export default function Gallery() {
   const { t } = useI18n();
-  const ti = t as any;
+  const ti = t;
 
   const eyebrow = ti.galleryEyebrow || "The club";
   const title = ti.galleryTitle || "Where the good hours happen.";

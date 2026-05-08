@@ -12,7 +12,7 @@ interface Discipline {
 
 export default function Services() {
   const { t } = useI18n();
-  const ti = t as any;
+  const ti = t;
 
   const eyebrow: string = ti.methodEyebrow || "The Method";
   const title: string = ti.methodTitle || "Four disciplines, one rhythm.";

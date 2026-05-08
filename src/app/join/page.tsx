@@ -221,7 +221,7 @@ export default function JoinPage() {
                   className="text-2xl font-bold mb-2"
                   style={{ color: "var(--fb-ink)" }}
                 >
-                  You're already part of the club!
+                  You&apos;re already part of the club!
                 </h2>
                 <p style={{ color: "var(--fb-mute)" }}>Check your inbox.</p>
               </div>
@@ -345,7 +345,7 @@ export default function JoinPage() {
                 )}
 
                 <p className="text-xs" style={{ color: "var(--fb-mute)" }}>
-                  Once you join, we'll send you an email with the details for your free outdoor class.
+                  Once you join, we&apos;ll send you an email with the details for your free outdoor class.
                 </p>
 
                 <button

@@ -81,7 +81,7 @@ export default function ContactPage() {
             style={{ color: "var(--fb-mute)" }}
           >
             <ArrowLeft className="w-4 h-4" />
-            {(t as any).common?.back || "Back"}
+            {t.common.back}
           </Link>
         </div>
 
@@ -144,7 +144,7 @@ export default function ContactPage() {
                   className="mt-8 text-sm font-medium underline underline-offset-4"
                   style={{ color: "var(--fb-green)" }}
                 >
-                  {(t as any).contact?.form?.sendAnother || "Send another message"}
+                  {t.contact.form.sendAnother}
                 </button>
               </div>
             ) : (
@@ -211,7 +211,7 @@ export default function ContactPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: "var(--fb-ink)" }}
                     >
-                      {(t as any).contact?.form?.phone || "Phone"}
+                      {t.contact.form.phone}
                     </label>
                     <input
                       id="phone"
@@ -235,7 +235,7 @@ export default function ContactPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: "var(--fb-ink)" }}
                     >
-                      {(t as any).contact?.form?.preferredContact || "Preferred contact"}
+                      {t.contact.form.preferredContact}
                     </label>
                     <select
                       id="preferredContact"
@@ -250,7 +250,7 @@ export default function ContactPage() {
                       }}
                     >
                       <option value="email">{c.form.email}</option>
-                      <option value="phone">{(t as any).contact?.form?.phone || "Phone"}</option>
+                      <option value="phone">{t.contact.form.phone}</option>
                     </select>
                   </div>
                 </div>
@@ -296,7 +296,7 @@ export default function ContactPage() {
                     color: "var(--fb-paper)",
                   }}
                 >
-                  {submitting ? ((t as any).common?.loading || "Sending...") : c.form.submit}
+                  {submitting ? t.common.loading : c.form.submit}
                 </button>
               </form>
             )}

@@ -105,6 +105,9 @@ const es: Translations = {
       selectOption: "Selecciona una opción",
       message: "Mensaje",
       messagePlaceholder: "Cuéntanos qué necesitas...",
+      phone: "Telefono",
+      preferredContact: "Contacto preferido",
+      sendAnother: "Enviar otro mensaje",
       submit: "Enviar mensaje",
       sent: "Mensaje enviado",
       sentText: "Te responderemos lo antes posible.",
@@ -161,6 +164,7 @@ const es: Translations = {
     backToSite: "Volver al sitio",
   },
   common: {
+    back: "Volver",
     loading: "Cargando...",
     noData: "No hay datos disponibles",
   },

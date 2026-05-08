@@ -89,7 +89,7 @@ export interface WaitlistConfirmationData {
 }
 
 export async function sendWaitlistConfirmation(data: WaitlistConfirmationData): Promise<void> {
-  const { to, userName, date, time, classType, position } = data;
+  const { to, userName, date, time, classType } = data;
   const subject = "You're on the Waitlist — We'll Let You Know";
   const safeName = escape(userName || "there");
   const safeClass = escape(classType);

@@ -47,7 +47,7 @@ export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const h = (t as any).hero ?? {};
+  const h = t.hero;
   const primaryCta = h.primary ?? h.cta1 ?? "Book your first class";
 
   useEffect(() => {

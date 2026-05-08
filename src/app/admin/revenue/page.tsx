@@ -58,13 +58,17 @@ export default function RevenuePage() {
   const [period, setPeriod] = useState<Period>("month");
 
   useEffect(() => {
-    setLoading(true);
-    const { from, to } = getDateRange(period);
-    fetch(`/api/admin/revenue?from=${from}&to=${to}`)
-      .then((r) => r.json())
-      .then(setData)
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    async function loadRevenue() {
+      setLoading(true);
+      const { from, to } = getDateRange(period);
+      try {
+        const r = await fetch(`/api/admin/revenue?from=${from}&to=${to}`);
+        setData(await r.json());
+      } catch { /* ignore */ } finally {
+        setLoading(false);
+      }
+    }
+    loadRevenue();
   }, [period]);
 
   if (loading) return <Loading />;

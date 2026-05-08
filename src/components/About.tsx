@@ -6,37 +6,15 @@ export default function About() {
   const { t } = useI18n();
 
   // Our Story i18n
-  const story = (t as any).about?.story || {
-    p1: "The Feel Better Club was created with a simple intention: to bring people together through movement, nature, and the kind of energy that only shared effort can create. What started as a few beach and garden sessions for friends has grown into a space where people challenge themselves, and discover how good it is to move with purpose — surrounded by fresh air, sunlight, and wildlife.",
-    p2: "Training Outside grounds us, Training Together lifts us up. And we keep showing up because it Feels Better — the endorphins and sound of waves bring out the smiles.",
-  };
-  const storyLabel = (t as any).about?.label || "About Us";
-  const storyTitle = (t as any).about?.title || "Our Story";
+  const story = t.about.story;
+  const storyLabel = t.about.label;
+  const storyTitle = t.about.title;
 
   // Pillars i18n with fallbacks
-  const pillars = (t as any).pillars || {
-    eyebrow: "Our philosophy",
-    title: "Small step. Big impact.",
-    left: {
-      eyebrow: "Small step",
-      title: "Consistency beats intensity.",
-      desc: "Thirty minutes, three times a week. That\u2019s where real change begins \u2014 not in extreme routines, but in showing up with intention, again and again.",
-    },
-    right: {
-      eyebrow: "Big impact",
-      title: "Compound, quietly.",
-      desc: "The body keeps score of every good decision. Small deposits of movement, breath, and care build a reserve you\u2019ll draw from for decades.",
-    },
-  };
+  const pillars = t.pillars;
 
   // Moni i18n with fallbacks
-  const moni = (t as any).moni || (t as any).about?.founder || {
-    eyebrow: "Meet the Founder & Coach",
-    quote: "\u201CHealth isn\u2019t a finish line \u2014 it\u2019s the way you walk the path.\u201D",
-    body: "Moni founded Feel Better Club after more than 25 years dedicated to movement, coaching, and holistic wellness.",
-    sign: "Moni",
-    role: "Founder \u00B7 Coach",
-  };
+  const moni = t.moni;
 
   // Split body into paragraphs
   const bodyParagraphs = (moni.body || "").split("\n\n").filter(Boolean);

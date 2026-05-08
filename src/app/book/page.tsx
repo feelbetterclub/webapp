@@ -104,7 +104,7 @@ function ReservarPageInner() {
     if (weekOffset === 0) {
       // Current week: select today
       const d = new Date().getDay();
-      setSelectedDay(d === 0 ? 7 : d);
+      setSelectedDay(d === 0 ? 7 : d); // eslint-disable-line react-hooks/set-state-in-effect -- sync derived state
       setSelectedDate(todayISO());
     } else {
       // Other weeks: select Monday

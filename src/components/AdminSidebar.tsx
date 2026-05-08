@@ -37,7 +37,7 @@ export default function AdminSidebar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(false);
+    setOpen(false); // eslint-disable-line react-hooks/set-state-in-effect -- close menu on route change
   }, [pathname]);
 
   return (

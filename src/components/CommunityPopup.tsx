@@ -13,7 +13,7 @@ export function CommunityPopup() {
   const [animate, setAnimate] = useState(false);
 
   /* ── i18n with fallbacks ── */
-  const p = (t as any).popup || {};
+  const p = t.popup;
   const badge = p.badge || "First class on us";
   const titleLine1 = p.titleLine1 || "Try your";
   const titleScript = p.titleScript || "first class free";

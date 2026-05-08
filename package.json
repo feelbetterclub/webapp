@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "npx tsx scripts/seed.ts",
-    "db:push": "npx drizzle-kit push"
+    "db:push": "npx drizzle-kit push",
+    "test": "vitest run",
+    "test:content": "vitest run tests/content-i18n.test.mts",
+    "test:api": "vitest run tests/api-contracts.test.mts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",
@@ -35,6 +38,7 @@
     "eslint-config-next": "16.2.3",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.5"
   }
 }

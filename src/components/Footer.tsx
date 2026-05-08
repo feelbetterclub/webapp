@@ -43,7 +43,7 @@ export default function Footer() {
   }, []);
 
   /* ── i18n with fallbacks ── */
-  const ft = (t as any).footer || {};
+  const ft = t.footer;
   const tag = ft.tag || "Small step — big impact";
   const colA = ft.colA || {
     title: "Classes",

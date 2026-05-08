@@ -4,7 +4,7 @@ import { useI18n } from "@/lib/i18n/context";
 
 export default function Rituals() {
   const { t } = useI18n();
-  const ti = t as any;
+  const ti = t;
 
   const eyebrow = ti.rituals?.label || "Rituals";
   const title = ti.rituals?.title || "Coming soon";
