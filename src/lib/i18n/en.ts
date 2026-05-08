@@ -24,9 +24,9 @@ const en = {
     cta2: "Book a class",
     badge: "Next class · Friday 7:30 am",
     h1a: "Outdoor Training Community.",
-    h1b: "Each of You Matters.",
-    sub: "Personalised Workouts. Fueled by Endorphins and Sea Vitamins. Sport. Nature. Connection.",
-    primary: "Book your first class",
+    h1b: "Where Each of You Matters.",
+    sub: "Strong Body, Calm Mind, Happy Soul - anytime, anywhere. Sport, Nature, Connection.",
+    primary: "Check Class Schedule",
     ghost: "See the method",
     stats: [
       { n: "4", l: "Disciplines" },
@@ -85,7 +85,7 @@ const en = {
     label: "Rituals",
     title: "Rituals — Coming Soon",
     subtitle:
-      "Whole-food high-protein nutrition tips, sauna, breathwork and ice bath events to support your training and recovery.",
+      "Sport Nutrition Tutorials, Breath Workshops, Sauna and Ice Bath Events, to support your training and recovery. Join the Club to stay tuned.",
     comingSoon: "Stay tuned",
   },
   contact: {
@@ -134,7 +134,7 @@ const en = {
       "You can return to this site anytime to manage a new class or cancel your spot.",
   },
   footer: {
-    askUs: "Ask us anything",
+    askUs: "Direct message",
     askUsPlaceholder: "Type your message...",
     askUsEmail: "Email (optional, for reply)",
     askUsSend: "Send",
@@ -145,10 +145,10 @@ const en = {
     connectTitle: "Connect and Get Inspired",
     testimonials: "Testimonials",
     tag: "Small step — big impact",
-    colA: { title: "Classes", items: ["Mobility Flow", "Pilates Flow", "Dance Burn", "Full schedule"] },
-    colB: { title: "The Club", items: ["About", "Class Program", "Rituals", "Contact"] },
+    colA: { title: "Classes", items: ["Mobility Flow", "Strength Flow", "Pilates Flow", "Dance Burn", "Full schedule"] },
+    colB: { title: "The Club", items: ["About", "Class Program", "Rituals", "Contact", "Join the Club"] },
     colC: { title: "Contact", items: ["feelbettermove@gmail.com"] },
-    legal: "© 2026 The Feel Better Club · Health routines community",
+    legal: "© 2026 The Feel Better Club",
     rights: "Made with Love, to make you Feel Better.",
   },
   admin: {
@@ -219,7 +219,7 @@ const en = {
   },
   marquee: ["Health routines community", "Small step — big impact", "Move · Breathe · Feel", "Tarifa · Costa de la Luz"],
   methodEyebrow: "The Method",
-  methodTitle: "Four disciplines, one flow. You Choose.",
+  methodTitle: "Move to Feel Better - Together.",
   methodSub: "We built the week as a complete cycle — so your body and mind gets what it needs, when it needs it.",
   disciplines: [
     { n: "01", title: "Mobility Flow", desc: "Class focused on dynamic stretching and deep breath. Activates joints, lymphatic system and releases tension. Supports recovery and prevents injuries. Each session is designed to help you feel flexible and fully present in your body, surrounded by the ocean breeze and morning sun.", tag: "" },
@@ -233,7 +233,7 @@ const en = {
   moni: {
     eyebrow: "Meet the Founder & Coach",
     quote: "\"Health isn't a finish line — it's the way you walk the path.\"",
-    body: "Sport has always been at the center of my life. I started at the age of seven and quickly became a professional basketball player — an experience that shaped my everyday discipline, teamwork, and the belief that high goals are worth pursuing.\n\nAfter ten years in competitive sport, I focused on education at university and opened myself to new forms of movement: dance, tennis, skiing, resistance training, and pilates. Each discipline taught me something different about the body, its potential and the flow.\n\nIn 2016, I discovered kitesurfing — a passion that changed my life and eventually led me to move to Tarifa. The ocean, the wind, the freedom — it all felt like home. Since then, I've continued exploring, traveling, and learning — always curious, always growing, always moving.\n\nToday, I bring more than 25 years of experience in sports into every session. As a European-certified fitness and personal trainer, I'm truly fulfilled by guiding people, helping them discover their inner power. My approach is built on positive energy, precise technique, and body-mind-soul connection. A rhythm-driven atmosphere creates flow and brings out smiles — because workout should be challenging in a good way.\n\nFeel Better Club is an extension of everything I love and value: nature, movement, connection, and the joy of growing together.\n\nI'm grateful for each of you. Your wellbeing is the main reason why I am here.",
+    body: "Sport has been at the center of my life since I was seven. I grew up as a professional basketball player, learning discipline, teamwork, and the joy of chasing big goals.\n\nAfter a decade in competitive sport, I explored new ways of moving — dance, tennis, skiing, resistance training, pilates — each one teaching me something about the body's potential.\n\nIn 2016 I discovered kitesurfing, a passion that changed everything and eventually brought me to Tarifa. The ocean, the wind, the freedom — that's where I feel at home.\n\nToday I bring 25+ years of sport experience into every session. As a European-certified trainer, I love guiding people to reconnect with their bodies and discover their inner power. My approach is all about energy, precision, and creating the space that feels good and challenging.\n\nFeel Better Club represents everything I value: nature, movement, connection, growing together.\n\nI'm grateful for each of you — your wellbeing is why I'm here.",
     sign: "Moni",
     role: "Founder · Coach",
   },
@@ -249,7 +249,7 @@ const en = {
   galleryLabels: ["Beach class · sunrise", "Studio interior", "Moni · coaching", "Playa Chica", "Fun Burn Friday", "Stretch session"],
   testimonialsEyebrow: "From the club",
   testimonialsTitle: "The people who keep showing up.",
-  cta: { line1: "Unlock your Free", scriptLine: "Feel Better Class.", desc: "Join the Feel Better Club, follow us on Instagram, bring a friend, and check your inbox — we'll send you the details for the next free class near you.", button: "Join the Club" },
+  cta: { line1: "Unlock your Free", scriptLine: "Feel Better Class.", desc: "Join the Feel Better Club, follow us on Instagram and check your mailbox for the next free class near you. As a member, you'll receive exclusive offers, priority access to special classes, and early invitations to community events.", button: "Join the Club" },
 };
 
 // Deep make all values string for translation compatibility

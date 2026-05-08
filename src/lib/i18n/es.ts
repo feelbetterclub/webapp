@@ -24,10 +24,10 @@ const es: Translations = {
     cta1: "Explora las clases",
     cta2: "Reservar clase",
     badge: "Próxima clase · Viernes 7:30",
-    h1a: "Comunidad de Entrenamiento Outdoor.",
-    h1b: "Cada Uno de Vosotros Importa.",
-    sub: "Entrenamientos personalizados. Impulsados por endorfinas y vitaminas del mar. Deporte. Naturaleza. Conexión.",
-    primary: "Reserva tu primera clase",
+    h1a: "Comunidad de Entrenamiento al Aire Libre.",
+    h1b: "Donde Cada Uno Importa.",
+    sub: "Cuerpo Fuerte, Mente Calma, Alma Feliz - en cualquier momento, en cualquier lugar. Deporte, Naturaleza, Conexión.",
+    primary: "Ver Horario de Clases",
     ghost: "Conoce el método",
     stats: [
       { n: "4", l: "Disciplinas" },
@@ -86,7 +86,7 @@ const es: Translations = {
     label: "Rituales",
     title: "Rituales Holísticos — Muy Pronto",
     subtitle:
-      "Tips de nutrición alta en proteína y comida real, eventos de sauna, breathwork y baños de hielo para apoyar tu entrenamiento y tu recuperación.",
+      "Tutoriales de Nutrición Deportiva, Talleres de Respiración, Sauna y Baños de Hielo, para apoyar tu entrenamiento y recuperación. Únete al Club para estar al día.",
     comingSoon: "Mantente atento",
   },
   contact: {
@@ -136,7 +136,7 @@ const es: Translations = {
       "Puedes volver a este sitio en cualquier momento para gestionar una nueva clase o cancelar tu plaza.",
   },
   footer: {
-    askUs: "Pregúntanos lo que quieras",
+    askUs: "Mensaje directo",
     askUsPlaceholder: "Escribe tu mensaje...",
     askUsEmail: "Email (opcional, para respuesta)",
     askUsSend: "Enviar",
@@ -147,10 +147,10 @@ const es: Translations = {
     connectTitle: "Conecta e Inspírate",
     testimonials: "Testimonios",
     tag: "Pequeño paso — gran impacto",
-    colA: { title: "Clases", items: ["Mobility Flow", "Pilates Flow", "Dance Burn", "Horario completo"] },
-    colB: { title: "El Club", items: ["Nosotros", "Programa", "Rituales", "Contacto"] },
+    colA: { title: "Clases", items: ["Mobility Flow", "Strength Flow", "Pilates Flow", "Dance Burn", "Horario completo"] },
+    colB: { title: "El Club", items: ["Nosotros", "Programa", "Rituales", "Contacto", "Unirse al Club"] },
     colC: { title: "Contacto", items: ["feelbettermove@gmail.com"] },
-    legal: "© 2026 The Feel Better Club · Rutinas de salud holística",
+    legal: "© 2026 The Feel Better Club",
     rights: "Hecho con amor, para que te sientas mejor.",
   },
   admin: {
@@ -221,7 +221,7 @@ const es: Translations = {
   },
   marquee: ["Rutinas de salud holística", "Pequeño paso, gran impacto", "Mover · Respirar · Sentir", "Tarifa · Costa de la Luz"],
   methodEyebrow: "El Método",
-  methodTitle: "Cuatro disciplinas, un flow. Tú eliges.",
+  methodTitle: "Muévete para Sentirte Mejor - Juntos.",
   methodSub: "Hemos construido la semana como un ciclo completo — para que tu cuerpo y mente reciban lo que necesitan, cuando lo necesitan.",
   disciplines: [
     { n: "01", title: "Mobility Flow", desc: "Clase de estiramientos dinámicos y respiración profunda. Activa articulaciones, sistema linfático y libera tensión. Cada sesión te ayuda a sentirte flexible y presente, rodeado de brisa marina y sol de la mañana.", tag: "" },
@@ -235,7 +235,7 @@ const es: Translations = {
   moni: {
     eyebrow: "Conoce a la Fundadora y Coach",
     quote: "\"La salud no es una meta — es la forma en que caminas el camino.\"",
-    body: "El deporte ha estado en el centro de mi vida desde que tengo memoria. Empecé a los siete años y me convertí en jugadora profesional de baloncesto — una experiencia que moldeó mi disciplina diaria, el trabajo en equipo y la creencia de que las metas grandes merecen la pena.\n\nTras diez años en deporte competitivo, cambié el foco a la universidad y me abrí a nuevas formas de movimiento: danza, tenis, esquí, entrenamiento de resistencia y pilates. Cada disciplina me enseñó algo distinto sobre el cuerpo, su ritmo y su fluidez.\n\nEn 2016 descubrí el kitesurf — una pasión que me cambió la vida y que acabó llevándome a Tarifa en 2021. El mar, el viento, la libertad — todo se sintió como en casa.\n\nHoy traigo más de 25 años de experiencia deportiva a cada sesión. Como entrenadora certificada a nivel europeo, mi enfoque se construye sobre energía positiva, técnica precisa y conexión cuerpo-mente-alma. Una atmósfera guiada por el ritmo crea flow y saca sonrisas — porque entrenar debe sentar bien.",
+    body: "El deporte ha estado en el centro de mi vida desde los siete años. Crecí como jugadora profesional de baloncesto, aprendiendo disciplina, trabajo en equipo y la alegría de perseguir grandes metas.\n\nTras una década en deporte competitivo, exploré nuevas formas de moverme — danza, tenis, esquí, entrenamiento de resistencia, pilates — cada una enseñándome algo sobre el potencial del cuerpo.\n\nEn 2016 descubrí el kitesurf, una pasión que lo cambió todo y que finalmente me trajo a Tarifa. El mar, el viento, la libertad — ahí es donde me siento en casa.\n\nHoy traigo más de 25 años de experiencia deportiva a cada sesión. Como entrenadora certificada a nivel europeo, me encanta guiar a las personas para que reconecten con su cuerpo y descubran su poder interior. Mi enfoque se basa en energía, precisión y crear un espacio que se sienta bien y desafiante.\n\nFeel Better Club representa todo lo que valoro: naturaleza, movimiento, conexión, crecer juntos.\n\nEstoy agradecida por cada uno de vosotros — vuestro bienestar es la razón por la que estoy aquí.",
     sign: "Moni",
     role: "Fundadora · Coach",
   },
@@ -251,7 +251,7 @@ const es: Translations = {
   galleryLabels: ["Clase en la playa · amanecer", "Interior del estudio", "Moni · dando clase", "Playa Chica", "Fun Burn Friday", "Sesión de stretch"],
   testimonialsEyebrow: "Del club",
   testimonialsTitle: "Las personas que vuelven.",
-  cta: { line1: "Consigue tu clase", scriptLine: "Feel Better gratis.", desc: "Únete al Feel Better Club, síguenos en Instagram, trae un amigo y revisa tu inbox — te enviaremos los detalles de la próxima clase gratuita cerca de ti.", button: "Únete al Club" },
+  cta: { line1: "Consigue tu clase", scriptLine: "Feel Better gratis.", desc: "Únete al Feel Better Club, síguenos en Instagram y revisa tu email para la próxima clase gratuita cerca de ti. Como miembro, recibirás ofertas exclusivas, acceso prioritario a clases especiales e invitaciones anticipadas a eventos comunitarios.", button: "Únete al Club" },
 };
 
 export default es;

@@ -51,8 +51,8 @@ function wrapper(inner: string): string {
         <tr><td style="padding:40px 32px;line-height:1.7;font-size:16px;color:#062e21;">
           ${inner}
         </td></tr>
-        <tr><td style="padding:24px 32px;background:#f4ebd0;text-align:center;font-size:12px;color:#094a34;">
-          Nature · Connection · Fun
+        <tr><td style="padding:24px 32px;background:#0d5e42;text-align:center;font-size:12px;color:#ffffff;">
+          Sport · Nature · Connection
         </td></tr>
       </table>
     </td></tr>

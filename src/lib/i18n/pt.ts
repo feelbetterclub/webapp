@@ -24,10 +24,10 @@ const pt: Translations = {
     cta1: "Explore as aulas",
     cta2: "Reservar aula",
     badge: "Proxima aula · Sexta 7:30",
-    h1a: "Comunidade de Treino Outdoor.",
-    h1b: "Cada Um de Voces Importa.",
-    sub: "Treinos personalizados. Movidos por endorfinas e vitaminas do mar. Esporte. Natureza. Conexao.",
-    primary: "Reserve sua primeira aula",
+    h1a: "Comunidade de Treino ao Ar Livre.",
+    h1b: "Onde Cada Um de Voces Importa.",
+    sub: "Corpo Forte, Mente Calma, Alma Feliz - a qualquer hora, em qualquer lugar. Esporte, Natureza, Conexao.",
+    primary: "Ver Horario de Aulas",
     ghost: "Conheca o metodo",
     stats: [
       { n: "4", l: "Disciplinas" },
@@ -86,7 +86,7 @@ const pt: Translations = {
     label: "Rituais",
     title: "Rituais — Em Breve",
     subtitle:
-      "Dicas de nutricao rica em proteina e comida de verdade, eventos de sauna, breathwork e banho de gelo para apoiar seu treino e sua recuperacao.",
+      "Tutoriais de Nutricao Esportiva, Workshops de Respiracao, Sauna e Banhos de Gelo, para apoiar seu treino e recuperacao. Faca parte do Clube para ficar por dentro.",
     comingSoon: "Fique ligado",
   },
   contact: {
@@ -136,7 +136,7 @@ const pt: Translations = {
       "Voce pode voltar a este site a qualquer momento para agendar uma nova aula ou cancelar sua vaga.",
   },
   footer: {
-    askUs: "Pergunte o que quiser",
+    askUs: "Mensagem direta",
     askUsPlaceholder: "Digite sua mensagem...",
     askUsEmail: "Email (opcional, para resposta)",
     askUsSend: "Enviar",
@@ -147,10 +147,10 @@ const pt: Translations = {
     connectTitle: "Conecte-se e Inspire-se",
     testimonials: "Depoimentos",
     tag: "Pequeno passo — grande impacto",
-    colA: { title: "Aulas", items: ["Mobility Flow", "Pilates Flow", "Dance Burn", "Horario completo"] },
-    colB: { title: "O Clube", items: ["Sobre", "Programa", "Rituais", "Contato"] },
+    colA: { title: "Aulas", items: ["Mobility Flow", "Strength Flow", "Pilates Flow", "Dance Burn", "Horario completo"] },
+    colB: { title: "O Clube", items: ["Sobre", "Programa", "Rituais", "Contato", "Entrar no Clube"] },
     colC: { title: "Contato", items: ["feelbettermove@gmail.com"] },
-    legal: "\u00a9 2026 The Feel Better Club \u00b7 Comunidade de rotinas saudaveis",
+    legal: "\u00a9 2026 The Feel Better Club",
     rights: "Feito com amor, para voce se sentir melhor.",
   },
   admin: {
@@ -221,7 +221,7 @@ const pt: Translations = {
   },
   marquee: ["Comunidade de rotinas saudaveis", "Pequeno passo, grande impacto", "Mover \u00b7 Respirar \u00b7 Sentir", "Tarifa \u00b7 Costa de la Luz"],
   methodEyebrow: "O Metodo",
-  methodTitle: "Quatro disciplinas, um flow. Voce escolhe.",
+  methodTitle: "Mova-se para Se Sentir Melhor - Juntos.",
   methodSub: "Montamos a semana como um ciclo completo — para que seu corpo e mente recebam o que precisam, quando precisam.",
   disciplines: [
     { n: "01", title: "Mobility Flow", desc: "Aula de alongamentos dinamicos e respiracao profunda. Ativa articulacoes, sistema linfatico e libera tensao. Cada sessao te ajuda a se sentir flexivel e presente, cercado pela brisa do mar e sol da manha.", tag: "" },
@@ -235,7 +235,7 @@ const pt: Translations = {
   moni: {
     eyebrow: "Conheca a Fundadora e Coach",
     quote: "\"Saude nao e uma linha de chegada — e o jeito que voce caminha o caminho.\"",
-    body: "O esporte sempre esteve no centro da minha vida. Comecei aos sete anos e me tornei jogadora profissional de basquete — uma experiencia que moldou minha disciplina diaria, o trabalho em equipe e a crenca de que metas grandes valem a pena.\n\nApos dez anos no esporte competitivo, mudei o foco para a universidade e me abri a novas formas de movimento: danca, tenis, esqui, musculacao e pilates. Cada disciplina me ensinou algo diferente sobre o corpo, seu ritmo e sua fluidez.\n\nEm 2016 descobri o kitesurf — uma paixao que mudou minha vida e acabou me levando a Tarifa em 2021. O mar, o vento, a liberdade — tudo parecia lar.\n\nHoje trago mais de 25 anos de experiencia esportiva para cada sessao. Como treinadora certificada na Europa, minha abordagem se baseia em energia positiva, tecnica precisa e conexao corpo-mente-alma. Uma atmosfera guiada pelo ritmo cria flow e arranca sorrisos — porque treinar tem que fazer bem.",
+    body: "O esporte esta no centro da minha vida desde os sete anos. Cresci como jogadora profissional de basquete, aprendendo disciplina, trabalho em equipe e a alegria de perseguir grandes metas.\n\nApos uma decada no esporte competitivo, explorei novas formas de me mover — danca, tenis, esqui, musculacao, pilates — cada uma me ensinando algo sobre o potencial do corpo.\n\nEm 2016 descobri o kitesurf, uma paixao que mudou tudo e acabou me trazendo a Tarifa. O mar, o vento, a liberdade — e ali que me sinto em casa.\n\nHoje trago mais de 25 anos de experiencia esportiva para cada sessao. Como treinadora certificada na Europa, adoro guiar pessoas a se reconectarem com seus corpos e descobrirem seu poder interior. Minha abordagem e toda sobre energia, precisao e criar o espaco que se sente bom e desafiador.\n\nFeel Better Club representa tudo o que valorizo: natureza, movimento, conexao, crescer juntos.\n\nSou grata por cada um de voces — o bem-estar de voces e a razao pela qual estou aqui.",
     sign: "Moni",
     role: "Fundadora \u00b7 Coach",
   },
@@ -251,7 +251,7 @@ const pt: Translations = {
   galleryLabels: ["Aula na praia \u00b7 nascer do sol", "Interior do estudio", "Moni \u00b7 dando aula", "Playa Chica", "Fun Burn Friday", "Sessao de alongamento"],
   testimonialsEyebrow: "Do clube",
   testimonialsTitle: "As pessoas que continuam voltando.",
-  cta: { line1: "Garanta sua aula", scriptLine: "Feel Better gratis.", desc: "Faca parte do Feel Better Club, siga a gente no Instagram, traga um amigo e confira seu inbox — vamos enviar os detalhes da proxima aula gratis perto de voce.", button: "Faca parte do Clube" },
+  cta: { line1: "Garanta sua aula", scriptLine: "Feel Better gratis.", desc: "Faca parte do Feel Better Club, siga a gente no Instagram e confira sua caixa de entrada para a proxima aula gratis perto de voce. Como membro, voce recebera ofertas exclusivas, acesso prioritario a aulas especiais e convites antecipados para eventos da comunidade.", button: "Faca parte do Clube" },
 };
 
 export default pt;

@@ -28,13 +28,6 @@ export default function Contact() {
         >
           {/* Left column */}
           <div>
-            <span
-              className="block mb-4 text-sm tracking-widest uppercase"
-              style={{ color: "var(--fb-green)", opacity: 0.5 }}
-            >
-              01 / 01
-            </span>
-
             <h2
               style={{
                 fontSize: "clamp(44px, 6vw, 88px)",
