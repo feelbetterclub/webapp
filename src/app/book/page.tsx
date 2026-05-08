@@ -46,6 +46,8 @@ function ReservarPageInner() {
   const [drawerSchedule, setDrawerSchedule] = useState<ScheduleWithAvailability | null>(null);
   const classParamHandled = useRef(false);
 
+  const [daysWithClasses, setDaysWithClasses] = useState<Set<string>>(new Set());
+
   const today = useMemo(() => todayISO(), []);
   const weekDates = useMemo(() => {
     const base = new Date();
@@ -112,6 +114,18 @@ function ReservarPageInner() {
       setSelectedDate(weekDates[0].iso);
     }
   }, [weekOffset, weekDates]);
+
+  // Fetch which days have classes for the visible week
+  useEffect(() => {
+    if (weekDates.length > 0) {
+      const from = weekDates[0].iso;
+      const to = weekDates[6].iso;
+      fetch(`/api/schedules/week?from=${from}&to=${to}`)
+        .then((r) => r.json())
+        .then((dates: string[]) => setDaysWithClasses(new Set(dates)))
+        .catch(() => {});
+    }
+  }, [weekDates]);
 
   const sortedSchedules = useMemo(
     () => [...schedules].sort((a, b) => a.startTime.localeCompare(b.startTime)),
@@ -181,6 +195,9 @@ function ReservarPageInner() {
                     }`}>
                     <span className="text-xs font-medium mb-1">{DAY_NAMES_SHORT[wd.dayOfWeek]}</span>
                     <span className="text-lg font-bold">{wd.date.getDate()}</span>
+                    {daysWithClasses.has(wd.iso) && (
+                      <span className={`w-1.5 h-1.5 rounded-full mt-0.5 ${isSelected ? "bg-brand-cream" : "bg-brand-teal"}`} />
+                    )}
                   </button>
                 );
               })}
