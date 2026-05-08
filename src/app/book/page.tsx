@@ -139,9 +139,7 @@ export default function ReservarPage() {
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">{t.booking.loading}</div>
           ) : sortedSchedules.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground bg-white rounded-2xl border border-brand-sage/30">
-              {t.booking.noClasses}
-            </div>
+            <OnDemandForm />
           ) : (
             <div className="space-y-4">
               {sortedSchedules.map((s) => (
