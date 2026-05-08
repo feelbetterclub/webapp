@@ -125,14 +125,11 @@ export default function About() {
           >
             {/* Photo */}
             <div className="rounded-[28px] overflow-hidden w-full min-h-[400px]">
-              <picture>
-                <source media="(max-width: 899px)" srcSet="/meet-moni.webp" />
-                <img
-                  src="/meet-moni-2.webp"
-                  alt="Moni — Founder & Coach"
-                  className="w-full h-full object-cover"
-                />
-              </picture>
+              <img
+                src="/meet-moni.webp"
+                alt="Moni — Founder & Coach"
+                className="w-full h-full object-cover"
+              />
             </div>
 
             {/* Text */}
