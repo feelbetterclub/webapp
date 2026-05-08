@@ -77,7 +77,7 @@ export default function Hero() {
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="h-52 rounded-[28px] bg-fb-green-mist/40 animate-pulse"
+                className="h-52 rounded-2xl bg-fb-green-mist/40 animate-pulse"
               />
             ))}
           </div>
@@ -168,7 +168,7 @@ function ClassCard({
   return (
     <Link
       href="/book"
-      className="block rounded-[28px] overflow-hidden relative transition-transform hover:scale-[1.02] hover:shadow-lg"
+      className="block rounded-2xl overflow-hidden relative transition-transform hover:scale-[1.02] hover:shadow-lg"
       style={{ minHeight: 220 }}
     >
       {/* Background image */}
