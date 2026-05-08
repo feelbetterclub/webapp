@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
@@ -45,6 +45,16 @@ export default function Hero() {
   const { t, lang } = useI18n();
   const [classes, setClasses] = useState<UpcomingClass[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || classes.length === 0) return;
+    const cardWidth = el.scrollWidth / classes.length;
+    const idx = Math.round(el.scrollLeft / cardWidth);
+    setActiveIdx(Math.min(idx, classes.length - 1));
+  }, [classes.length]);
 
   const h = t.hero;
   const primaryCta = h.primary ?? h.cta1 ?? "Book your first class";
@@ -99,7 +109,11 @@ export default function Hero() {
             </div>
 
             {/* Mobile: horizontal scroll */}
-            <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 scrollbar-hide">
+            <div
+              ref={scrollRef}
+              onScroll={handleScroll}
+              className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 scrollbar-hide"
+            >
               {classes.map((cls, i) => (
                 <div key={cls.id} className="snap-center shrink-0 w-[85vw]">
                   <ClassCard
@@ -110,6 +124,19 @@ export default function Hero() {
                 </div>
               ))}
             </div>
+            {/* Dot indicators */}
+            {classes.length > 1 && (
+              <div className="md:hidden flex items-center justify-center gap-2 mt-3">
+                {classes.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`rounded-full transition-all ${
+                      i === activeIdx ? "w-2.5 h-2.5 bg-fb-green" : "w-1.5 h-1.5 bg-fb-green/30"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
             <style>{`.scrollbar-hide::-webkit-scrollbar{display:none}.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}`}</style>
 
             {/* CTA below banners */}
