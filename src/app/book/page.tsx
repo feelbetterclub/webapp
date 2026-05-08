@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BookingDrawer } from "@/components/BookingDrawer";
@@ -26,7 +27,16 @@ function getWeekDates(base: Date) {
 }
 
 export default function ReservarPage() {
+  return (
+    <Suspense>
+      <ReservarPageInner />
+    </Suspense>
+  );
+}
+
+function ReservarPageInner() {
   const { t, lang } = useI18n();
+  const searchParams = useSearchParams();
   const [weekOffset, setWeekOffset] = useState(0);
   const initialDay = (() => { const d = new Date().getDay(); return d === 0 ? 7 : d; })();
   const [selectedDay, setSelectedDay] = useState<number | null>(initialDay);
@@ -34,6 +44,7 @@ export default function ReservarPage() {
   const [schedules, setSchedules] = useState<ScheduleWithAvailability[]>([]);
   const [loading, setLoading] = useState(false);
   const [drawerSchedule, setDrawerSchedule] = useState<ScheduleWithAvailability | null>(null);
+  const classParamHandled = useRef(false);
 
   const today = useMemo(() => todayISO(), []);
   const weekDates = useMemo(() => {
@@ -42,8 +53,54 @@ export default function ReservarPage() {
     return getWeekDates(base);
   }, [weekOffset]);
 
-  // Sync selectedDay/selectedDate when weekOffset changes
+  // Handle ?class= query param: find next available date for that discipline
   useEffect(() => {
+    if (classParamHandled.current) return;
+    const classParam = searchParams.get("class");
+    if (!classParam) return;
+    classParamHandled.current = true;
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/schedules/next?className=${encodeURIComponent(classParam)}`);
+        const data = await res.json();
+        if (!data.date) return;
+
+        // Calculate weekOffset from today to the target date
+        const todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
+        const targetDate = new Date(data.date + "T00:00:00");
+
+        // Find monday of today's week
+        const todayDay = todayDate.getDay();
+        const todayMonday = new Date(todayDate);
+        todayMonday.setDate(todayDate.getDate() - (todayDay === 0 ? 6 : todayDay - 1));
+
+        // Find monday of target week
+        const targetDay = targetDate.getDay();
+        const targetMonday = new Date(targetDate);
+        targetMonday.setDate(targetDate.getDate() - (targetDay === 0 ? 6 : targetDay - 1));
+
+        const diffMs = targetMonday.getTime() - todayMonday.getTime();
+        const newWeekOffset = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
+
+        setWeekOffset(newWeekOffset);
+        setSelectedDay(data.dayOfWeek);
+        setSelectedDate(data.date);
+      } catch {
+        // Fallback: keep default behavior (today)
+      }
+    })();
+  }, [searchParams]);
+
+  // Sync selectedDay/selectedDate when weekOffset changes (skip if class param set it)
+  useEffect(() => {
+    if (classParamHandled.current) {
+      // After the class param sets the initial state, clear the flag so
+      // subsequent weekOffset changes (user navigation) work normally
+      classParamHandled.current = false;
+      return;
+    }
     if (weekOffset === 0) {
       // Current week: select today
       const d = new Date().getDay();

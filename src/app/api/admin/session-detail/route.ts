@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     const [bookingsRes, waitlistRes] = await Promise.all([
       client.execute({
-        sql: `SELECT id, user_name AS userName, user_email AS userEmail, user_phone AS userPhone, status, created_at AS createdAt
+        sql: `SELECT id, user_name AS userName, user_email AS userEmail, user_phone AS userPhone, status, paid, payment_method AS paymentMethod, created_at AS createdAt
               FROM bookings WHERE schedule_id = ? AND date = ? AND status = ?
               ORDER BY created_at`,
         args: [Number(scheduleId), date, BOOKING_STATUS.CONFIRMED],
@@ -117,6 +117,37 @@ export async function POST(req: NextRequest) {
       await tx.rollback();
       throw txErr;
     }
+  } catch (err) {
+    return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
+  }
+}
+
+/**
+ * PATCH /api/admin/session-detail
+ * Toggle payment status for a booking.
+ * Body: { bookingId, paid, paymentMethod? }
+ */
+export async function PATCH(req: NextRequest) {
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
+    const { bookingId, paid, paymentMethod } = await req.json();
+    if (bookingId == null || paid == null) {
+      return NextResponse.json({ error: "bookingId and paid required" }, { status: 400 });
+    }
+
+    const validMethods = ["cash", "card", "revolut", null];
+    if (paymentMethod !== undefined && !validMethods.includes(paymentMethod)) {
+      return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
+    }
+
+    await client.execute({
+      sql: "UPDATE bookings SET paid = ?, payment_method = ? WHERE id = ?",
+      args: [paid ? 1 : 0, paid ? (paymentMethod || null) : null, bookingId],
+    });
+
+    return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: "Internal error", detail: String(err) }, { status: 500 });
   }

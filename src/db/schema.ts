@@ -36,6 +36,8 @@ export const bookings = sqliteTable("bookings", {
   userPhone: text("user_phone"),
   status: text("status").notNull().default("confirmed"),
   cancelToken: text("cancel_token"),
+  paid: integer("paid").default(0), // 0 = unpaid, 1 = paid
+  paymentMethod: text("payment_method"), // cash | card | revolut
   createdAt: text("created_at").notNull(),
 });
 

@@ -139,6 +139,8 @@ export async function ensureTables() {
   await safeAlter("ALTER TABLE classes ADD COLUMN queue_capacity INTEGER NOT NULL DEFAULT 5");
   await safeAlter("ALTER TABLE schedules_v2 ADD COLUMN queue_capacity INTEGER");
   await safeAlter("ALTER TABLE community_members ADD COLUMN interests TEXT");
+  await safeAlter("ALTER TABLE bookings ADD COLUMN paid INTEGER DEFAULT 0");
+  await safeAlter("ALTER TABLE bookings ADD COLUMN payment_method TEXT");
 
   // Settings table for admin toggles
   await client.execute(`

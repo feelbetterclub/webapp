@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         SELECT
           s.id, s.date, s.start_time as startTime, s.instructor,
           c.name as className, c.location, c.location_url as locationUrl,
-          c.max_capacity as maxCapacity,
+          c.max_capacity as maxCapacity, s.price,
           COALESCE(b.cnt, 0) as bookingCount,
           COALESCE(w.cnt, 0) as waitlistCount
         FROM schedules_v2 s

@@ -13,6 +13,7 @@ import {
   MessageSquare,
   MessageCircle,
   BarChart3,
+  DollarSign,
   ArrowLeft,
   Menu,
   X,
@@ -28,6 +29,7 @@ const links = [
   { href: "/admin/contact-requests", label: "Contact Requests", icon: MessageSquare },
   { href: "/admin/requests", label: "Class Requests", icon: MessageCircle },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/admin/revenue", label: "Revenue", icon: DollarSign },
 ];
 
 export default function AdminSidebar() {

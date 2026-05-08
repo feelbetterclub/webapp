@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone, Trash2 } from "lucide-react";
+import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone, Trash2, Check, CircleDollarSign } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -18,6 +18,7 @@ interface UpcomingSession {
   bookingCount: number;
   maxCapacity: number;
   waitlistCount: number;
+  price: number | null;
 }
 
 interface SessionStudent {
@@ -27,6 +28,8 @@ interface SessionStudent {
   userPhone: string | null;
   status: string;
   position?: number;
+  paid?: number;
+  paymentMethod?: string | null;
 }
 
 interface SessionDetail {
@@ -45,6 +48,7 @@ export default function AdminDashboard() {
   const [sessionDetail, setSessionDetail] = useState<SessionDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [promoting, setPromoting] = useState<number | null>(null);
+  const [togglingPayment, setTogglingPayment] = useState<number | null>(null);
   const [popupEnabled, setPopupEnabled] = useState(true);
 
   useEffect(() => {
@@ -183,6 +187,40 @@ export default function AdminDashboard() {
     } catch { /* ignore */ }
   }
 
+  async function togglePayment(bookingId: number, currentPaid: number, method: string | null, session: UpcomingSession) {
+    setTogglingPayment(bookingId);
+    const newPaid = currentPaid ? 0 : 1;
+    try {
+      const res = await fetch("/api/admin/session-detail", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId,
+          paid: newPaid,
+          paymentMethod: newPaid ? (method || "cash") : null,
+        }),
+      });
+      if (res.ok) {
+        const detailRes = await fetch(`/api/admin/session-detail?scheduleId=${session.id}&date=${session.date}`);
+        if (detailRes.ok) setSessionDetail(await detailRes.json());
+      }
+    } catch { /* ignore */ } finally {
+      setTogglingPayment(null);
+    }
+  }
+
+  async function changePaymentMethod(bookingId: number, newMethod: string, session: UpcomingSession) {
+    try {
+      await fetch("/api/admin/session-detail", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId, paid: 1, paymentMethod: newMethod }),
+      });
+      const detailRes = await fetch(`/api/admin/session-detail?scheduleId=${session.id}&date=${session.date}`);
+      if (detailRes.ok) setSessionDetail(await detailRes.json());
+    } catch { /* ignore */ }
+  }
+
   if (loading) return <Loading />;
 
   const statCards = [
@@ -279,6 +317,19 @@ export default function AdminDashboard() {
                                   <p className="text-xs text-muted-foreground py-3">Loading...</p>
                                 ) : sessionDetail ? (
                                   <div className="pt-3 space-y-4">
+                                    {/* Revenue summary */}
+                                    {s.price != null && s.price > 0 && sessionDetail.bookings.length > 0 && (
+                                      <div className="flex items-center gap-3 mb-3 px-1">
+                                        <CircleDollarSign className="w-4 h-4 text-green-600" />
+                                        <span className="text-sm font-medium text-brand-deep">
+                                          {sessionDetail.bookings.filter(b => b.paid).length}/{sessionDetail.bookings.length} paid
+                                        </span>
+                                        <span className="text-sm text-green-600 font-semibold">
+                                          {((sessionDetail.bookings.filter(b => b.paid).length * s.price!) / 100).toFixed(2)} EUR collected
+                                        </span>
+                                      </div>
+                                    )}
+
                                     {/* Bookings */}
                                     <div>
                                       <h4 className="text-xs font-semibold text-brand-deep uppercase tracking-wider mb-2">
@@ -297,6 +348,33 @@ export default function AdminDashboard() {
                                               <div className="flex items-center gap-3 text-xs text-muted-foreground pl-8 sm:pl-0">
                                                 <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {b.userEmail}</span>
                                                 {b.userPhone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {b.userPhone}</span>}
+                                                {/* Payment toggle */}
+                                                <button
+                                                  type="button"
+                                                  onClick={() => togglePayment(b.id, b.paid || 0, b.paymentMethod || null, s)}
+                                                  disabled={togglingPayment === b.id}
+                                                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors font-medium ${
+                                                    b.paid
+                                                      ? "bg-green-100 text-green-700 hover:bg-green-200"
+                                                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                                                  } disabled:opacity-50`}
+                                                  title={b.paid ? "Mark as unpaid" : "Mark as paid"}
+                                                >
+                                                  <Check className="w-3 h-3" />
+                                                  {togglingPayment === b.id ? "..." : b.paid ? "Paid" : "Unpaid"}
+                                                </button>
+                                                {/* Payment method selector (only when paid) */}
+                                                {b.paid ? (
+                                                  <select
+                                                    value={b.paymentMethod || "cash"}
+                                                    onChange={(e) => changePaymentMethod(b.id, e.target.value, s)}
+                                                    className="text-xs bg-white border border-brand-sage/30 rounded px-1.5 py-0.5 text-brand-deep"
+                                                  >
+                                                    <option value="cash">Cash</option>
+                                                    <option value="card">Card</option>
+                                                    <option value="revolut">Revolut</option>
+                                                  </select>
+                                                ) : null}
                                                 <button
                                                   type="button"
                                                   onClick={() => deleteBooking(b.id, s)}
