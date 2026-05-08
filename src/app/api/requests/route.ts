@@ -31,7 +31,8 @@ export async function POST(req: NextRequest) {
       args: [name, email, phone || null, groupSize || null, preferredDate || null, notes || null, new Date().toISOString()],
     });
 
-    sendOnDemandConfirmation({ to: email, userName: name, groupSize: groupSize || undefined, preferredDate: preferredDate || undefined })
+    const lang = String(body.lang || "en").trim();
+    sendOnDemandConfirmation({ to: email, userName: name, groupSize: groupSize || undefined, preferredDate: preferredDate || undefined, lang })
       .catch((err) => console.error("[email] sendOnDemandConfirmation failed:", err));
     sendOnDemandLeadNotification({ userName: name, userEmail: email, userPhone: phone || undefined, groupSize: groupSize || undefined, preferredDate: preferredDate || undefined, notes: notes || undefined })
       .catch((err) => console.error("[email] sendOnDemandLeadNotification failed:", err));

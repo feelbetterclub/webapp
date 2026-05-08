@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
     });
 
     // Fire and forget — email failure must not break signup
-    sendWelcomeEmail(email, name).catch((e) =>
+    const lang = String(body.lang || "en").trim();
+    sendWelcomeEmail(email, name, lang).catch((e) =>
       console.error("[community/signup] welcome email failed:", e)
     );
 

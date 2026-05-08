@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Calendar, Clock, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Clock, MapPin } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 
 interface UpcomingClass {
@@ -44,7 +44,6 @@ function formatTime(time: string): string {
 export default function Hero() {
   const { t, lang } = useI18n();
   const [classes, setClasses] = useState<UpcomingClass[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const h = t.hero;
@@ -59,9 +58,6 @@ export default function Hero() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
-
-  const prev = () => setActiveIndex((i) => (i === 0 ? classes.length - 1 : i - 1));
-  const next = () => setActiveIndex((i) => (i === classes.length - 1 ? 0 : i + 1));
 
   return (
     <section className="bg-fb-paper pt-14 pb-8">
@@ -102,35 +98,19 @@ export default function Hero() {
               ))}
             </div>
 
-            {/* Mobile: single card with arrows */}
-            <div className="md:hidden">
-              <ClassCard
-                cls={classes[activeIndex]}
-                image={CARD_IMAGES[activeIndex % CARD_IMAGES.length]}
-                lang={lang}
-              />
-              {classes.length > 1 && (
-                <div className="flex items-center justify-center gap-4 mt-4">
-                  <button
-                    onClick={prev}
-                    aria-label="Previous class"
-                    className="p-2 rounded-full border border-fb-green/20 text-fb-green hover:bg-fb-green-mist transition-colors"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <span className="text-fb-mute text-sm font-medium">
-                    {activeIndex + 1} / {classes.length}
-                  </span>
-                  <button
-                    onClick={next}
-                    aria-label="Next class"
-                    className="p-2 rounded-full border border-fb-green/20 text-fb-green hover:bg-fb-green-mist transition-colors"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
+            {/* Mobile: horizontal scroll */}
+            <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 scrollbar-hide">
+              {classes.map((cls, i) => (
+                <div key={cls.id} className="snap-center shrink-0 w-[85vw]">
+                  <ClassCard
+                    cls={cls}
+                    image={CARD_IMAGES[i % CARD_IMAGES.length]}
+                    lang={lang}
+                  />
                 </div>
-              )}
+              ))}
             </div>
+            <style>{`.scrollbar-hide::-webkit-scrollbar{display:none}.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}`}</style>
 
             {/* CTA below banners */}
             <div className="flex justify-center mt-8">

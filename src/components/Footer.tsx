@@ -47,7 +47,7 @@ export default function Footer() {
   const tag = ft.tag || "Small step — big impact";
   const colA = ft.colA || {
     title: "Classes",
-    items: ["Mobility", "Strength", "Pilates", "Fun Burn", "Full schedule"],
+    items: ["Mobility", "Strength", "Pilates", "Fun Burn"],
   };
   const colB = ft.colB || {
     title: "The Club",
@@ -65,7 +65,7 @@ export default function Footer() {
     <>
       {/* ════════ Testimonials section (separate from footer) ════════ */}
       {testimonials.length > 0 && (
-        <section className="bg-[var(--fb-bone)] py-20 px-4 sm:px-6 lg:px-8">
+        <section id="testimonials" className="bg-[var(--fb-bone)] py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {testimonials.slice(0, 6).map((tm) => (
@@ -128,7 +128,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 {colA.items.map((item: string) => (
                   <li key={item}>
-                    <a href="/book" className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors">
+                    <a href={`/book?class=${encodeURIComponent(item)}`} className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors">
                       {item}
                     </a>
                   </li>
@@ -143,7 +143,7 @@ export default function Footer() {
               </h4>
               <ul className="space-y-2">
                 {colB.items.map((item: string, i: number) => {
-                  const hrefs = ["/#about", "/#method", "/#rituals", "/contact", "/join"];
+                  const hrefs = ["/#about", "/#method", "/#rituals", "/contact", "/join", "/#testimonials"];
                   return (
                     <li key={item}>
                       <a href={hrefs[i] || "/"} className="text-sm text-[var(--fb-paper)]/[0.85] hover:text-white transition-colors">

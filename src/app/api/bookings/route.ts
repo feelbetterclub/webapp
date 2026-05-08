@@ -45,7 +45,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { scheduleId, date, userName, userEmail, userPhone } = body;
+    const { scheduleId, date, userName, userEmail, userPhone, lang: rawLang } = body;
+    const lang = String(rawLang || "en").trim();
 
     if (!scheduleId || !date || !userName || !userEmail) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -154,6 +155,7 @@ export async function POST(req: NextRequest) {
         time: scheduleInfo.startTime,
         classType: scheduleInfo.className,
         cancelUrl,
+        lang,
       }).catch((e) => console.error("[bookings] confirmation email failed:", e));
     }
 
@@ -165,6 +167,7 @@ export async function POST(req: NextRequest) {
         time: scheduleInfo.startTime,
         classType: scheduleInfo.className,
         position: waitlistPosition,
+        lang,
       }).catch((e) => console.error("[bookings] waitlist email failed:", e));
       return NextResponse.json({ success: true, waitlisted: true, position: waitlistPosition }, { status: 201 });
     }

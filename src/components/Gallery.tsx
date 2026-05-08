@@ -9,6 +9,9 @@ const cellConfig = [
   { span: "col-span-3", aspect: "aspect-square", mt: "", img: "/gallery-4.webp" },
   { span: "col-span-6", aspect: "aspect-[16/10]", mt: "", img: "/gallery-5.webp" },
   { span: "col-span-3", aspect: "aspect-square", mt: "mt-5", img: "/gallery-6.webp" },
+  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", img: "/gallery-7.webp" },
+  { span: "col-span-4", aspect: "aspect-square", mt: "mt-6", img: "/gallery-8.webp" },
+  { span: "col-span-4", aspect: "aspect-[4/5]", mt: "", img: "/gallery-9.webp" },
 ];
 
 export default function Gallery() {
@@ -20,14 +23,6 @@ export default function Gallery() {
   const sub =
     ti.gallerySub ||
     "Classes on the sand, in the studio, between pines and wind.";
-  const labels = ti.galleryLabels || [
-    "Beach class · sunrise",
-    "Studio interior",
-    "Moni · coaching",
-    "Playa Chica",
-    "Fun Burn Friday",
-    "Stretch session",
-  ];
 
   return (
     <section id="gallery" className="py-20 bg-fb-bone">
@@ -59,14 +54,10 @@ export default function Gallery() {
               >
                 <img
                   src={cell.img}
-                  alt={labels[i] ?? ""}
+                  alt=""
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <span className="absolute bottom-3 left-4 text-white/90 text-sm font-medium drop-shadow-sm">
-                  {labels[i] ?? ""}
-                </span>
               </div>
             </div>
           ))}

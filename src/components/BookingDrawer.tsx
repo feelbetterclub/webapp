@@ -65,6 +65,7 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
           userName: form.userName,
           userEmail: form.userEmail,
           userPhone: form.userPhone,
+          lang,
         }),
       });
 

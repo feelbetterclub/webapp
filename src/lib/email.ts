@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getEmailStrings } from "./email-i18n";
 
 /**
  * Email service for Feel Better Club.
@@ -62,19 +63,19 @@ function wrapper(inner: string): string {
 
 // ---------- Welcome email (community signup) ----------
 
-export async function sendWelcomeEmail(to: string, name: string): Promise<void> {
+export async function sendWelcomeEmail(to: string, name: string, lang?: string): Promise<void> {
+  const s = getEmailStrings(lang).welcome;
   const safeName = escape(name || "there");
-  const subject = "Welcome — your outdoor training journey starts here";
   const inner = `
-    <p>Hi ${safeName},</p>
-    <p>I'm genuinely excited to have you with us. The Feel Better Club was created with one simple intention: to bring people together through movement, nature, and the kind of energy that only shared effort can create.</p>
-    <p>Every session is designed to feel uplifting and connected — whether we're training on the beach at sunrise, doing mobility at sunset, or challenging ourselves in the forest at midday. My goal is to make each workout something you look forward to, not just for the training itself, but for the atmosphere and the people around you.</p>
-    <p>By joining, you're not just signing up for workouts. You're becoming part of a Feel Better Community that supports each other, grows together, and enjoys the outdoors as our "gym". I'm grateful to have you with us.</p>
-    <p>As a welcome gift, you'll receive the details about date and time for your free outdoor class in a separate message shortly. I can't wait for you to experience it and give us feedback.</p>
-    <p>As a member you can easily book a class or manage your reservations. You also get premium access to special events, sport nutrition tips and holistic health rituals. And of course, you can always reach out if you have questions or ideas — this community grows stronger when we build it together.</p>
-    <p style="margin-top:32px;">See you outside.<br/><strong>Moni</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
+    <p>${s.greeting(safeName)}</p>
+    <p>${s.p1}</p>
+    <p>${s.p2}</p>
+    <p>${s.p3}</p>
+    <p>${s.p4}</p>
+    <p>${s.p5}</p>
+    <p style="margin-top:32px;">${s.signoff}<br/><strong>Moni</strong><br/><em>${s.role}</em></p>
   `;
-  await send(to, subject, wrapper(inner));
+  await send(to, s.subject, wrapper(inner));
 }
 
 // ---------- Waitlist confirmation email ----------
@@ -86,30 +87,31 @@ export interface WaitlistConfirmationData {
   time: string;
   classType: string;
   position: number;
+  lang?: string;
 }
 
 export async function sendWaitlistConfirmation(data: WaitlistConfirmationData): Promise<void> {
-  const { to, userName, date, time, classType } = data;
-  const subject = "You're on the Waitlist — We'll Let You Know";
+  const { to, userName, date, time, classType, lang } = data;
+  const s = getEmailStrings(lang).waitlist;
   const safeName = escape(userName || "there");
   const safeClass = escape(classType);
   const safeDate = escape(date);
   const safeTime = escape(time);
 
   const inner = `
-    <p>Hi ${safeName},</p>
-    <p>Thanks for your interest in joining us! The class is currently full, but you're on the waitlist.</p>
-    <p><strong>Your waitlist details:</strong></p>
+    <p>${s.greeting(safeName)}</p>
+    <p>${s.intro}</p>
+    <p><strong>${s.detailsLabel}</strong></p>
     <ul style="padding-left:20px;margin:12px 0;">
-      <li><strong>Class:</strong> ${safeClass}</li>
-      <li><strong>Date:</strong> ${safeDate}</li>
-      <li><strong>Time:</strong> ${safeTime}</li>
-      <li><strong>Status:</strong> On the waitlist</li>
+      <li><strong>${s.classLabel}</strong> ${safeClass}</li>
+      <li><strong>${s.dateLabel}</strong> ${safeDate}</li>
+      <li><strong>${s.timeLabel}</strong> ${safeTime}</li>
+      <li><strong>${s.statusLabel}</strong> ${s.statusValue}</li>
     </ul>
-    <p>If a spot opens up, you'll receive a confirmation email automatically with all the details and a cancellation link. No action needed from your side — just keep your fingers crossed!</p>
-    <p style="margin-top:32px;">See you soon, hopefully!<br/><strong>Moni</strong></p>
+    <p>${s.body}</p>
+    <p style="margin-top:32px;">${s.signoff}<br/><strong>Moni</strong></p>
   `;
-  await send(to, subject, wrapper(inner));
+  await send(to, s.subject, wrapper(inner));
 }
 
 // ---------- Booking confirmation email ----------
@@ -121,37 +123,38 @@ export interface BookingConfirmationData {
   time: string; // "09:00"
   classType: string;
   cancelUrl?: string;
+  lang?: string;
 }
 
 export async function sendBookingConfirmation(data: BookingConfirmationData): Promise<void> {
-  const { to, userName, date, time, classType, cancelUrl } = data;
-  const subject = "Your Spot Is Confirmed — See You Outdoors";
+  const { to, userName, date, time, classType, cancelUrl, lang } = data;
+  const s = getEmailStrings(lang).booking;
   const safeName = escape(userName || "there");
   const safeClass = escape(classType);
   const safeDate = escape(date);
   const safeTime = escape(time);
 
   const cancelBlock = cancelUrl
-    ? `<p>If your plans change, you can cancel up to 12 hours before the class using the link below:</p>
+    ? `<p>${s.cancelIntro}</p>
        <p><a href="${cancelUrl}" style="color:#0d5e42;text-decoration:underline;">${escape(cancelUrl)}</a></p>`
     : "";
 
   const inner = `
-    <p>Hi ${safeName},</p>
-    <p>Thank you for choosing Feel Better Club and your reservation. I am excited to train with you. You are the reason why I show up every day to create the space where you can discover your inner Power and Connect with your true potential.</p>
-    <p><strong>Your booking:</strong></p>
+    <p>${s.greeting(safeName)}</p>
+    <p>${s.intro}</p>
+    <p><strong>${s.detailsLabel}</strong></p>
     <ul style="padding-left:20px;margin:12px 0;">
-      <li><strong>Date:</strong> ${safeDate}</li>
-      <li><strong>Time:</strong> ${safeTime}</li>
-      <li><strong>Class:</strong> ${safeClass}</li>
+      <li><strong>${s.dateLabel}</strong> ${safeDate}</li>
+      <li><strong>${s.timeLabel}</strong> ${safeTime}</li>
+      <li><strong>${s.classLabel}</strong> ${safeClass}</li>
     </ul>
     ${cancelBlock}
-    <p style="margin-top:32px;">Let's grow and Feel Better — together :)<br/><strong>Moni</strong></p>
+    <p style="margin-top:32px;">${s.signoff}<br/><strong>Moni</strong></p>
   `;
-  await send(to, subject, wrapper(inner));
+  await send(to, s.subject, wrapper(inner));
 }
 
-// ---------- Contact form notification (to coach) ----------
+// ---------- Contact form notification (to coach) — always English ----------
 
 const COACH_EMAIL = "feelbettermove@gmail.com";
 
@@ -191,7 +194,7 @@ export async function sendContactNotification(data: ContactNotificationData): Pr
   await send(COACH_EMAIL, subject, wrapper(inner));
 }
 
-// ---------- Anonymous message notification (to coach) ----------
+// ---------- Anonymous message notification (to coach) — always English ----------
 
 export interface MessageNotificationData {
   text: string;
@@ -226,39 +229,40 @@ export interface OnDemandConfirmationData {
   userName: string;
   groupSize?: string;
   preferredDate?: string;
+  lang?: string;
 }
 
 export async function sendOnDemandConfirmation(data: OnDemandConfirmationData): Promise<void> {
-  const { to, userName, groupSize, preferredDate } = data;
-  const subject = "Your Request Has Been Received — Feel Better Club";
+  const { to, userName, groupSize, preferredDate, lang } = data;
+  const s = getEmailStrings(lang).onDemandConfirmation;
   const safeName = escape(userName || "there");
 
   const detailRows = [
-    groupSize ? `<li><strong>Group size:</strong> ${escape(groupSize)}</li>` : "",
-    preferredDate ? `<li><strong>Preferred date:</strong> ${escape(preferredDate)}</li>` : "",
+    groupSize ? `<li><strong>${s.groupSizeLabel}</strong> ${escape(groupSize)}</li>` : "",
+    preferredDate ? `<li><strong>${s.preferredDateLabel}</strong> ${escape(preferredDate)}</li>` : "",
   ]
     .filter(Boolean)
     .join("\n");
 
   const detailBlock = detailRows
-    ? `<p><strong>Your request details:</strong></p>
+    ? `<p><strong>${s.detailsLabel}</strong></p>
        <ul style="padding-left:20px;margin:12px 0;">
          ${detailRows}
        </ul>`
     : "";
 
   const inner = `
-    <p>Hi ${safeName},</p>
-    <p>Thank you for reaching out! We've received your on-demand class request and we're excited to make it happen.</p>
+    <p>${s.greeting(safeName)}</p>
+    <p>${s.intro}</p>
     ${detailBlock}
-    <p>Moni will review your request and get back to you shortly to confirm the details and arrange everything just right for you.</p>
-    <p>In the meantime, if you have any questions feel free to reply to this email.</p>
-    <p style="margin-top:32px;">See you outside!<br/><strong>Moni</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
+    <p>${s.followUp}</p>
+    <p>${s.meanwhile}</p>
+    <p style="margin-top:32px;">${s.signoff}<br/><strong>Moni</strong><br/><em>${s.role}</em></p>
   `;
-  await send(to, subject, wrapper(inner));
+  await send(to, s.subject, wrapper(inner));
 }
 
-// ---------- On-demand class request — coach lead notification (FBC-71) ----------
+// ---------- On-demand class request — coach lead notification (FBC-71) — always English ----------
 
 export interface OnDemandLeadData {
   userName: string;
@@ -297,14 +301,14 @@ export async function sendOnDemandLeadNotification(data: OnDemandLeadData): Prom
 
 // ---------- Contact form — auto-reply to user ----------
 
-export async function sendContactAutoReply(to: string, name: string): Promise<void> {
+export async function sendContactAutoReply(to: string, name: string, lang?: string): Promise<void> {
+  const s = getEmailStrings(lang).contactAutoReply;
   const safeName = escape(name || "there");
-  const subject = "We Got Your Message — Feel Better Club";
   const inner = `
-    <p>Hi ${safeName},</p>
-    <p>Thank you for reaching out! We've received your message and Moni will get back to you as soon as possible.</p>
-    <p>In the meantime, feel free to check out our classes and upcoming sessions at <a href="https://thefeelbetterclub.com/book" style="color:#0d5e42;text-decoration:underline;">thefeelbetterclub.com</a>.</p>
-    <p style="margin-top:32px;">See you outside!<br/><strong>Moni</strong><br/><em>Feel Better Coach &amp; Founder</em></p>
+    <p>${s.greeting(safeName)}</p>
+    <p>${s.body}</p>
+    <p>${s.cta} <a href="https://thefeelbetterclub.com/book" style="color:#0d5e42;text-decoration:underline;">${s.ctaLabel}</a>.</p>
+    <p style="margin-top:32px;">${s.signoff}<br/><strong>Moni</strong><br/><em>${s.role}</em></p>
   `;
-  await send(to, subject, wrapper(inner));
+  await send(to, s.subject, wrapper(inner));
 }

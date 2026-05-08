@@ -52,8 +52,9 @@ export async function POST(req: NextRequest) {
     sendContactNotification({ name, email, phone: phone || undefined, preferredContact, message })
       .catch(e => console.error("[contact] email notification failed:", e));
 
-    // Auto-reply to the user
-    sendContactAutoReply(email, name)
+    // Auto-reply to the user — in the user's language
+    const lang = String(body.lang || "en").trim();
+    sendContactAutoReply(email, name, lang)
       .catch(e => console.error("[contact] auto-reply failed:", e));
 
     return NextResponse.json({ success: true }, { status: 201 });

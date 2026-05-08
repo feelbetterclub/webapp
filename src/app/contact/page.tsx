@@ -26,7 +26,7 @@ const INITIAL_FORM: FormState = {
 };
 
 export default function ContactPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
@@ -52,7 +52,7 @@ export default function ContactPage() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, lang }),
       });
 
       if (!res.ok) {

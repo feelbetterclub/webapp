@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useI18n } from "@/lib/i18n/context";
 
 interface FormState {
   name: string;
@@ -24,12 +25,13 @@ const INITIAL_FORM: FormState = {
 
 const BENEFITS = [
   "Free outdoor training session to try us out",
-  "Weekly updates on classes and events",
   "Priority access to special workshops and rituals",
+  "Exclusive offers and early invitations to community events",
   "Be part of a community that moves, breathes and grows together",
 ];
 
 export default function JoinPage() {
+  const { lang } = useI18n();
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "alreadyMember" | "error">("idle");
@@ -58,6 +60,7 @@ export default function JoinPage() {
           phone: form.phone,
           source: "join-page",
           interests: form.interests || undefined,
+          lang,
         }),
       });
 

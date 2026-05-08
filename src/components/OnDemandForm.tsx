@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useI18n } from "@/lib/i18n/context";
 
 export function OnDemandForm() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +25,7 @@ export function OnDemandForm() {
           groupSize: fd.get("groupSize"),
           preferredDate: fd.get("preferredDate"),
           notes: fd.get("notes"),
+          lang,
         }),
       });
       if (!res.ok) {
