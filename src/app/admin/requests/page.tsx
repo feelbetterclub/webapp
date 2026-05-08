@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Phone, Users, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { Mail, Phone, Users, Calendar, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 
 interface ClassRequest {
@@ -154,6 +154,21 @@ export default function RequestsPage() {
                         year: "numeric",
                       })}
                     </span>
+                    <button
+                      onClick={async () => {
+                        if (!confirm("Delete this request permanently?")) return;
+                        const res = await fetch("/api/admin/requests", {
+                          method: "DELETE",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ id: r.id }),
+                        });
+                        if (res.ok) setRequests((prev) => prev.filter((x) => x.id !== r.id));
+                      }}
+                      className="text-red-400 hover:text-red-600 transition-colors p-1"
+                      title="Delete request"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 

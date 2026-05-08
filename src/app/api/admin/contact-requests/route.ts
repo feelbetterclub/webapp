@@ -52,3 +52,28 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }
+
+/**
+ * DELETE /api/admin/contact-requests — Delete a contact message.
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+
+    const body = await req.json();
+    const id = Number(body.id);
+    if (!id) {
+      return NextResponse.json({ error: "id required" }, { status: 400 });
+    }
+
+    await client.execute({
+      sql: "DELETE FROM contact_messages WHERE id = ?",
+      args: [id],
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}

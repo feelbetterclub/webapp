@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Mail, Phone, ChevronDown, ChevronUp, Archive, Eye } from "lucide-react";
+import { Mail, Phone, ChevronDown, ChevronUp, Archive, Eye, Trash2 } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -248,6 +248,21 @@ export default function ContactRequestsPage() {
                           Restore
                         </button>
                       )}
+                      <button
+                        onClick={async () => {
+                          if (!confirm("Delete this message permanently?")) return;
+                          const res = await fetch("/api/admin/contact-requests", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id: m.id }),
+                          });
+                          if (res.ok) setMessages((prev) => prev.filter((x) => x.id !== m.id));
+                        }}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </button>
                     </div>
                   </div>
                 )}
