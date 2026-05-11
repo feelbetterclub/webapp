@@ -251,7 +251,7 @@ const pt: Translations = {
   },
   galleryEyebrow: "O Clube",
   galleryTitle: "Feel Better em acao.",
-  gallerySub: "Treinando ao ar livre, cercados de natureza e energia boa. Isso e o que fazemos — e como fazemos.",
+  gallerySub: "Treinando ao ar livre, cercados de natureza e energia boa. Isso e o que fazemos e como fazemos.",
   galleryLabels: ["Aula na praia \u00b7 nascer do sol", "Interior do estudio", "Moni \u00b7 dando aula", "Playa Chica", "Fun Burn Friday", "Sessao de alongamento"],
   testimonialsEyebrow: "Do clube",
   testimonialsTitle: "As pessoas que continuam voltando.",

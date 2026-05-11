@@ -4,15 +4,15 @@ import { useState, useRef, useCallback } from "react";
 import { useI18n } from "@/lib/i18n/context";
 
 const cellConfig = [
-  { span: "col-span-4", aspect: "aspect-[4/5]", mt: "", img: "/gallery-1.webp" },
-  { span: "col-span-4", aspect: "aspect-square", mt: "mt-10", img: "/gallery-2.webp" },
-  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", img: "/gallery-3.webp" },
-  { span: "col-span-3", aspect: "aspect-square", mt: "", img: "/gallery-4.webp" },
-  { span: "col-span-6", aspect: "aspect-[16/10]", mt: "", img: "/gallery-5.webp" },
-  { span: "col-span-3", aspect: "aspect-square", mt: "mt-5", img: "/gallery-6.webp" },
-  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", img: "/gallery-7.webp" },
-  { span: "col-span-4", aspect: "aspect-square", mt: "mt-6", img: "/gallery-8.webp" },
-  { span: "col-span-4", aspect: "aspect-[4/5]", mt: "", img: "/gallery-9.webp" },
+  { span: "col-span-4", aspect: "aspect-[4/3]", mt: "", img: "/gallery-1.webp" },    // -59 Moni lunge (horizontal)
+  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "mt-10", img: "/gallery-2.webp" }, // -122 Moni ayudando alumno (vertical)
+  { span: "col-span-4", aspect: "aspect-[4/3]", mt: "", img: "/gallery-3.webp" },    // -152 Chicas charlando (horizontal)
+  { span: "col-span-3", aspect: "aspect-[3/4]", mt: "", img: "/gallery-4.webp" },    // -140 Moni close-up (vertical)
+  { span: "col-span-6", aspect: "aspect-[16/10]", mt: "", img: "/gallery-5.webp" },  // -168 Gente en el mar (horizontal)
+  { span: "col-span-3", aspect: "aspect-[4/3]", mt: "mt-5", img: "/gallery-6.webp" }, // -50 Squats grupo (horizontal)
+  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", img: "/gallery-7.webp" },    // -24 Vista aérea tenis+playa (vertical)
+  { span: "col-span-4", aspect: "aspect-[4/3]", mt: "mt-6", img: "/gallery-8.webp" }, // -84 Grupo tumbado mar (horizontal)
+  { span: "col-span-4", aspect: "aspect-[3/4]", mt: "", img: "/gallery-9.webp" },    // -95 Moni cobra/stretch (vertical)
 ];
 
 export default function Gallery() {

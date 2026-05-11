@@ -249,7 +249,7 @@ const en = {
   },
   galleryEyebrow: "The Club",
   galleryTitle: "Feel Better in action.",
-  gallerySub: "Training outdoors, surrounded by nature and good energy. This is what we do — and how we do it.",
+  gallerySub: "Training outdoors, surrounded by nature and good energy. This is what we do and how we do it.",
   galleryLabels: ["Beach class · sunrise", "Studio interior", "Moni · coaching", "Playa Chica", "Fun Burn Friday", "Stretch session"],
   testimonialsEyebrow: "From the club",
   testimonialsTitle: "The people who keep showing up.",
