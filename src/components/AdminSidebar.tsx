@@ -48,7 +48,7 @@ export default function AdminSidebar() {
       <aside className="w-64 bg-white border-r border-brand-sage/30 min-h-screen p-6 hidden md:block">
         <div className="flex items-center gap-2 mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-v4.svg" alt="Feel Better" className="h-8" />
+          <img src="/logo-web.png" alt="Feel Better" className="h-8" />
         </div>
 
         <nav className="space-y-1">
@@ -85,7 +85,7 @@ export default function AdminSidebar() {
       {/* Mobile top bar */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-brand-sage/30 h-14 px-4 flex items-center justify-between md:hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-v4.svg" alt="Feel Better" className="h-6" />
+        <img src="/logo-web.png" alt="Feel Better" className="h-6" />
         <button
           onClick={() => setOpen(true)}
           aria-label="Open menu"
@@ -100,7 +100,7 @@ export default function AdminSidebar() {
         <div className="fixed inset-0 z-50 bg-white flex flex-col md:hidden">
           <div className="flex items-center justify-between h-14 px-4 border-b border-brand-sage/30">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-v4.svg" alt="Feel Better" className="h-6" />
+            <img src="/logo-web.png" alt="Feel Better" className="h-6" />
             <button
               onClick={() => setOpen(false)}
               aria-label="Close menu"

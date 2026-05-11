@@ -47,7 +47,7 @@ function wrapper(inner: string): string {
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
         <tr><td style="background:#0d5e42;padding:24px;text-align:center;">
-          <img src="https://thefeelbetterclub.com/logo-v4-white-hd.png" alt="Feel Better Club" height="40" style="height:40px;width:auto;" />
+          <img src="https://thefeelbetterclub.com/logo-email.png" alt="Feel Better Club" height="48" style="height:48px;width:auto;" />
         </td></tr>
         <tr><td style="padding:28px 24px;line-height:1.6;font-size:15px;color:#062e21;">
           ${inner}

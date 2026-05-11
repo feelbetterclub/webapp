@@ -45,7 +45,7 @@ export default function Header() {
             <Link href="/" className="flex-shrink-0 max-w-[40vw] sm:max-w-none">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo-v4.svg"
+                src="/logo-web.png"
                 alt="Feel Better"
                 className="h-10 sm:h-10 w-auto"
                 onError={(e) => {
