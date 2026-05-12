@@ -127,7 +127,7 @@ export default function About() {
             <div className="rounded-[28px] overflow-hidden w-full min-h-[400px]">
               <img
                 src="/meet-moni.webp"
-                alt="Moni — Founder & Coach"
+                alt="Moni, Founder and Coach"
                 className="w-full h-full object-cover"
               />
             </div>

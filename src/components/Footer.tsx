@@ -44,7 +44,7 @@ export default function Footer() {
 
   /* ── i18n with fallbacks ── */
   const ft = t.footer;
-  const tag = ft.tag || "Small step — big impact";
+  const tag = ft.tag || "Small step, big impact";
   const colA = ft.colA || {
     title: "Classes",
     items: ["Mobility", "Strength", "Pilates", "Fun Burn"],
@@ -111,7 +111,7 @@ export default function Footer() {
             {/* 1 — Logo column */}
             <div>
               <img
-                src="/logo-v4-white.svg"
+                src="/logo-web-white.png"
                 alt="Feel Better Club"
                 className="h-10 w-auto mb-4"
               />

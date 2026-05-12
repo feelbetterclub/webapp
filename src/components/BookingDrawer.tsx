@@ -171,7 +171,7 @@ export function BookingDrawer({ schedule, date, onClose, onBooked }: Props) {
 
               {schedule.price != null && schedule.price > 0 ? (
                 <p className="text-xs text-muted-foreground bg-brand-sage/20 px-4 py-3 rounded-xl">
-                  {lang === "es" ? "Precio" : "Price"}: <strong>{(schedule.price / 100).toFixed(0)}€</strong> — {t.booking.paymentNote}
+                  {lang === "es" ? "Precio" : "Price"}: <strong>{(schedule.price / 100).toFixed(0)}€</strong>. {t.booking.paymentNote}
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground bg-brand-sage/20 px-4 py-3 rounded-xl">

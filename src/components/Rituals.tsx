@@ -10,7 +10,7 @@ export default function Rituals() {
   const title = ti.rituals?.title || "Coming soon";
   const subtitle =
     ti.rituals?.subtitle ||
-    "Sauna, breathwork, ice bath and more — we're preparing something special.";
+    "Sauna, breathwork, ice bath and more. We're preparing something special.";
 
   return (
     <section id="rituals" className="py-20 bg-fb-bone">

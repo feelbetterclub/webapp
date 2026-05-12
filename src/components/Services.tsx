@@ -18,7 +18,7 @@ export default function Services() {
   const title: string = ti.methodTitle || "Four disciplines, one rhythm.";
   const sub: string =
     ti.methodSub ||
-    "We built the week as a complete cycle — each session feeds the next so your body progresses without burnout. Show up, follow the rhythm, and let the method do the rest.";
+    "We built the week as a complete cycle. Each session feeds the next so your body progresses without burnout. Show up, follow the rhythm, and let the method do the rest.";
 
   const disciplines: Discipline[] = ti.disciplines || [
     {
@@ -34,7 +34,7 @@ export default function Services() {
       title: ti.classInfo?.strength?.name || "Strength",
       desc:
         ti.classInfo?.strength?.description ||
-        "Functional load work that builds real-world power — kettlebells, bands, bodyweight progressions.",
+        "Functional load work that builds real-world power: kettlebells, bands, bodyweight progressions.",
       tag: "Tue · Thu",
     },
     {
@@ -42,7 +42,7 @@ export default function Services() {
       title: ti.classInfo?.pilates?.name || "Pilates",
       desc:
         ti.classInfo?.pilates?.description ||
-        "Core, control, coordination — classic repertoire with a modern edge to sharpen your centre.",
+        "Core, control, coordination. Classic repertoire with a modern edge to sharpen your centre.",
       tag: "Mon · Wed · Sat",
     },
     {
@@ -50,7 +50,7 @@ export default function Services() {
       title: ti.classInfo?.funBurn?.name || "Fun Burn",
       desc:
         ti.classInfo?.funBurn?.description ||
-        "High-energy cardio fused with play — music, movement, and zero monotony.",
+        "High-energy cardio fused with play: music, movement, and zero monotony.",
       tag: "Fri · Sat",
     },
   ];

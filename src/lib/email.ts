@@ -168,7 +168,7 @@ export interface ContactNotificationData {
 
 export async function sendContactNotification(data: ContactNotificationData): Promise<void> {
   const { name, email, phone, preferredContact, message } = data;
-  const subject = "New Contact Message — Feel Better Club";
+  const subject = "New Contact Message. Feel Better Club";
   const safeName = escape(name);
   const safeEmail = escape(email);
   const safePhone = phone ? escape(phone) : null;
@@ -203,13 +203,13 @@ export interface MessageNotificationData {
 
 export async function sendMessageNotification(data: MessageNotificationData): Promise<void> {
   const { text, replyEmail } = data;
-  const subject = "New Message — Feel Better Club";
+  const subject = "New Message. Feel Better Club";
   const safeText = escape(text);
   const timestamp = escape(new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC");
 
   const replyBlock = replyEmail
     ? `<p><strong>Reply to:</strong> <a href="mailto:${escape(replyEmail)}" style="color:#0d5e42;">${escape(replyEmail)}</a></p>`
-    : `<p><em>No reply email provided — this message is anonymous.</em></p>`;
+    : `<p><em>No reply email provided. This message is anonymous.</em></p>`;
 
   const inner = `
     <p>A new anonymous message has been submitted via the "Ask us anything" form.</p>

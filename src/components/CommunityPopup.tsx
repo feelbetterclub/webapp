@@ -18,7 +18,7 @@ export function CommunityPopup() {
   const titleLine1 = p.titleLine1 || "Try your";
   const titleScript = p.titleScript || "first class free";
   const body =
-    p.body || "Come meet us with no commitment — one outdoor session to see how you feel.";
+    p.body || "Come meet us with no commitment. One outdoor session to see how you feel.";
   const cta = p.cta || "Book my free class";
   const dismiss = p.dismiss || "Maybe later";
   const foot1 = p.foot1 || "No credit card";
