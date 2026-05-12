@@ -225,7 +225,7 @@ const pt: Translations = {
   },
   marquee: ["Comunidade de rotinas saudaveis", "Pequeno passo, grande impacto", "Mover \u00b7 Respirar \u00b7 Sentir", "Tarifa \u00b7 Costa de la Luz"],
   methodEyebrow: "O Metodo",
-  methodTitle: "Mova-se para Se Sentir Melhor - Juntos.",
+  methodTitle: "Mova-se para Se Sentir Melhor. Juntos.",
   methodSub: "Montamos a semana como um ciclo completo, para que seu corpo e mente recebam o que precisam, quando precisam.",
   disciplines: [
     { n: "01", title: "Mobility Flow", desc: "Aula de alongamentos dinamicos e respiracao profunda. Ativa articulacoes, sistema linfatico e libera tensao. Cada sessao te ajuda a se sentir flexivel e presente, cercado pela brisa do mar e sol da manha.", tag: "" },

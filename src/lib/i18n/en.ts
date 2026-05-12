@@ -223,7 +223,7 @@ const en = {
   },
   marquee: ["Health routines community", "Small step, big impact", "Move · Breathe · Feel", "Tarifa · Costa de la Luz"],
   methodEyebrow: "The Method",
-  methodTitle: "Move to Feel Better - Together.",
+  methodTitle: "Move to Feel Better. Together.",
   methodSub: "We built the week as a complete cycle, so your body and mind gets what it needs, when it needs it.",
   disciplines: [
     { n: "01", title: "Mobility Flow", desc: "Class focused on dynamic stretching and deep breath. Activates joints, lymphatic system and releases tension. Supports recovery and prevents injuries. Each session is designed to help you feel flexible and fully present in your body, surrounded by the ocean breeze and morning sun.", tag: "" },

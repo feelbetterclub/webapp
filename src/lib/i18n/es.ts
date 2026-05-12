@@ -225,7 +225,7 @@ const es: Translations = {
   },
   marquee: ["Rutinas de salud holística", "Pequeño paso, gran impacto", "Mover · Respirar · Sentir", "Tarifa · Costa de la Luz"],
   methodEyebrow: "El Método",
-  methodTitle: "Muévete para Sentirte Mejor - Juntos.",
+  methodTitle: "Muévete para Sentirte Mejor. Juntos.",
   methodSub: "Hemos construido la semana como un ciclo completo, para que tu cuerpo y mente reciban lo que necesitan, cuando lo necesitan.",
   disciplines: [
     { n: "01", title: "Mobility Flow", desc: "Clase de estiramientos dinámicos y respiración profunda. Activa articulaciones, sistema linfático y libera tensión. Cada sesión te ayuda a sentirte flexible y presente, rodeado de brisa marina y sol de la mañana.", tag: "" },
