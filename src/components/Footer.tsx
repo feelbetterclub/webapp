@@ -115,9 +115,6 @@ export default function Footer() {
                 alt="Feel Better Club"
                 className="h-10 w-auto mb-4"
               />
-              <p className="text-sm max-w-[28ch] text-[var(--fb-paper)]/75 leading-relaxed">
-                {tag}
-              </p>
             </div>
 
             {/* 2 — Classes */}
