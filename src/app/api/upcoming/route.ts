@@ -14,9 +14,11 @@ export async function GET() {
           s.start_time AS startTime,
           c.location,
           c.duration_minutes AS durationMinutes,
-          c.icon
+          c.icon,
+          l.image AS locationImage
         FROM schedules_v2 s
         INNER JOIN classes c ON s.class_id = c.id
+        LEFT JOIN locations l ON LOWER(TRIM(c.location)) = LOWER(TRIM(l.name))
         WHERE s.date >= ?
         ORDER BY s.date, s.start_time
         LIMIT 3

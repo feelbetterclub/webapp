@@ -13,6 +13,7 @@ interface UpcomingClass {
   location: string | null;
   durationMinutes: number | null;
   icon: string | null;
+  locationImage: string | null;
 }
 
 const CARD_IMAGES = [
@@ -102,7 +103,7 @@ export default function Hero() {
                 <ClassCard
                   key={cls.id}
                   cls={cls}
-                  image={CARD_IMAGES[i % CARD_IMAGES.length]}
+                  image={cls.locationImage || CARD_IMAGES[i % CARD_IMAGES.length]}
                   lang={lang}
                 />
               ))}
@@ -118,7 +119,7 @@ export default function Hero() {
                 <div key={cls.id} className="snap-center shrink-0 w-[85vw]">
                   <ClassCard
                     cls={cls}
-                    image={CARD_IMAGES[i % CARD_IMAGES.length]}
+                    image={cls.locationImage || CARD_IMAGES[i % CARD_IMAGES.length]}
                     lang={lang}
                   />
                 </div>

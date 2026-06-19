@@ -16,6 +16,7 @@ export interface LocationItem {
   id: number;
   name: string;
   url: string | null;
+  image: string | null;
 }
 
 export interface ScheduleItem {

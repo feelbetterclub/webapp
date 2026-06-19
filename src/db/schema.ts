@@ -45,6 +45,7 @@ export const locations = sqliteTable("locations", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   url: text("url"),
+  image: text("image"),
 });
 
 export type LocationRow = typeof locations.$inferSelect;
