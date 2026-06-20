@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Plus, Trash2, X, MapPin, ExternalLink, ImageIcon, Upload } from "lucide-react";
+import { Plus, Trash2, X, MapPin, ExternalLink, ImageIcon, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -9,6 +9,7 @@ import { BrandButton } from "@/components/ui/brand-button";
 import type { LocationItem } from "@/lib/types";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_PHOTOS = 3;
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -52,6 +53,17 @@ export default function LocationsPage() {
 
   function handleFilesSelected(files: FileList | null, target: "form" | number) {
     if (!files) return;
+
+    // Check limit for existing locations
+    if (target !== "form") {
+      const loc = locationsList.find((l) => l.id === target);
+      const currentCount = loc?.images?.length ?? 0;
+      if (currentCount >= MAX_PHOTOS) {
+        setError(`Maximum ${MAX_PHOTOS} photos per location. Delete one first.`);
+        return;
+      }
+    }
+
     const valid: PendingImage[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -63,9 +75,17 @@ export default function LocationsPage() {
     }
 
     if (target === "form") {
-      setPendingImages((prev) => [...prev, ...valid]);
+      setPendingImages((prev) => {
+        const combined = [...prev, ...valid];
+        if (combined.length > MAX_PHOTOS) {
+          setError(`Maximum ${MAX_PHOTOS} photos per location`);
+          // Revoke extras
+          combined.slice(MAX_PHOTOS).forEach((img) => URL.revokeObjectURL(img.preview));
+          return combined.slice(0, MAX_PHOTOS);
+        }
+        return combined;
+      });
     } else {
-      // Upload directly to existing location
       uploadImagesToLocation(target, valid);
     }
   }
@@ -85,16 +105,17 @@ export default function LocationsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ images }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error || "Error uploading images");
+      } else if (data.message) {
+        setError(data.message);
       }
       loadLocations();
     } catch (err) {
       setError(`Upload error: ${err}`);
     } finally {
       setUploadingFor(null);
-      // Clean up previews
       imgs.forEach((img) => URL.revokeObjectURL(img.preview));
     }
   }
@@ -107,10 +128,42 @@ export default function LocationsPage() {
     loadLocations();
   }
 
+  async function handleMoveImage(locationId: number, imageId: number, direction: "left" | "right") {
+    const loc = locationsList.find((l) => l.id === locationId);
+    if (!loc?.images) return;
+
+    const ids = loc.images.map((img) => img.id);
+    const idx = ids.indexOf(imageId);
+    if (idx < 0) return;
+
+    const newIdx = direction === "left" ? idx - 1 : idx + 1;
+    if (newIdx < 0 || newIdx >= ids.length) return;
+
+    // Swap
+    [ids[idx], ids[newIdx]] = [ids[newIdx], ids[idx]];
+
+    await fetch(`/api/admin/locations/${locationId}/images`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order: ids }),
+    });
+    loadLocations();
+  }
+
   function removePendingImage(index: number) {
     setPendingImages((prev) => {
       URL.revokeObjectURL(prev[index].preview);
       return prev.filter((_, i) => i !== index);
+    });
+  }
+
+  function movePendingImage(index: number, direction: "left" | "right") {
+    setPendingImages((prev) => {
+      const newIdx = direction === "left" ? index - 1 : index + 1;
+      if (newIdx < 0 || newIdx >= prev.length) return prev;
+      const arr = [...prev];
+      [arr[index], arr[newIdx]] = [arr[newIdx], arr[index]];
+      return arr;
     });
   }
 
@@ -187,27 +240,52 @@ export default function LocationsPage() {
               onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} />
 
             <div className="sm:col-span-2">
-              <label className="text-sm font-medium text-brand-deep mb-1.5 block">Photos</label>
+              <label className="text-sm font-medium text-brand-deep mb-1.5 block">
+                Photos <span className="text-muted-foreground font-normal">({pendingImages.length}/{MAX_PHOTOS})</span>
+              </label>
               <div className="flex flex-wrap items-start gap-3">
                 {pendingImages.map((img, i) => (
-                  <div key={i} className="relative w-24 h-18 rounded-lg overflow-hidden border border-brand-sage/30">
-                    <img src={img.preview} alt="Preview" className="w-full h-full object-cover" />
+                  <div key={i} className="relative group">
+                    <div className="w-24 h-18 rounded-lg overflow-hidden border border-brand-sage/30">
+                      <img src={img.preview} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
                     <button type="button" onClick={() => removePendingImage(i)}
                       className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5">
                       <X className="w-3 h-3" />
                     </button>
+                    {/* Position badge */}
+                    <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">
+                      #{i + 1}
+                    </span>
+                    {/* Reorder arrows */}
+                    <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {i > 0 && (
+                        <button type="button" onClick={() => movePendingImage(i, "left")}
+                          className="bg-black/60 text-white rounded p-0.5">
+                          <ChevronLeft className="w-3 h-3" />
+                        </button>
+                      )}
+                      {i < pendingImages.length - 1 && (
+                        <button type="button" onClick={() => movePendingImage(i, "right")}
+                          className="bg-black/60 text-white rounded p-0.5">
+                          <ChevronRight className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
-                <button type="button" onClick={() => fileInputRef.current?.click()}
-                  className="w-24 h-18 rounded-lg border-2 border-dashed border-brand-sage/40 flex flex-col items-center justify-center gap-1 text-brand-sage hover:border-brand-teal hover:text-brand-teal transition-colors">
-                  <Upload className="w-4 h-4" />
-                  <span className="text-[10px]">Add photos</span>
-                </button>
+                {pendingImages.length < MAX_PHOTOS && (
+                  <button type="button" onClick={() => fileInputRef.current?.click()}
+                    className="w-24 h-18 rounded-lg border-2 border-dashed border-brand-sage/40 flex flex-col items-center justify-center gap-1 text-brand-sage hover:border-brand-teal hover:text-brand-teal transition-colors">
+                    <Upload className="w-4 h-4" />
+                    <span className="text-[10px]">Add photo</span>
+                  </button>
+                )}
                 <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
                   onChange={(e) => { handleFilesSelected(e.target.files, "form"); e.target.value = ""; }} />
               </div>
               <p className="text-xs text-muted-foreground mt-1.5">
-                JPG, PNG or WebP. Max 2MB each. First photo used as hero banner.
+                JPG, PNG or WebP. Max 2MB each. Max {MAX_PHOTOS} photos. Order matters for the home banner.
               </p>
             </div>
 
@@ -226,81 +304,106 @@ export default function LocationsPage() {
         <EmptyState text="No locations yet. Add your first venue or beach." />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {locationsList.map((loc) => (
-            <div key={loc.id} className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
-              {/* Image gallery */}
-              {loc.images && loc.images.length > 0 ? (
-                <div className="relative">
-                  <div className="flex gap-0.5 overflow-x-auto h-32 scrollbar-hide">
-                    {loc.images.map((img) => (
-                      <div key={img.id} className="relative shrink-0 h-full" style={{ width: loc.images!.length === 1 ? "100%" : "50%" }}>
-                        <img src={img.url} alt={loc.name} className="w-full h-full object-cover" />
-                        <button onClick={() => handleDeleteImage(loc.id, img.id)}
-                          className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 opacity-0 hover:opacity-100 transition-opacity">
-                          <X className="w-3 h-3" />
-                        </button>
+          {locationsList.map((loc) => {
+            const imgCount = loc.images?.length ?? 0;
+
+            return (
+              <div key={loc.id} className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
+                {/* Image gallery */}
+                {imgCount > 0 ? (
+                  <div className="relative">
+                    <div className="flex gap-0.5 h-32">
+                      {loc.images!.map((img, idx) => (
+                        <div key={img.id} className="relative shrink-0 h-full group"
+                          style={{ width: imgCount === 1 ? "100%" : imgCount === 2 ? "50%" : "33.33%" }}>
+                          <img src={img.url} alt={`${loc.name} #${idx + 1}`} className="w-full h-full object-cover" />
+                          {/* Position badge */}
+                          <span className="absolute top-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">
+                            #{idx + 1}
+                          </span>
+                          {/* Delete */}
+                          <button onClick={() => handleDeleteImage(loc.id, img.id)}
+                            className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <X className="w-3 h-3" />
+                          </button>
+                          {/* Reorder */}
+                          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {idx > 0 && (
+                              <button onClick={() => handleMoveImage(loc.id, img.id, "left")}
+                                className="bg-black/60 text-white rounded p-0.5">
+                                <ChevronLeft className="w-3 h-3" />
+                              </button>
+                            )}
+                            {idx < imgCount - 1 && (
+                              <button onClick={() => handleMoveImage(loc.id, img.id, "right")}
+                                className="bg-black/60 text-white rounded p-0.5">
+                                <ChevronRight className="w-3 h-3" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : loc.image ? (
+                  <div className="h-32 bg-brand-sage/10">
+                    <img src={loc.image} alt={loc.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="h-32 bg-brand-sage/10 flex items-center justify-center">
+                    <ImageIcon className="w-8 h-8 text-brand-sage/40" />
+                  </div>
+                )}
+
+                <div className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 bg-brand-teal/10 rounded-full flex items-center justify-center shrink-0">
+                        <MapPin className="w-4 h-4 text-brand-teal" />
                       </div>
-                    ))}
-                  </div>
-                  {loc.images.length > 1 && (
-                    <span className="absolute bottom-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded-full">
-                      {loc.images.length} photos
-                    </span>
-                  )}
-                </div>
-              ) : loc.image ? (
-                <div className="h-32 bg-brand-sage/10">
-                  <img src={loc.image} alt={loc.name} className="w-full h-full object-cover" />
-                </div>
-              ) : (
-                <div className="h-32 bg-brand-sage/10 flex items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-brand-sage/40" />
-                </div>
-              )}
-
-              <div className="p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 bg-brand-teal/10 rounded-full flex items-center justify-center shrink-0">
-                      <MapPin className="w-4 h-4 text-brand-teal" />
+                      <div>
+                        <p className="font-medium text-brand-deep">{loc.name}</p>
+                        {loc.url && (
+                          <a href={loc.url} target="_blank" rel="noopener noreferrer"
+                            className="text-xs text-brand-teal hover:underline flex items-center gap-1 mt-1">
+                            <ExternalLink className="w-3 h-3" /> View map
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-brand-deep">{loc.name}</p>
-                      {loc.url && (
-                        <a href={loc.url} target="_blank" rel="noopener noreferrer"
-                          className="text-xs text-brand-teal hover:underline flex items-center gap-1 mt-1">
-                          <ExternalLink className="w-3 h-3" /> View map
-                        </a>
-                      )}
-                    </div>
+                    <button onClick={() => handleDelete(loc.id)} className="text-red-400 hover:text-red-600 p-1">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                  <button onClick={() => handleDelete(loc.id)} className="text-red-400 hover:text-red-600 p-1">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
 
-                {/* Add photos button */}
-                <div className="mt-3 pt-3 border-t border-brand-sage/20">
-                  <label
-                    className={`text-xs text-brand-teal hover:text-brand-deep flex items-center gap-1 cursor-pointer ${uploadingFor === loc.id ? "opacity-50 pointer-events-none" : ""}`}
-                  >
-                    <Upload className="w-3 h-3" />
-                    {uploadingFor === loc.id ? "Uploading..." : "Add photos"}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      className="hidden"
-                      onChange={(e) => {
-                        handleFilesSelected(e.target.files, loc.id);
-                        e.target.value = "";
-                      }}
-                    />
-                  </label>
+                  {/* Add photos button */}
+                  <div className="mt-3 pt-3 border-t border-brand-sage/20 flex items-center justify-between">
+                    {imgCount < MAX_PHOTOS ? (
+                      <label
+                        className={`text-xs text-brand-teal hover:text-brand-deep flex items-center gap-1 cursor-pointer ${uploadingFor === loc.id ? "opacity-50 pointer-events-none" : ""}`}
+                      >
+                        <Upload className="w-3 h-3" />
+                        {uploadingFor === loc.id ? "Uploading..." : "Add photos"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          className="hidden"
+                          onChange={(e) => {
+                            handleFilesSelected(e.target.files, loc.id);
+                            e.target.value = "";
+                          }}
+                        />
+                      </label>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Max {MAX_PHOTOS} photos</span>
+                    )}
+                    <span className="text-[10px] text-muted-foreground">{imgCount}/{MAX_PHOTOS}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

@@ -14,6 +14,7 @@ interface UpcomingClass {
   durationMinutes: number | null;
   icon: string | null;
   locationImage: string | null;
+  locationImages?: string[];
 }
 
 const CARD_IMAGES = [
@@ -70,6 +71,23 @@ export default function Hero() {
       .finally(() => setLoading(false));
   }, []);
 
+  // When the same location appears multiple times, rotate through its photos
+  function pickImage(cls: UpcomingClass, index: number): string {
+    const imgs = cls.locationImages;
+    if (!imgs || imgs.length === 0) {
+      return cls.locationImage || CARD_IMAGES[index % CARD_IMAGES.length];
+    }
+    // Count how many times this location appeared before this index
+    const loc = cls.location?.toLowerCase().trim();
+    let occurrenceBefore = 0;
+    for (let j = 0; j < index; j++) {
+      if (classes[j].location?.toLowerCase().trim() === loc) {
+        occurrenceBefore++;
+      }
+    }
+    return imgs[occurrenceBefore % imgs.length];
+  }
+
   return (
     <section className="bg-fb-paper pt-14 pb-8">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -103,7 +121,7 @@ export default function Hero() {
                 <ClassCard
                   key={cls.id}
                   cls={cls}
-                  image={cls.locationImage || CARD_IMAGES[i % CARD_IMAGES.length]}
+                  image={pickImage(cls, i)}
                   lang={lang}
                 />
               ))}
@@ -119,7 +137,7 @@ export default function Hero() {
                 <div key={cls.id} className="snap-center shrink-0 w-[85vw]">
                   <ClassCard
                     cls={cls}
-                    image={cls.locationImage || CARD_IMAGES[i % CARD_IMAGES.length]}
+                    image={pickImage(cls, i)}
                     lang={lang}
                   />
                 </div>
