@@ -10,6 +10,7 @@ const ALLOWED_TABLES = new Set([
   "bookings",
   "instructors",
   "locations",
+  "location_images",
   "community_members",
   "testimonials",
   "messages",

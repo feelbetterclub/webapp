@@ -12,11 +12,18 @@ export interface ClassItem {
   locationUrl: string | null;
 }
 
+export interface LocationImage {
+  id: number;
+  url: string;
+  position: number;
+}
+
 export interface LocationItem {
   id: number;
   name: string;
   url: string | null;
   image: string | null;
+  images?: LocationImage[];
 }
 
 export interface ScheduleItem {

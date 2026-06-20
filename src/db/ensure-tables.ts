@@ -145,6 +145,18 @@ export async function ensureTables() {
   await safeAlter("ALTER TABLE locations ADD COLUMN image_data TEXT");
   await safeAlter("ALTER TABLE locations ADD COLUMN image_mime TEXT");
 
+  // Location images (multi-photo per location)
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS location_images (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      location_id INTEGER NOT NULL REFERENCES locations(id) ON DELETE CASCADE,
+      image_data TEXT NOT NULL,
+      image_mime TEXT NOT NULL DEFAULT 'image/webp',
+      position INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )
+  `);
+
   // Settings table for admin toggles
   await client.execute(`
     CREATE TABLE IF NOT EXISTS settings (

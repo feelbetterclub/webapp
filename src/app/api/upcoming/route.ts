@@ -15,7 +15,7 @@ export async function GET() {
           c.location,
           c.duration_minutes AS durationMinutes,
           c.icon,
-          l.image AS locationImage
+          COALESCE(l.image, (SELECT '/api/locations/images/' || li.id FROM location_images li WHERE li.location_id = l.id ORDER BY li.position, li.id LIMIT 1)) AS locationImage
         FROM schedules_v2 s
         INNER JOIN classes c ON s.class_id = c.id
         LEFT JOIN locations l ON LOWER(TRIM(c.location)) = LOWER(TRIM(l.name))
