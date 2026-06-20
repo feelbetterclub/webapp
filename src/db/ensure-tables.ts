@@ -142,6 +142,8 @@ export async function ensureTables() {
   await safeAlter("ALTER TABLE bookings ADD COLUMN paid INTEGER DEFAULT 0");
   await safeAlter("ALTER TABLE bookings ADD COLUMN payment_method TEXT");
   await safeAlter("ALTER TABLE locations ADD COLUMN image TEXT");
+  await safeAlter("ALTER TABLE locations ADD COLUMN image_data TEXT");
+  await safeAlter("ALTER TABLE locations ADD COLUMN image_mime TEXT");
 
   // Settings table for admin toggles
   await client.execute(`
