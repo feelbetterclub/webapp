@@ -250,28 +250,30 @@ export default function LocationsPage() {
                       <img src={img.preview} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                     <button type="button" onClick={() => removePendingImage(i)}
-                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5">
-                      <X className="w-3 h-3" />
+                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1">
+                      <X className="w-3.5 h-3.5" />
                     </button>
                     {/* Position badge */}
                     <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">
                       #{i + 1}
                     </span>
-                    {/* Reorder arrows */}
-                    <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {i > 0 && (
-                        <button type="button" onClick={() => movePendingImage(i, "left")}
-                          className="bg-black/60 text-white rounded p-0.5">
-                          <ChevronLeft className="w-3 h-3" />
-                        </button>
-                      )}
-                      {i < pendingImages.length - 1 && (
-                        <button type="button" onClick={() => movePendingImage(i, "right")}
-                          className="bg-black/60 text-white rounded p-0.5">
-                          <ChevronRight className="w-3 h-3" />
-                        </button>
-                      )}
-                    </div>
+                    {/* Reorder arrows — always visible on mobile, hover on desktop */}
+                    {pendingImages.length > 1 && (
+                      <div className="absolute bottom-1 right-1 flex gap-0.5">
+                        {i > 0 && (
+                          <button type="button" onClick={() => movePendingImage(i, "left")}
+                            className="bg-black/60 text-white rounded p-1">
+                            <ChevronLeft className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                        {i < pendingImages.length - 1 && (
+                          <button type="button" onClick={() => movePendingImage(i, "right")}
+                            className="bg-black/60 text-white rounded p-1">
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
                 {pendingImages.length < MAX_PHOTOS && (
@@ -314,33 +316,35 @@ export default function LocationsPage() {
                   <div className="relative">
                     <div className="flex gap-0.5 h-32">
                       {loc.images!.map((img, idx) => (
-                        <div key={img.id} className="relative shrink-0 h-full group"
+                        <div key={img.id} className="relative shrink-0 h-full"
                           style={{ width: imgCount === 1 ? "100%" : imgCount === 2 ? "50%" : "33.33%" }}>
                           <img src={img.url} alt={`${loc.name} #${idx + 1}`} className="w-full h-full object-cover" />
                           {/* Position badge */}
-                          <span className="absolute top-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded">
+                          <span className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded font-medium">
                             #{idx + 1}
                           </span>
-                          {/* Delete */}
+                          {/* Delete — always visible for touch */}
                           <button onClick={() => handleDeleteImage(loc.id, img.id)}
-                            className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <X className="w-3 h-3" />
+                            className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1">
+                            <X className="w-3.5 h-3.5" />
                           </button>
-                          {/* Reorder */}
-                          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {idx > 0 && (
-                              <button onClick={() => handleMoveImage(loc.id, img.id, "left")}
-                                className="bg-black/60 text-white rounded p-0.5">
-                                <ChevronLeft className="w-3 h-3" />
-                              </button>
-                            )}
-                            {idx < imgCount - 1 && (
-                              <button onClick={() => handleMoveImage(loc.id, img.id, "right")}
-                                className="bg-black/60 text-white rounded p-0.5">
-                                <ChevronRight className="w-3 h-3" />
-                              </button>
-                            )}
-                          </div>
+                          {/* Reorder — always visible for touch */}
+                          {imgCount > 1 && (
+                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1">
+                              {idx > 0 && (
+                                <button onClick={() => handleMoveImage(loc.id, img.id, "left")}
+                                  className="bg-black/60 text-white rounded p-1">
+                                  <ChevronLeft className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                              {idx < imgCount - 1 && (
+                                <button onClick={() => handleMoveImage(loc.id, img.id, "right")}
+                                  className="bg-black/60 text-white rounded p-1">
+                                  <ChevronRight className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

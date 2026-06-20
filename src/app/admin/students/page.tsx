@@ -198,10 +198,10 @@ export default function AlumnosPage() {
                     <td className="px-6 py-3">
                       <button
                         onClick={() => deleteStudent(s.email, s.name)}
-                        className="text-red-400 hover:text-red-600 transition-colors"
+                        className="text-red-400 hover:text-red-600 transition-colors p-2 -m-1"
                         title="Delete student"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </td>
                   </tr>

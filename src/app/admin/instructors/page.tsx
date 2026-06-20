@@ -121,8 +121,8 @@ export default function InstructorsPage() {
                   {inst.phone && <p className="text-xs text-muted-foreground">{inst.phone}</p>}
                 </div>
               </div>
-              <button onClick={() => handleDelete(inst.id)} className="text-red-400 hover:text-red-600 p-1">
-                <Trash2 className="w-4 h-4" />
+              <button onClick={() => handleDelete(inst.id)} className="text-red-400 hover:text-red-600 p-2 -m-1">
+                <Trash2 className="w-5 h-5" />
               </button>
             </div>
           ))}

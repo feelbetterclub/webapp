@@ -51,7 +51,8 @@ export default function CommunityPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-brand-sage/30 overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-brand-sage/20 text-left">
                 <th className="px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Name</th>
@@ -77,14 +78,15 @@ export default function CommunityPage() {
                     {new Date(m.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </td>
                   <td className="px-6 py-3">
-                    <button onClick={() => handleDelete(m.id)} className="text-red-400 hover:text-red-600 p-1" title="Remove">
-                      <Trash2 className="w-4 h-4" />
+                    <button onClick={() => handleDelete(m.id)} className="text-red-400 hover:text-red-600 p-2 -m-1" title="Remove">
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

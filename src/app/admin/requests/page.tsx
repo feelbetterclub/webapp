@@ -139,7 +139,7 @@ export default function RequestsPage() {
                     <select
                       value={r.status}
                       onChange={(e) => handleStatusChange(r.id, e.target.value)}
-                      className={`text-xs font-medium px-3 py-1.5 rounded-full border-0 cursor-pointer appearance-none ${cfg.bg} ${cfg.text}`}
+                      className={`text-sm font-medium px-4 py-2 rounded-full border-0 cursor-pointer ${cfg.bg} ${cfg.text}`}
                     >
                       {ALL_STATUSES.map((s) => (
                         <option key={s} value={s}>
@@ -164,10 +164,10 @@ export default function RequestsPage() {
                         });
                         if (res.ok) setRequests((prev) => prev.filter((x) => x.id !== r.id));
                       }}
-                      className="text-red-400 hover:text-red-600 transition-colors p-1"
+                      className="text-red-400 hover:text-red-600 transition-colors p-2 -m-1"
                       title="Delete request"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default function RequestsPage() {
                   <div className="mt-3 pt-3 border-t border-brand-sage/15">
                     <button
                       onClick={() => toggleNotes(r.id)}
-                      className="flex items-center gap-1 text-xs text-muted-foreground hover:text-brand-teal transition-colors"
+                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand-teal transition-colors py-1"
                     >
                       {notesExpanded ? (
                         <ChevronUp className="w-3.5 h-3.5" />

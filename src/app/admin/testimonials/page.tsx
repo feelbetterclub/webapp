@@ -252,17 +252,17 @@ export default function TestimonialsPage() {
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => handleToggleVisibility(t)}
-                    className="text-brand-teal hover:text-brand-dark p-1.5 rounded-lg hover:bg-brand-sage/10 transition-colors"
+                    className="text-brand-teal hover:text-brand-dark p-2.5 rounded-lg hover:bg-brand-sage/10 transition-colors"
                     title={t.visible ? "Hide from site" : "Show on site"}
                   >
-                    {t.visible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {t.visible ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                   <button
                     onClick={() => handleDelete(t.id)}
-                    className="text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                    className="text-red-400 hover:text-red-600 p-2.5 rounded-lg hover:bg-red-50 transition-colors"
                     title="Delete"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
               </div>

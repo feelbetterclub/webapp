@@ -221,7 +221,7 @@ export default function ContactRequestsPage() {
                       </p>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {m.status !== "read" && (
                         <button
                           onClick={() => updateStatus(m.id, "read")}
