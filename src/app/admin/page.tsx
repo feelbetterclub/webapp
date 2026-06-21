@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone, Trash2, Check, CircleDollarSign } from "lucide-react";
+import { BookOpen, Calendar, Users, TrendingUp, MapPin, ChevronDown, ChevronUp, UserPlus, Clock, Mail, Phone, Trash2, Check, CircleDollarSign, Link2 } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -50,6 +50,7 @@ export default function AdminDashboard() {
   const [promoting, setPromoting] = useState<number | null>(null);
   const [togglingPayment, setTogglingPayment] = useState<number | null>(null);
   const [popupEnabled, setPopupEnabled] = useState(true);
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/settings").then(r => r.json()).then(s => {
@@ -307,6 +308,25 @@ export default function AdminDashboard() {
                                 <StatusBadge variant={s.bookingCount >= s.maxCapacity ? "cancelled" : s.bookingCount > 0 ? "warning" : "confirmed"}>
                                   {s.bookingCount >= s.maxCapacity ? "Full" : s.bookingCount > 0 ? `${s.bookingCount} booked` : "Open"}
                                 </StatusBadge>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const url = `${window.location.origin}/book?date=${s.date}&scheduleId=${s.id}`;
+                                    navigator.clipboard.writeText(url);
+                                    setCopiedLink(sessionKey);
+                                    setTimeout(() => setCopiedLink(null), 2000);
+                                  }}
+                                  className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full transition-colors ${
+                                    copiedLink === sessionKey
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-brand-sage/20 text-brand-dark hover:bg-brand-teal/20 hover:text-brand-teal"
+                                  }`}
+                                  title="Copy booking link"
+                                >
+                                  <Link2 className="w-3 h-3" />
+                                  {copiedLink === sessionKey ? "Copied!" : "Link"}
+                                </button>
                                 {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
                               </div>
                             </button>
