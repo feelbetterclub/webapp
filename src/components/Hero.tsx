@@ -184,9 +184,11 @@ function ClassCard({
   image: string;
   lang: string;
 }) {
+  const bookUrl = `/book?date=${cls.date}&scheduleId=${cls.id}`;
+
   return (
     <Link
-      href="/book"
+      href={bookUrl}
       className="block rounded-2xl overflow-hidden relative transition-transform hover:scale-[1.02] hover:shadow-lg"
       style={{ minHeight: 220 }}
     >

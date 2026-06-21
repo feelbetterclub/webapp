@@ -45,6 +45,7 @@ function ReservarPageInner() {
   const [loading, setLoading] = useState(false);
   const [drawerSchedule, setDrawerSchedule] = useState<ScheduleWithAvailability | null>(null);
   const classParamHandled = useRef(false);
+  const scheduleIdAutoOpened = useRef(false);
 
   const [daysWithClasses, setDaysWithClasses] = useState<Set<string>>(new Set());
 
@@ -55,30 +56,48 @@ function ReservarPageInner() {
     return getWeekDates(base);
   }, [weekOffset]);
 
-  // Handle ?class= query param: find next available date for that discipline
+  // Handle query params: ?date=, ?scheduleId=, ?class=
   useEffect(() => {
     if (classParamHandled.current) return;
+
+    const dateParam = searchParams.get("date");
     const classParam = searchParams.get("class");
-    if (!classParam) return;
+
+    // If neither date nor class param, skip
+    if (!dateParam && !classParam) return;
     classParamHandled.current = true;
 
     (async () => {
       try {
-        const res = await fetch(`/api/schedules/next?className=${encodeURIComponent(classParam)}`);
-        const data = await res.json();
-        if (!data.date) return;
+        let targetDateStr: string | null = null;
+        let targetDayOfWeek: number | null = null;
+
+        if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+          // Direct date param (from Hero banner or unique URL)
+          targetDateStr = dateParam;
+          const d = new Date(dateParam + "T00:00:00");
+          const dow = d.getDay();
+          targetDayOfWeek = dow === 0 ? 7 : dow;
+        } else if (classParam) {
+          // Legacy class param: find next available date for that discipline
+          const res = await fetch(`/api/schedules/next?className=${encodeURIComponent(classParam)}`);
+          const data = await res.json();
+          if (!data.date) return;
+          targetDateStr = data.date;
+          targetDayOfWeek = data.dayOfWeek;
+        }
+
+        if (!targetDateStr || !targetDayOfWeek) return;
 
         // Calculate weekOffset from today to the target date
         const todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
-        const targetDate = new Date(data.date + "T00:00:00");
+        const targetDate = new Date(targetDateStr + "T00:00:00");
 
-        // Find monday of today's week
         const todayDay = todayDate.getDay();
         const todayMonday = new Date(todayDate);
         todayMonday.setDate(todayDate.getDate() - (todayDay === 0 ? 6 : todayDay - 1));
 
-        // Find monday of target week
         const targetDay = targetDate.getDay();
         const targetMonday = new Date(targetDate);
         targetMonday.setDate(targetDate.getDate() - (targetDay === 0 ? 6 : targetDay - 1));
@@ -87,8 +106,8 @@ function ReservarPageInner() {
         const newWeekOffset = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
 
         setWeekOffset(newWeekOffset);
-        setSelectedDay(data.dayOfWeek);
-        setSelectedDate(data.date);
+        setSelectedDay(targetDayOfWeek);
+        setSelectedDate(targetDateStr);
       } catch {
         // Fallback: keep default behavior (today)
       }
@@ -126,6 +145,19 @@ function ReservarPageInner() {
         .catch(() => {});
     }
   }, [weekDates]);
+
+  // Auto-open drawer when ?scheduleId= is present and schedules are loaded
+  useEffect(() => {
+    if (scheduleIdAutoOpened.current) return;
+    const scheduleIdParam = searchParams.get("scheduleId");
+    if (!scheduleIdParam || schedules.length === 0) return;
+
+    const targetSchedule = schedules.find((s) => s.id === Number(scheduleIdParam));
+    if (targetSchedule && (targetSchedule.spotsLeft > 0 || !targetSchedule.waitlistFull)) {
+      scheduleIdAutoOpened.current = true;
+      setDrawerSchedule(targetSchedule);
+    }
+  }, [schedules, searchParams]);
 
   const sortedSchedules = useMemo(
     () => [...schedules].sort((a, b) => a.startTime.localeCompare(b.startTime)),
