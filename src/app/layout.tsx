@@ -23,6 +23,7 @@ const chewy = Chewy({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://thefeelbetterclub.com"),
   title: "Feel Better Club | Health routines community",
   description:
     "Morning Endorphins & Sea Vitamins. Health routines for lifestyle-driven athletes. Mobility, Strength, Pilates, Breathwork.",
@@ -51,6 +52,14 @@ export const metadata: Metadata = {
     description:
       "Morning Endorphins & Sea Vitamins. Strong Body and Clear Mind. Reconnect with Nature.",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Feel Better Club — Morning Endorphins & Sea Vitamins",
+      },
+    ],
   },
 };
 
